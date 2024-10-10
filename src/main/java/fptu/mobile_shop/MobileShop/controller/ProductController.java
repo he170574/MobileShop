@@ -1,11 +1,13 @@
 package fptu.mobile_shop.MobileShop.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import fptu.mobile_shop.MobileShop.dto.CategoryDTO;
 import fptu.mobile_shop.MobileShop.dto.ProductDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
+import fptu.mobile_shop.MobileShop.entity.Category;
 import fptu.mobile_shop.MobileShop.entity.Product;
 import fptu.mobile_shop.MobileShop.repository.ProductRepository;
+import fptu.mobile_shop.MobileShop.service.CategoryService;
 import fptu.mobile_shop.MobileShop.service.CloudinaryService;
 import fptu.mobile_shop.MobileShop.service.ProductService;
 import jakarta.validation.Valid;
@@ -16,15 +18,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ProductController {
     private final ProductService productService;
+    private CategoryService categoryService;
 
     @Autowired
     public ProductController(ProductService productService, ProductRepository productRepository) {
@@ -161,4 +164,24 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
+    @GetMapping("/get-all-category")
+    private ResponseDTO getAllCategory() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        for (Category category : CategoryService.getAll()){
+            categoryDTOS.add(CategoryDTO.builder()
+                        .CategoryID(category.getCategoryID())
+                        .CategoryName(category.getCategoryName())
+                        .build());
+        }
+        responseDTO.setData(categoryDTOS);
+        responseDTO.setMessage("Get all category successful");
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+
+
+
+
 }
