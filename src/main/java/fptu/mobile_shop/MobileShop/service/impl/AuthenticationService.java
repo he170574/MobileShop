@@ -4,6 +4,7 @@ import fptu.mobile_shop.MobileShop.dto.LoginDTO;
 import fptu.mobile_shop.MobileShop.dto.LoginResponseDTO;
 import fptu.mobile_shop.MobileShop.entity.User;
 import fptu.mobile_shop.MobileShop.repository.UserRepository;
+import fptu.mobile_shop.MobileShop.service.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuthenticationService {
+public class AuthenticationService implements IAuthenticationService {
 
     @Autowired
     private UserRepository userRepository;
