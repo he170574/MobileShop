@@ -22,6 +22,11 @@ $(document).ready(function () {
         }
         loadProducts(searchQuery, page);
     });
+
+    $('#productTable th').on('click', function () {
+        var columnIndex = $(this).index();
+        sortProducts(columnIndex);
+    });
 });
 
 // Load all product
@@ -30,29 +35,11 @@ function loadProducts(search = '', page = 1) {
         url: `/get-product`,
         type: 'GET',
         success: function (response) {
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(response, 'text/html');
-
-
             var tableBody = $('#productTableBody');
             tableBody.empty();
 
             $.each(response.data, function (index, product) {
-                var productHtml = `
-                <tr class="product">
-                    <td>${product.productId}</td>
-                    <td>${product.productName}</td>
-                    <td>${product.productDetails}</td>
-                    <td><img src="${product.productImage}" alt="${product.productName}" width="200" /></td>
-                    <td>${product.price}</td>
-                    <td>${product.categoryID}</td>
-                    <td>${product.stockQuantity}</td>
-                    <td>
-                        <button class="btn btn-success col me-3 edit-product" data-product-id="${product.productId}">Update</button>
-                        <button class="btn btn-danger col delete-product" data-product-id="${product.productId}">Delete</button>
-                    </td>
-                </tr>
-                `;
+                var productHtml = createProductRow(product);
                 tableBody.append(productHtml);
             });
 
@@ -78,7 +65,6 @@ function loadProducts(search = '', page = 1) {
 }
 
 function createProductRow(product) {
-    const priceInDong = product.price * 1000000;
     const formatter = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
@@ -88,25 +74,18 @@ function createProductRow(product) {
     let price = priceFormatted.replace('₫', 'đ');
 
     return `
-        <tr data-product-id="${product.id}">
-            <td class="id-column">${product.id}</td>
-            <td>${product.name}</td>
-            <td>${product.description}</td>
-            <td><img src="${product.image}" alt="${product.name}" width="50"></td>
-            <td>${price}</td>
-            <td>${product.categoryId}</td>
-            <td>${product.stock}</td>
-            <td>${product.status}</td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn btn-sm btn-warning edit-product">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-product">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
+        <tr class="product">
+                    <td>${product.productId}</td>
+                    <td>${product.productName}</td>
+                    <td>${product.productDetails}</td>
+                    <td><img src="${product.productImageUrl}" alt="${product.productName}" width="200" /></td>
+                    <td>${price}</td>
+                    <td>${product.categoryID}</td>
+                    <td>${product.stockQuantity}</td>
+                    <td>
+                        <button class="btn btn-success col me-3 edit-product" data-product-id="${product.productId}">Update</button>
+                        <button class="btn btn-danger col delete-product" data-product-id="${product.productId}">Delete</button>
+                    </td>
         </tr>
     `;
 }
@@ -120,20 +99,14 @@ function showAddProductModal() {
 $('#addProductForm').on('submit', function (event) {
     event.preventDefault();
 
-    var formData = {
-        productName: $('#productName').val(),
-        productDetails: $('#productDescription').val(),
-        productImage: $('#imageUrl').val(),
-        price: $('#productPrice').val(),
-        categoryID: $('#categoryId').val(),
-        stockQuantity: $('#productStock').val()
-    };
+    var formData = new FormData(this);
 
     $.ajax({
         url: '/save-new-product',
         type: 'POST',
-        contentType: 'application/json',  // Gửi dữ liệu dưới dạng JSON
-        data: JSON.stringify(formData),    // Chuyển dữ liệu thành chuỗi JSON
+        processData: false,
+        contentType: false,
+        data: formData,
         success: function (response) {
             alert("Add Success");
             loadProducts();
@@ -143,23 +116,24 @@ $('#addProductForm').on('submit', function (event) {
         error: function (xhr) {
             if (xhr.status == 409) {
                 var existingProduct = xhr.responseJSON.data;
-                if (confirm("Product already exists, do you want to update it?")) {
-                    var newStockQuantity = existingProduct.stockQuantity + parseInt($('#productStock').val());
+                var newStockQuantity = existingProduct.stockQuantity + parseInt($('#productStock').val());
+
+                if (confirm("Product already exists, do you want to update quantity?")) {
                     $.ajax({
                         url: '/save-edit-product',
                         type: 'POST',
-                        contentType: 'application/json', // Chuyển dữ liệu thành JSON
+                        contentType: 'application/json',
                         data: JSON.stringify({
                             productId: existingProduct.productId,
                             stockQuantity: newStockQuantity
                         }),
                         success: function (updateResponse) {
-                            console.log(updateResponse);
                             alert("Update quantity success");
                             loadProducts();
                         },
-                        error: function () {
-                            alert("Error update quantity");
+                        error: function (updateError) {
+                            console.error("Error updating quantity:", updateError);
+                            alert("Error updating quantity");
                         }
                     });
                 }
@@ -189,7 +163,7 @@ function editProduct(productId) {
             $('#editProductId').val(product.productId);
             $('#editProductName').val(product.productName);
             $('#editProductDescription').val(product.productDetails);
-            $('#editImageUrl').val(product.productImage);
+            $('#editImageUrl').val(product.productImage); // Nếu bạn muốn hiển thị URL cũ
             $('#editProductPrice').val(product.price);
             $('#editCategoryId').val(product.categoryID);
             $('#editProductStock').val(product.stockQuantity);
@@ -207,21 +181,14 @@ function editProduct(productId) {
 $('#editProductForm').on('submit', function (event) {
     event.preventDefault();
 
-    var formData = {
-        productId: $('#editProductId').val(),
-        productName: $('#editProductName').val(),
-        productDetails: $('#editProductDescription').val(),
-        productImage: $('#editImageUrl').val(),
-        price: $('#editProductPrice').val(),
-        stockQuantity: $('#editProductStock').val(),
-        categoryID: $('#editCategoryId').val()
-    };
+    var formData = new FormData(this);
 
     $.ajax({
         url: '/save-edit-product',
         type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
+        processData: false, // Không xử lý dữ liệu
+        contentType: false, // Không gửi content type
+        data: formData, // Gửi dữ liệu FormData
         success: function (response) {
             alert(response.message);
             $('#editProductModal').modal('hide');
@@ -240,7 +207,7 @@ function deleteProduct(productId) {
         $.ajax({
             url: '/delete-product',
             type: 'POST',
-            data: { id: productId },  // Truyền productId vào đây
+            data: {id: productId},  // Truyền productId vào đây
             success: function (response) {
                 alert(response.message);  // Hiển thị message trong response
                 loadProducts();
@@ -252,5 +219,33 @@ function deleteProduct(productId) {
     }
 }
 
+function sortProducts(columnIndex) {
+    // Chỉ cho phép sắp xếp khi nhấn vào cột ID, Price hoặc Stock
+    if (columnIndex !== 0 && columnIndex !== 4 && columnIndex !== 6) {
+        return; // Không làm gì nếu không phải là cột ID, Price hoặc Stock
+    }
 
+    var tableBody = $('#productTableBody');
+    var rows = tableBody.find('tr').toArray();
 
+    var isAscending = tableBody.data('sortOrder') === 'asc';
+    tableBody.data('sortOrder', isAscending ? 'desc' : 'asc');
+
+    rows.sort(function (a, b) {
+        var aValue = $(a).children('td').eq(columnIndex).text();
+        var bValue = $(b).children('td').eq(columnIndex).text();
+
+        // Chuyển đổi giá trị thành số nếu là Price hoặc Stock
+        if (columnIndex === 0 || columnIndex === 4 || columnIndex === 6) {
+            aValue = parseFloat(aValue);
+            bValue = parseFloat(bValue);
+        }
+
+        return isAscending ? (aValue > bValue ? 1 : -1) : (aValue < bValue ? 1 : -1);
+    });
+
+    // Cập nhật lại bảng
+    rows.forEach(function (row) {
+        tableBody.append(row);
+    });
+}
