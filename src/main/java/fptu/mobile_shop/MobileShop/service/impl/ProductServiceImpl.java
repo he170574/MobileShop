@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,12 +47,13 @@ public class ProductServiceImpl implements ProductService {
                 .deleted(false)
                 .productName(productDTO.getProductName())
                 .productDetails(productDTO.getProductDetails())
-                .productImage(productDTO.getProductImage())
+                .productImage(productDTO.getProductImageUrl()) // Lưu đường dẫn hình ảnh
                 .price(productDTO.getPrice())
                 .categoryID(productDTO.getCategoryID())
                 .stockQuantity(productDTO.getStockQuantity())
                 .build();
     }
+
 
     @Override
     public void deleteByProductId(Integer id) {
@@ -72,7 +74,9 @@ public class ProductServiceImpl implements ProductService {
             product.setProductID(id);
             product.setProductName(name);
             product.setProductDetails(detail);
-            product.setProductImage(image);
+            if (image != null && !image.isEmpty()){
+                product.setProductImage(image);
+            }
             product.setPrice(price);
             product.setCategoryID(category);
             product.setStockQuantity(quantity);
