@@ -165,18 +165,28 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-    @GetMapping("/get-all-category")
-    private ResponseDTO getAllCategory() {
+//    @GetMapping("/get-all-category")
+//    private ResponseDTO getAllCategory() {
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+//        for (Category category : CategoryService.getAll()){
+//            categoryDTOS.add(CategoryDTO.builder()
+//                        .CategoryID(category.getCategoryID())
+//                        .CategoryName(category.getCategoryName())
+//                        .build());
+//        }
+//        responseDTO.setData(categoryDTOS);
+//        responseDTO.setMessage("Get all category successful");
+//        return ResponseEntity.ok().body(responseDTO).getBody();
+//    }
+
+    @PostMapping("/admin/product/add-new-category")
+    private ResponseEntity<ResponseDTO> addNewCategory(@RequestBody CategoryDTO categoryDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<CategoryDTO> categoryDTOS = new ArrayList<>();
-        for (Category category : CategoryService.getAll()){
-            categoryDTOS.add(CategoryDTO.builder()
-                        .CategoryID(category.getCategoryID())
-                        .CategoryName(category.getCategoryName())
-                        .build());
-        }
-        responseDTO.setData(categoryDTOS);
-        responseDTO.setMessage("Get all category successful");
+        Category category = categoryService.save(categoryService.parseCategoryDtoToCategory(categoryDTO));
+        categoryDTO.setCategoryID(category.getCategoryID());
+        responseDTO.setData(categoryDTO);
+        responseDTO.setMessage("Add new category successful");
         return ResponseEntity.ok().body(responseDTO);
     }
 
