@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -18,8 +19,9 @@ public class ProductDTO {
     @NotNull(message = "Detail is required")
     private String productDetails;
 
-    @NotNull
-    private String productImage;
+    private MultipartFile productImage;
+
+    private String productImageUrl;
 
     @NotNull(message = "Price is required")
     private Double price;

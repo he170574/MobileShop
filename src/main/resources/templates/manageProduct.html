@@ -65,7 +65,7 @@
     <aside class="left-sidebar">
         <div>
             <div class="brand-logo d-flex align-items-center justify-content-between">
-                <a href="./index.html" class="text-nowrap logo-img">
+                <a href="" class="text-nowrap logo-img">
                     <img src="../assets/images/logos/logo.png" width="180" alt="logo"/>
                 </a>
                 <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -80,7 +80,7 @@
                         <span class="hide-menu">Home</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/dashboard" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-layout-dashboard"></i>
                                     </span>
@@ -92,7 +92,7 @@
                         <span class="hide-menu">UI COMPONENTS</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="/admin/orders" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-article"></i>
                                     </span>
@@ -100,7 +100,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link"  href="/admin/dashboard" aria-expanded="false">
+                        <a class="sidebar-link" href="/admin/product" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-alert-circle"></i>
                                     </span>
@@ -108,7 +108,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/categories" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-cards"></i>
                                     </span>
@@ -116,7 +116,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/customers" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-file-description"></i>
                                     </span>
@@ -124,7 +124,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/reports" aria-expanded="false">
+                        <a class="sidebar-link" href="" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-typography"></i>
                                     </span>
@@ -182,13 +182,25 @@
                     <table id="productTable" class="table table-bordered">
                         <thead>
                         <tr>
-                            <th class="id-column">ID</th>
+                            <th class="id-column" onclick="sortProducts(0)">ID
+                                <button class="btn btn-link btn-sm" onclick="sortProducts(0)" style="float: right; padding: 0; margin: 0;">
+                                    <i class="fas fa-sort"></i>
+                                </button>
+                            </th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Image</th>
-                            <th>Price (vnd)</th>
+                            <th onclick="sortProducts(4)">Price (vnd)
+                                <button class="btn btn-link btn-sm" onclick="sortProducts(4)" style="float: right; padding: 0; margin: 0;">
+                                    <i class="fas fa-sort"></i>
+                                </button>
+                            </th>
                             <th>Category ID</th>
-                            <th>Stock</th>
+                            <th onclick="sortProducts(6)">Quantity
+                                <button class="btn btn-link btn-sm" onclick="sortProducts(6)" style="float: right; padding: 0; margin: 0;">
+                                    <i class="fas fa-sort"></i>
+                                </button>
+                            </th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -233,18 +245,16 @@
                             <div class="form-group">
                                 <label for="productDescription">Product Description:</label>
                                 <input type="text" class="form-control" id="productDescription"
-                                       name="productDescription"
-                                       required>
+                                       name="productDescription" required>
                             </div>
                             <div class="form-group">
-                                <label for="imageUrl">Image URL:</label>
-                                <input type="text" id="imageUrl" name="imageUrl" class="form-control">
+                                <label for="imageUpload">Product Image:</label>
+                                <input type="file" id="imageUpload" name="imageUpload" class="form-control" accept="image/*" required>
                             </div>
                             <div class="form-group">
                                 <label for="productPrice">Price:</label>
                                 <input type="number" class="form-control" id="productPrice" name="productPrice"
-                                       step="0.01"
-                                       required>
+                                       step="0.01" required>
                             </div>
                             <div class="form-group">
                                 <label for="categoryId">Category ID:</label>
@@ -252,8 +262,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="productStock">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="productStock" name="productStock"
-                                       required>
+                                <input type="number" class="form-control" id="productStock" name="productStock" required>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Add Product</button>
                         </form>
@@ -276,8 +285,7 @@
                             <input type="hidden" id="editProductId" name="productId">
                             <div class="form-group">
                                 <label for="editProductName">Product Name:</label>
-                                <input type="text" class="form-control" id="editProductName" name="productName"
-                                       required>
+                                <input type="text" class="form-control" id="editProductName" name="productName" required>
                             </div>
                             <div class="form-group">
                                 <label for="editProductDescription">Product Description:</label>
@@ -285,8 +293,8 @@
                                        name="productDescription" required>
                             </div>
                             <div class="form-group">
-                                <label for="editImageUrl">Image URL:</label>
-                                <input type="text" id="editImageUrl" name="imageUrl" class="form-control">
+                                <label for="editImageUpload">Product Image:</label>
+                                <input type="file" id="editImageUpload" name="editImageUpload" class="form-control" accept="image/*">
                             </div>
                             <div class="form-group">
                                 <label for="editProductPrice">Price:</label>
@@ -295,13 +303,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="editCategoryId">Category ID:</label>
-                                <input type="number" class="form-control" id="editCategoryId" name="categoryId"
-                                       required>
+                                <input type="number" class="form-control" id="editCategoryId" name="categoryId" required>
                             </div>
                             <div class="form-group">
                                 <label for="editProductStock">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="editProductStock" name="productStock"
-                                       required>
+                                <input type="number" class="form-control" id="editProductStock" name="productStock" required>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Update Product</button>
                         </form>
@@ -319,7 +325,7 @@
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="/js/AdminProduct.js"></script>
+<script src="/assets/js/manageProduct.js"></script>
 
 </body>
 
