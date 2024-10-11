@@ -24,7 +24,7 @@ public class User {
     private String passwordHash;
 
     @Column(name = "RegistrationDate")
-    private LocalDate registrationDate;
+    private String registrationDate;
 
     @Column(name = "Address")
     private String address;

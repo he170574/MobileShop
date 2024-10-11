@@ -4,15 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -21,13 +16,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Tắt CSRF nếu không cần
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Cấu hình CORS từ bean
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .anyRequest().permitAll()  // Tất cả các request đều được phép
+                .authorizeRequests(authorize -> authorize
+                        .requestMatchers("/auth/**").permitAll() // Cho phép truy cập đến các trang đăng ký và đăng nhập
+                        .requestMatchers("/").permitAll() // Yêu cầu xác thực cho trang chính
+                        .anyRequest().permitAll() // Yêu cầu xác thực cho tất cả các yêu cầu khác
                 )
-                .logout(logout -> logout.disable())  // Vô hiệu hóa logout nếu không cần
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // Không dùng session-based authentication
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/auth/**") // Tắt CSRF cho các đường dẫn đăng ký và đăng nhập
+                )
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth/login?logout") // Chuyển hướng đến trang đăng nhập sau khi logout
+                        .permitAll()
+                )
+                .exceptionHandling(handler ->
+                        handler.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/auth/login")) // Chuyển hướng đến trang đăng nhập nếu không xác thực
+                );
 
         return http.build();
     }
@@ -35,17 +44,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));  // Cho phép tất cả các domain (nên điều chỉnh theo yêu cầu)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
