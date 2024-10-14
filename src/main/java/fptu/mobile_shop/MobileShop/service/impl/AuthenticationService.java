@@ -1,7 +1,9 @@
 package fptu.mobile_shop.MobileShop.service.impl;
 
 import fptu.mobile_shop.MobileShop.entity.User;
-import fptu.mobile_shop.MobileShop.repository.UserRepository;
+import fptu.mobile_shop.MobileShop.entity.User1;
+import fptu.mobile_shop.MobileShop.entity.UserRole;
+import fptu.mobile_shop.MobileShop.repository.User1Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,14 +16,25 @@ import java.util.Optional;
 public class AuthenticationService {
 
     @Autowired
-    private UserRepository userRepository;
+    private User1Repository userRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void register(User user) {
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+    public void register(User1 user, String rawPassword) {
+        // Mã hóa mật khẩu
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        user.setPasswordHash(encodedPassword);
+
+        // Tạo đối tượng UserRole với RoleID là 4 (ví dụ: vai trò mặc định là "user")
+        UserRole defaultRole = new UserRole();
+
+
+        // Lưu user vào cơ sở dữ liệu
         userRepository.save(user);
     }
+
+
+
 
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email);
