@@ -27,7 +27,7 @@ public class ProductDTO {
     private Double price;
 
     @NotNull(message = "Category is required")
-    private String CategoryID;
+    private String categoryName;
 
     @NotNull(message = "Quantity is required")
     private Integer stockQuantity;

@@ -9,4 +9,14 @@ public class MainController {
     public String getAdminProduct() {
         return "manageProduct";
     }
+
+    @GetMapping("/cart")
+    public String showCartPage() { return "cart";
+    }
+
+    @GetMapping("/home")
+    public String showHomePage() { return "index";
+
+    }
+
 }

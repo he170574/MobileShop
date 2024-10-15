@@ -1,6 +1,5 @@
 package fptu.mobile_shop.MobileShop.controller;
 
-
 import fptu.mobile_shop.MobileShop.dto.CategoryDTO;
 import fptu.mobile_shop.MobileShop.dto.ProductDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
@@ -27,23 +26,27 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class ProductController {
     private final ProductService productService;
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Autowired
-    public ProductController(ProductService productService, ProductRepository productRepository) {
+    public ProductController(ProductService productService, ProductRepository productRepository,
+            CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/get-product")
-    public ResponseEntity<ResponseDTO> getAllProducts() {
-        List<Product> products = productService.getAll();
+    public ResponseEntity<ResponseDTO> getAllProducts(@RequestParam(defaultValue = "") String search,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "1") int size) {
+        List<Product> products = productService.getAll(search, page, size);
         List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
                 .productName(item.getProductName())
                 .productDetails(item.getProductDetails())
                 .productImageUrl(item.getProductImage())
                 .price(item.getPrice())
-                .CategoryID(item.getCategoryID())
+                .categoryName(item.getCategoryName())
                 .stockQuantity(item.getStockQuantity())
                 .build()).toList();
         ResponseDTO responseDTO = new ResponseDTO();
@@ -53,7 +56,8 @@ public class ProductController {
     }
 
     @PostMapping("/edit-product")
-    public ResponseEntity<ResponseDTO> getProductById(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
+    public ResponseEntity<ResponseDTO> getProductById(@Valid @RequestBody ProductDTO productDTO,
+            BindingResult bindingResult) {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage("Get success");
         responseDTO.setData(productService.getOne(productDTO.getProductId()));
@@ -65,24 +69,26 @@ public class ProductController {
             @RequestParam("productName") String productName,
             @RequestParam("productDescription") String productDescription,
             @RequestParam("productPrice") Double price,
-            @RequestParam("categoryId") String categoryId,
+            @RequestParam("categoryName") String categoryName,
             @RequestParam("productStock") Integer stockQuantity,
-            @RequestParam("imageUpload") MultipartFile productImage) throws IOException { // Nhận MultipartFile cho hình ảnh
+            @RequestParam("imageUpload") MultipartFile productImage) throws IOException { // Nhận MultipartFile cho hình
+                                                                                          // ảnh
         ProductDTO productDTO = ProductDTO.builder()
                 .productName(productName)
                 .productDetails(productDescription)
                 .price(price)
-                .CategoryID(categoryId)
+                .categoryName(categoryName)
                 .stockQuantity(stockQuantity)
                 .productImage(productImage)
                 .build();
-        //Upload Image
+        // Upload Image
         CloudinaryService cloudinaryService = new CloudinaryService();
         String imgUrl = cloudinaryService.uploadImage(productDTO.getProductImage());
         productDTO.setProductImageUrl(imgUrl);
 
         ResponseDTO responseDTO = new ResponseDTO();
-        Optional<Product> existingProduct = Optional.ofNullable(productService.getProductByProductName(productDTO.getProductName()));
+        Optional<Product> existingProduct = Optional
+                .ofNullable(productService.getProductByProductName(productDTO.getProductName()));
         if (existingProduct.isPresent()) {
             responseDTO.setMessage("Product already exists, do you want to update it?");
             responseDTO.setData(existingProduct.get());
@@ -112,8 +118,8 @@ public class ProductController {
 
     @PostMapping("/submitForm")
     public String submitForm(@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult) {
-        if (productDTO.getStockQuantity() < 1){
-            bindingResult.rejectValue("productDTO","stockQuantity", "Stock quantity must be greater than 0");
+        if (productDTO.getStockQuantity() < 1) {
+            bindingResult.rejectValue("productDTO", "stockQuantity", "Stock quantity must be greater than 0");
         }
         if (bindingResult.hasErrors()) {
             return "Validation failed";
@@ -123,28 +129,28 @@ public class ProductController {
 
     @PostMapping("/save-edit-product")
     public ResponseEntity<ResponseDTO> updateProduct(@RequestParam("productName") String productName,
-                                                     @RequestParam("productDescription") String productDescription,
-                                                     @RequestParam("productPrice") Double price,
-                                                     @RequestParam("categoryId") String categoryId,
-                                                     @RequestParam("productStock") Integer stockQuantity,
-                                                     @RequestParam(value = "editImageUpload",required = false) MultipartFile productImage) throws IOException {
+            @RequestParam("productDescription") String productDescription,
+            @RequestParam("productPrice") Double price,
+            @RequestParam("categoryName") String categoryName,
+            @RequestParam("productStock") Integer stockQuantity,
+            @RequestParam(value = "editImageUpload", required = false) MultipartFile productImage) throws IOException {
         ResponseDTO responseDTO = new ResponseDTO();
         Optional<Product> existingProduct = Optional.ofNullable(productService.getProductByProductName(productName));
-        if(existingProduct.isEmpty()){
+        if (existingProduct.isEmpty()) {
             responseDTO.setMessage("Product does not exist");
-        }else{
+        } else {
 
             ProductDTO productDTO = ProductDTO.builder()
                     .productName(productName)
                     .productDetails(productDescription)
                     .price(price)
-                    .CategoryID(categoryId)
+                    .categoryName(categoryName)
                     .stockQuantity(stockQuantity)
                     .productImage(productImage)
                     .productImageUrl("")
                     .build();
-            //nếu người dùng chọn ảnh mới thì upload lại ảnh lên cloudinary
-            if(productDTO.getProductImage() != null){
+            // nếu người dùng chọn ảnh mới thì upload lại ảnh lên cloudinary
+            if (productDTO.getProductImage() != null) {
                 CloudinaryService cloudinaryService = new CloudinaryService();
                 String imgUrl = cloudinaryService.uploadImage(productDTO.getProductImage());
                 productDTO.setProductImageUrl(imgUrl);
@@ -157,7 +163,7 @@ public class ProductController {
                     productDTO.getProductImageUrl(),
                     productDTO.getPrice(),
                     productDTO.getStockQuantity(),
-                    productDTO.getCategoryID());
+                    productDTO.getCategoryName());
 
             responseDTO.setMessage("Update success");
             responseDTO.setData(product);
@@ -165,20 +171,20 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
-//    @GetMapping("/get-all-category")
-//    private ResponseDTO getAllCategory() {
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        List<CategoryDTO> categoryDTOS = new ArrayList<>();
-//        for (Category category : CategoryService.getAll()){
-//            categoryDTOS.add(CategoryDTO.builder()
-//                        .CategoryID(category.getCategoryID())
-//                        .CategoryName(category.getCategoryName())
-//                        .build());
-//        }
-//        responseDTO.setData(categoryDTOS);
-//        responseDTO.setMessage("Get all category successful");
-//        return ResponseEntity.ok().body(responseDTO).getBody();
-//    }
+    @GetMapping("/get-category")
+    private ResponseDTO getAllCategory() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<CategoryDTO> categoryDTOS = new ArrayList<>();
+        for (Category category : categoryService.getAll()) {
+            categoryDTOS.add(CategoryDTO.builder()
+                    .CategoryID(category.getCategoryID())
+                    .CategoryName(category.getCategoryName())
+                    .build());
+        }
+        responseDTO.setData(categoryDTOS);
+        responseDTO.setMessage("Get all category successful");
+        return ResponseEntity.ok().body(responseDTO).getBody();
+    }
 
     @PostMapping("/admin/product/add-new-category")
     private ResponseEntity<ResponseDTO> addNewCategory(@RequestBody CategoryDTO categoryDTO) {
@@ -189,9 +195,5 @@ public class ProductController {
         responseDTO.setMessage("Add new category successful");
         return ResponseEntity.ok().body(responseDTO);
     }
-
-
-
-
 
 }
