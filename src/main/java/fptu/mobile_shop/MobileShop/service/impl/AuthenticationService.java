@@ -36,14 +36,14 @@ public class AuthenticationService {
 
 
 
-    public User login(String email, String password) {
-        User user = userRepository.findByEmail(email);
+    public User1 login(String email, String password) {
+        User1 user = userRepository.findByEmail(email);
         if (user != null && passwordEncoder.matches(password, user.getPasswordHash())) {
             return user;
         }
         return null;
     }
-    public User findByEmail(String email) {
+    public User1 findByEmail(String email) {
         return userRepository.findByEmail(email); // Truy vấn người dùng theo email
     }
 }

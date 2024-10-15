@@ -127,18 +127,16 @@
 				<div class="login-form">
 					<h2>Đăng nhập vào tài khoản của bạn</h2>
 					<form action="/auth/login" method="post" id="login-form">
-						<input type="email" name="email" placeholder="Địa chỉ Email" required />
-						<input type="password" name="password" placeholder="Mật khẩu" required />
+						<input type="email" id="email" name="email" placeholder="Địa chỉ Email" required />
+						<input type="password" id="password" name="password" placeholder="Mật khẩu" required />
 						<span>
-                            <input type="checkbox" class="checkbox">
-                            Giữ tôi đăng nhập
-                        </span>
-						<button type="submit" class="btn btn-default">Đăng nhập</button>
-					</form>
-					<div>
-    <span style="color: red;">
-        <th:block th:if="${param.error}">Thông tin đăng nhập không hợp lệ.</th:block>
+        <input type="checkbox" class="checkbox"> Giữ tôi đăng nhập
     </span>
+						<button type="submit" class="btn btn-default" id="loginBtn">Đăng nhập</button>
+					</form>
+
+					<div>
+
 					</div>
 				</div>
 			</div>
@@ -171,11 +169,48 @@
 	</div>
 </footer>
 
-<script src="/assets/js/jquery.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/jquery.scrollUp.min.js"></script>
 <script src="/assets/js/price-range.js"></script>
 <script src="/assets/js/jquery.prettyPhoto.js"></script>
 <script src="/assets/js/main.js"></script>
+
+<script>
+	$('#login-form').submit(function(event) {
+		event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+		$.ajax({
+			type: 'POST',
+			url: '/auth/login',
+			data: {
+				email: $('#email').val(),
+				password: $('#password').val()
+			},
+			contentType: 'application/x-www-form-urlencoded', // Đổi kiểu contentType
+			success: function(response) {
+				console.log(response);  // Kiểm tra nội dung phản hồi
+				try {
+					const res = JSON.parse(response);  // Đảm bảo phản hồi là JSON
+					if (res.status === 'success') {
+						window.location.href = '/dashboard'; // Điều hướng tới trang sau khi đăng nhập thành công
+					} else {
+						alert(res.message); // Hiển thị thông báo lỗi
+					}
+				} catch (e) {
+					alert('Phản hồi từ server không phải định dạng JSON.');
+				}
+			},
+			error: function(xhr, status, error) {
+				console.log("Status: " + status);
+				console.log("Error: " + error);
+				console.log("Response: " + xhr.responseText);
+				alert('Lỗi: ' + xhr.responseText);
+			}
+		});
+	});
+
+</script>
 </body>
 </html>

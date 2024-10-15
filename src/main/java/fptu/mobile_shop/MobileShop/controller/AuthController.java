@@ -1,9 +1,13 @@
 package fptu.mobile_shop.MobileShop.controller;
 
+import fptu.mobile_shop.MobileShop.dto.LoginDTO;
+import fptu.mobile_shop.MobileShop.dto.LoginResponseDTO;
 import fptu.mobile_shop.MobileShop.entity.User;
 import fptu.mobile_shop.MobileShop.entity.User1;
 import fptu.mobile_shop.MobileShop.service.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/auth")
@@ -38,26 +44,22 @@ public class AuthController {
         return "login"; // Trả về view đăng nhập
     }
 
+
     @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password, Model model) {
-        // Tìm người dùng theo email
-        User user = authenticationService.findByEmail(email);
-
-        if (user == null) {
-            // Nếu không tìm thấy người dùng, thêm thông báo lỗi
-            model.addAttribute("error", "Tài khoản không tồn tại.");
-            return "login"; // Trả về lại trang đăng nhập
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO) {
+        try {
+            User1 user = authenticationService.login(loginDTO.getEmail(), loginDTO.getPassword());
+            if (user != null) {
+                return ResponseEntity.ok(new LoginResponseDTO("success", "Đăng nhập thành công"));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new LoginResponseDTO("error", "Email hoặc mật khẩu không đúng"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Ghi log lỗi để kiểm tra
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new LoginResponseDTO("error", "Đã xảy ra lỗi trong quá trình xử lý"));
         }
-
-        // Kiểm tra mật khẩu
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
-            // Nếu mật khẩu không khớp, thêm thông báo lỗi
-            model.addAttribute("error", "Sai mật khẩu.");
-            return "login"; // Trả về lại trang đăng nhập
-        }
-
-        // Nếu thành công, chuyển hướng về trang chính
-        return "redirect:/home";
     }
 
 
