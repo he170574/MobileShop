@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "users", schema = "MobileShop")
 @Data  // Tự động tạo getter, setter, toString, equals, và hashCode
-public class User {
+public class User1 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +32,4 @@ public class User {
     @Column(name = "PaymentInfo")
     private String paymentInfo;
 
-    // Many-to-One relationship with UserRole
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RoleID", referencedColumnName = "RoleID")  // Liên kết với bảng UserRole
-    private UserRole role;
 }

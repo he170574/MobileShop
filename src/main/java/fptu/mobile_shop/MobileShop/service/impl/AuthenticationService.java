@@ -1,38 +1,50 @@
 package fptu.mobile_shop.MobileShop.service.impl;
 
-import fptu.mobile_shop.MobileShop.dto.LoginDTO;
-import fptu.mobile_shop.MobileShop.dto.LoginResponseDTO;
 import fptu.mobile_shop.MobileShop.entity.User;
-import fptu.mobile_shop.MobileShop.repository.UserRepository;
-import fptu.mobile_shop.MobileShop.service.IAuthenticationService;
+import fptu.mobile_shop.MobileShop.entity.User1;
+import fptu.mobile_shop.MobileShop.entity.UserRole;
+import fptu.mobile_shop.MobileShop.repository.User1Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-public class AuthenticationService implements IAuthenticationService {
+public class AuthenticationService {
 
     @Autowired
-    private UserRepository userRepository;
+    private User1Repository userRepository;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public void register(User1 user, String rawPassword) {
+        // Mã hóa mật khẩu
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        user.setPasswordHash(encodedPassword);
 
-    public LoginResponseDTO login(LoginDTO loginRequest) {
-        Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
-                // Tạo JWT token
-                String token = jwtTokenUtil.generateToken(user.getEmail());
-                return new LoginResponseDTO(token, user.getUserName());
-            }
+        // Tạo đối tượng UserRole với RoleID là 4 (ví dụ: vai trò mặc định là "user")
+        UserRole defaultRole = new UserRole();
+
+
+        // Lưu user vào cơ sở dữ liệu
+        userRepository.save(user);
+    }
+
+
+
+
+    public User1 login(String email, String password) {
+        User1 user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPasswordHash())) {
+            return user;
         }
-        throw new RuntimeException("Invalid email or password");
+        return null;
+    }
+    public User1 findByEmail(String email) {
+        return userRepository.findByEmail(email); // Truy vấn người dùng theo email
     }
 }
+
