@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +24,8 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
-
-
     @Override
-    public List<Product> getAll() {
+    public List<Product> getAll(String search, int page, int size) {
         return productRepository.findAllByDeletedIsFalse();
     }
 
@@ -49,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
                 .productDetails(productDTO.getProductDetails())
                 .productImage(productDTO.getProductImageUrl()) // Lưu đường dẫn hình ảnh
                 .price(productDTO.getPrice())
-                .categoryID(productDTO.getCategoryID())
+                .categoryName(productDTO.getCategoryName())
                 .stockQuantity(productDTO.getStockQuantity())
                 .build();
     }
@@ -78,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setProductImage(image);
             }
             product.setPrice(price);
-            product.setCategoryID(category);
+            product.setCategoryName(category);
             product.setStockQuantity(quantity);
             return productRepository.save(product);
         } else {

@@ -10,11 +10,11 @@
 
     <!-- Bootstrap CSS v5.2.1 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"/>
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <!-- Bootstrap Icon -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="shortcut icon" type="image/png" href="/assets/images/logos/logo.png"/>
-    <link rel="stylesheet" href="/assets/css/styles.min.css"/>
+    <link rel="shortcut icon" type="image/png" href="/assets/images/logos/logo.png" />
+    <link rel="stylesheet" href="/assets/css/styles.min.css" />
     <style>
         th.id-column,
         td.id-column {
@@ -22,310 +22,337 @@
             text-align: center;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
+        .pagination {
+            position: relative;
+            bottom: 0;
+            right: 0;
+            margin-top: 20px;
         }
 
-        .action-buttons .btn {
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .action-buttons .btn-warning {
+        .btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
-            color: white;
         }
 
-        .action-buttons .btn-danger {
+        .btn-danger {
             background-color: #dc3545;
             border-color: #dc3545;
-            color: white;
         }
-
-        .action-buttons .btn i {
-            font-size: 16px;
-        }
-
     </style>
 </head>
 
 <body>
-<!--  Body Wrapper -->
-<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-     data-sidebar-position="fixed" data-header-position="fixed">
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
 
-    <!-- Sidebar Start -->
-    <aside class="left-sidebar">
-        <div>
-            <div class="brand-logo d-flex align-items-center justify-content-between">
-                <a href="" class="text-nowrap logo-img">
-                    <img src="../assets/images/logos/logo.png" width="180" alt="logo"/>
-                </a>
-                <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-                    <i class="ti ti-x fs-8"></i>
+        <!-- Sidebar Start -->
+        <aside class="left-sidebar">
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="" class="text-nowrap logo-img">
+                        <img src="../assets/images/logos/logo.png" width="180" alt="logo" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
+                    </div>
                 </div>
-            </div>
-            <!-- Sidebar navigation -->
-            <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                <ul id="sidebarnav">
-                    <li class="nav-small-cap">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">Home</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-layout-dashboard"></i>
-                                    </span>
-                            <span class="hide-menu">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-small-cap">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">UI COMPONENTS</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-article"></i>
-                                    </span>
-                            <span class="hide-menu">Order</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="/admin/product" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-alert-circle"></i>
-                                    </span>
-                            <span class="hide-menu">Products</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-cards"></i>
-                                    </span>
-                            <span class="hide-menu">Categories</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-file-description"></i>
-                                    </span>
-                            <span class="hide-menu">Customers</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-typography"></i>
-                                    </span>
-                            <span class="hide-menu">Reports</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </aside>
-    <!--  Sidebar End -->
-
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-        <!--  Header Start -->
-        <header class="app-header">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <ul class="navbar-nav">
-                    <!-- Add additional navbar items if necessary -->
-                </ul>
-                <div class="navbar-collapse justify-content-end px-0">
-                    <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                <img src="../assets/images/profile/user-1.jpg" alt="profile" width="35" height="35"
-                                     class="rounded-circle">
+                <!-- Sidebar navigation -->
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">Home</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-layout-dashboard"></i>
+                                </span>
+                                <span class="hide-menu">Dashboard</span>
                             </a>
-                            <!-- Profile Dropdown -->
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">UI COMPONENTS</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-article"></i>
+                                </span>
+                                <span class="hide-menu">Order</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/product" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-alert-circle"></i>
+                                </span>
+                                <span class="hide-menu">Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-cards"></i>
+                                </span>
+                                <span class="hide-menu">Categories</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-file-description"></i>
+                                </span>
+                                <span class="hide-menu">Customers</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-typography"></i>
+                                </span>
+                                <span class="hide-menu">Reports</span>
+                            </a>
                         </li>
                     </ul>
-                </div>
-            </nav>
-        </header>
-        <!--  Header End -->
+                </nav>
+            </div>
+        </aside>
+        <!--  Sidebar End -->
 
-        <!-- Content Start -->
-        <!-- Content Start -->
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title fw-semibold mb-4">Product List</h5>
-
-                    <!-- Search Form -->
-                    <div class="input-group mb-3">
-                        <input type="text" id="searchInput" class="form-control form-control-sm"
-                               placeholder="Search products...">
-                        <button id="searchButton" class="btn btn-sm btn-primary" type="button">Search</button>
-                    </div>
-
-                    <!-- Button to open the Add Product Modal -->
-                    <button class="btn btn-primary my-3" onclick="showAddProductModal()">Add Product</button>
-
-                    <!-- Product List Table -->
-                    <table id="productTable" class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th class="id-column" onclick="sortProducts(0)">ID
-                                <button class="btn btn-link btn-sm" onclick="sortProducts(0)" style="float: right; padding: 0; margin: 0;">
-                                    <i class="fas fa-sort"></i>
-                                </button>
-                            </th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Image</th>
-                            <th onclick="sortProducts(4)">Price (vnd)
-                                <button class="btn btn-link btn-sm" onclick="sortProducts(4)" style="float: right; padding: 0; margin: 0;">
-                                    <i class="fas fa-sort"></i>
-                                </button>
-                            </th>
-                            <th>Category ID</th>
-                            <th onclick="sortProducts(6)">Quantity
-                                <button class="btn btn-link btn-sm" onclick="sortProducts(6)" style="float: right; padding: 0; margin: 0;">
-                                    <i class="fas fa-sort"></i>
-                                </button>
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody id="productTableBody"></tbody>
-                    </table>
-
-                    <div id="noDataMessage" style="display: none;">
-                        <p>No products available.</p>
-                    </div>
-
-                    <!-- Pagination Links -->
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                            <li class="page-item"><a class="page-link" href="#" data-page="prev">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#" data-page="next">Next</a></li>
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <ul class="navbar-nav">
+                        <!-- Add additional navbar items if necessary -->
+                    </ul>
+                    <div class="navbar-collapse justify-content-end px-0">
+                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" href="javascript:void(0)" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <img src="../assets/images/profile/user-1.jpg" alt="profile" width="35" height="35"
+                                        class="rounded-circle">
+                                </a>
+                                <!-- Profile Dropdown -->
+                            </li>
                         </ul>
-                    </nav>
-
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Product Modal -->
-        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form id="addProductForm">
-                            <div class="form-group">
-                                <label for="productName">Product Name:</label>
-                                <input type="text" class="form-control" id="productName" name="productName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productDescription">Product Description:</label>
-                                <input type="text" class="form-control" id="productDescription"
-                                       name="productDescription" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="imageUpload">Product Image:</label>
-                                <input type="file" id="imageUpload" name="imageUpload" class="form-control" accept="image/*" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productPrice">Price:</label>
-                                <input type="number" class="form-control" id="productPrice" name="productPrice"
-                                       step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="categoryId">Category ID:</label>
-                                <input type="number" class="form-control" id="categoryId" name="categoryId" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="productStock">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="productStock" name="productStock" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Add Product</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+                </nav>
+            </header>
+            <!--  Header End -->
 
-        <!-- Edit Product Modal -->
-        <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editProductForm">
-                            <input type="hidden" id="editProductId" name="productId">
-                            <div class="form-group">
-                                <label for="editProductName">Product Name:</label>
-                                <input type="text" class="form-control" id="editProductName" name="productName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editProductDescription">Product Description:</label>
-                                <input type="text" class="form-control" id="editProductDescription"
-                                       name="productDescription" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editImageUpload">Product Image:</label>
-                                <input type="file" id="editImageUpload" name="editImageUpload" class="form-control" accept="image/*">
-                            </div>
-                            <div class="form-group">
-                                <label for="editProductPrice">Price:</label>
-                                <input type="number" class="form-control" id="editProductPrice" name="productPrice"
-                                       step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editCategoryId">Category ID:</label>
-                                <input type="number" class="form-control" id="editCategoryId" name="categoryId" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="editProductStock">Stock Quantity:</label>
-                                <input type="number" class="form-control" id="editProductStock" name="productStock" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Update Product</button>
-                        </form>
+            <!-- Content Start -->
+            <!-- Content Start -->
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title fw-semibold mb-4">Product List</h5>
+
+                        <!-- Search Form -->
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchInput" class="form-control form-control-sm"
+                                placeholder="Search products...">
+                            <button id="searchButton" class="btn btn-sm btn-primary" type="button">Search</button>
+                        </div>
+
+                        <!-- Button to open the Add Product Modal -->
+                        <button class="btn btn-primary my-3" onclick="showAddProductModal()">Add Product</button>
+
+                        <!-- Product List Table -->
+                        <table id="productTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="id-column" onclick="sortProducts(0)">ID
+                                        <button class="btn btn-link btn-sm" onclick="sortProducts(0)"
+                                            style="float: right; padding: 0; margin: 0;">
+                                            <i class="fas fa-sort"></i>
+                                        </button>
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Image</th>
+                                    <th onclick="sortProducts(4)">Price (vnd)
+                                        <button class="btn btn-link btn-sm" onclick="sortProducts(4)"
+                                            style="float: right; padding: 0; margin: 0;">
+                                            <i class="fas fa-sort"></i>
+                                        </button>
+                                    </th>
+                                    <th>Category Name</th>
+                                    <th onclick="sortProducts(6)">Quantity
+                                        <button class="btn btn-link btn-sm" onclick="sortProducts(6)"
+                                            style="float: right; padding: 0; margin: 0;">
+                                            <i class="fas fa-sort"></i>
+                                        </button>
+                                    </th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody"></tbody>
+                        </table>
+
+                        <div id="noDataMessage" style="display: none;">
+                            <p>No products available.</p>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item"><span class="page-link">Previous</span></li>
+                                    <li class="page-item"><span class="page-link active">1</span></li>
+                                    <li class="page-item"><span class="page-link">Next</span></li>
+                                </ul>
+                            </nav>
+                        </div>
+
                     </div>
                 </div>
             </div>
+
+            <!-- Add Product Modal -->
+            <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addProductForm">
+                                <div class="form-group">
+                                    <label for="productName">Product Name:</label>
+                                    <input type="text" class="form-control" id="productName" name="productName"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productDescription">Product Description:</label>
+                                    <input type="text" class="form-control" id="productDescription"
+                                        name="productDescription" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="imageUpload">Product Image:</label>
+                                    <input type="file" id="imageUpload" name="imageUpload" class="form-control"
+                                        accept="image/*" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">Price:</label>
+                                    <input type="number" class="form-control" id="productPrice" name="productPrice"
+                                        step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryName">Category Name:</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="categoryName" name="categoryName"
+                                            required></select>
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="showAddCategoryModal()">Add New Category</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productStock">Stock Quantity:</label>
+                                    <input type="number" class="form-control" id="productStock" name="productStock"
+                                        required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Add Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Product Modal -->
+            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editProductForm">
+                                <input type="hidden" id="editProductId" name="productId">
+                                <div class="form-group">
+                                    <label for="editProductName">Product Name:</label>
+                                    <input type="text" class="form-control" id="editProductName" name="productName"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductDescription">Product Description:</label>
+                                    <input type="text" class="form-control" id="editProductDescription"
+                                        name="productDescription" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editImageUpload">Product Image:</label>
+                                    <input type="file" id="editImageUpload" name="editImageUpload" class="form-control"
+                                        accept="image/*">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductPrice">Price:</label>
+                                    <input type="number" class="form-control" id="editProductPrice" name="productPrice"
+                                        step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editCategoryName">Category Name:</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="editCategoryName" name="categoryName"
+                                            required></select>
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            onclick="showAddCategoryModal()">Add New Category</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductStock">Stock Quantity:</label>
+                                    <input type="number" class="form-control" id="editProductStock" name="productStock"
+                                        required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">Update Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add New Category Modal -->
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="newCategoryName">New Category Name:</label>
+                                <input type="text" class="form-control" id="newCategoryName" required>
+                            </div>
+                            <button type="button" class="btn btn-primary mt-3" onclick="saveNewCategory()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="/assets/js/manageProduct.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/manageProduct.js"></script>
 
 </body>
 
