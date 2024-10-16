@@ -1,0 +1,432 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 14-Sep-2023, 09:07:18
+    Author     : Admin
+*/
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+body {
+    font-family: "Open Sans", sans-serif;
+    color: #444444;
+}
+
+a {
+    color: #1977cc;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #3291e6;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Raleway", sans-serif;
+}
+
+.btn {
+    border-radius: 20px;
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+#header {
+    background: #fff;
+    transition: all 0.5s;
+    z-index: 997;
+    padding: 10px 0;
+    box-shadow: 0px 2px 15px rgba(25, 119, 204, 0.1);
+    position: sticky;
+}
+
+#header.header-scrolled {
+    top: 0;
+}
+
+.logo {
+    font-size: 30px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-family: "Poppins", sans-serif;
+}
+
+#header .logo a {
+    color: #2c4964;
+}
+
+#header .logo img {
+    max-height: 40px;
+}
+
+/**
+* Appointment Button *
+*/
+.appointment-btn {
+    margin-left: 5rem;
+    /*    background: #1977cc;*/
+    color: #1977cc;
+    border-radius: 50px;
+    border: 1px solid #1977cc;
+    padding: 8px 25px;
+    white-space: nowrap;
+    transition: 0.3s;
+    font-size: 14px;
+    display: inline-block;
+    font-weight: 600;
+}
+
+.appointment-btn:hover {
+    background: #1977cc;
+    color: #fff;
+}
+#header .appointment-btn:last-child {
+    margin-left: 10px;
+    color: #fff;
+    background: #1977cc;
+}
+#header .appointment-btn:hover:last-child {
+    background: #3b9dff;
+    border-color: #3b9dff;
+    color: #fff;
+}
+
+
+/*--------------------------------------------------------------
+# Navigation Menu
+--------------------------------------------------------------*/
+.navbar {
+    padding: 0;
+}
+
+.navbar ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+}
+
+.navbar li {
+    position: relative;
+}
+
+.navbar>ul>li {
+    position: relative;
+    white-space: nowrap;
+    padding: 8px 0 8px 20px;
+}
+
+.navbar a,
+.navbar a:focus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #2c4964;
+    white-space: nowrap;
+    transition: 0.3s;
+    border-bottom: 2px solid #fff;
+    padding: 5px 2px;
+}
+
+.navbar a i,
+.navbar a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+}
+
+.navbar a:hover,
+.navbar .active,
+.navbar .active:focus,
+.navbar li:hover>a {
+    color: #1977cc;
+    border-color: #1977cc;
+}
+
+.navbar .dropdown ul {
+    display: block;
+    position: absolute;
+    left: 20px;
+    top: calc(100% + 30px);
+    margin: 0;
+    padding: 10px 0;
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    background: #fff;
+    box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+    transition: 0.3s;
+    border-radius: 20px;
+}
+
+.navbar .dropdown ul li {
+    min-width: 200px;
+}
+
+.navbar .dropdown ul a {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: none;
+    color: #082744;
+    border: none;
+}
+
+.navbar .dropdown ul a i {
+    font-size: 12px;
+}
+
+.navbar .dropdown ul a:hover,
+.navbar .dropdown ul .active:hover,
+.navbar .dropdown ul li:hover>a {
+    color: #1977cc;
+}
+
+.navbar .dropdown:hover>ul {
+    opacity: 1;
+    top: 100%;
+    visibility: visible;
+}
+
+.navbar .dropdown .dropdown ul {
+    top: 0;
+    left: calc(100% - 30px);
+    visibility: hidden;
+}
+
+.navbar .dropdown .dropdown:hover>ul {
+    opacity: 1;
+    top: 0;
+    left: 100%;
+    visibility: visible;
+}
+
+@media (max-width: 1366px) {
+    .navbar .dropdown .dropdown ul {
+        left: -90%;
+    }
+
+    .navbar .dropdown .dropdown:hover>ul {
+        left: -100%;
+    }
+}
+
+/*
+    Slider 
+*/
+.carousel-item {
+
+    min-height: 300px;
+}
+.carousel-caption {
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: 1;
+}
+.carousel-caption h5 {
+    font-size: 45px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 200px 15px 0;
+}
+.carousel-caption p {
+    margin: 0 10px;
+    width: 70%;
+    margin: auto;
+    font-size: 18px;
+    line-height: 1.9;
+}
+.carousel-inner {
+    border-radius: 20px;
+}
+.first-row {
+    margin-top: 50px;
+}
+
+.card.article {
+    margin-bottom: 30px;
+    border-radius: 20px;
+}
+.card.article:last-child {
+    margin-bottom: 0px;
+
+}
+
+
+
+.sider {
+    padding-left: 30px;
+}
+.custom-slider .carousel-inner {
+    height: 100%;
+}
+
+.carousel-item img {
+    object-fit: cover;
+/*    width: 100%;
+    height: 100%;*/
+    border-radius: 20px;
+}
+
+.card-img {
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.shadow {
+    box-shadow: 0 0.6375rem 0.975rem 0 #F4F8FE, 0 3px 6px 0 #F4F8FE !important;
+    border-radius: 20px;
+}
+
+.card {
+    border: none;
+}
+
+.section-padding {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #ecf3f2;
+    margin-bottom: 40px;
+    justify-content: center;
+}
+.tab-content {
+    background-color: white;
+    border-radius: 20px;
+}
+.nav-tabs .nav-link {
+    border-radius: 0;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 25px;
+    transition: all 0.3s;
+}
+
+.nav-tabs .nav-link:first-child {
+    margin-right: 20px;
+
+}
+.nav-link {
+    color: #7e8082;
+}
+
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link:hover {
+    border-bottom-color: #1977cc;
+    color: #1977cc;
+}
+
+.custom-block {
+    border-radius:20px;
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.custom-block:hover {
+    background-color: #80d0c7;
+    transform: translateY(-3px);
+}
+
+.custom-block > a {
+    width: 100%;
+}
+
+.custom-block-image {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    margin-top: 35px;
+}
+
+.custom-block .rounded-pill {
+    border-radius: 5px !important;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 20px;
+}
+
+.custom-block-overlay {
+    height: 100%;
+    min-height: 350px;
+    padding: 0;
+}
+
+.custom-block-overlay > a {
+    height: 100%;
+}
+
+.custom-block-overlay .custom-block-image {
+    border-radius: 20px;
+    display: block;
+    height: 100%;
+    margin-top: 0;
+}
+
+.custom-block-overlay-text {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 30px;
+}
+
+.custom-block-topics-listing-info {
+    margin: 30px 20px 20px 30px;
+}
+
+.custom-block-topics-listing {
+    height: inherit;
+}
+
+.custom-block-topics-listing .custom-block-image {
+    width: 200px;
+}
+/*component*/
+.sider .badge {
+    border-radius: 20px;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+.big-title {
+    font-weight: 900;
+    color: #1977cc;
+}
+img {
+    object-fit: cover;
+}
+
+

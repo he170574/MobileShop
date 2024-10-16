@@ -1,0 +1,102 @@
+.list-doctor {
+    margin-top: 65px;
+}
+.list-doctor .item {
+    border: 1px solid #9DABAF;
+    margin-bottom: 32px;
+}
+.list-doctor .item h4 {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 150%;
+    color: #2F4857;
+    margin: 13px 9px 19px 9px;
+}
+.list-doctor .item p {
+    margin-left: 9px;
+    margin-right: 9px;
+    font-size: 12px;
+}
+body.page-template-doctors .content-page {
+    padding-top: 30px;
+}
+.item-doctor {
+    margin-top: 64px;
+}
+.item-doctor .thumb {
+    width: 30%;
+    margin-right: 30px;
+}
+.item-doctor .thumb img {
+    height: auto;
+    width: 100%;
+    object-fit: cover;
+}
+.item-doctor .info h3 a {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #0d6efd;
+}
+.item-doctor .info p img {
+    margin-top: -5px;
+    margin-right: 5px;
+    width: 20px;
+}
+.doctor-slide .owl-dots {
+    text-align: center;
+}
+.doctor-slide .owl-dot  {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #9DABAF;
+    border-radius: 50%;
+    margin: 0 7px;
+}
+.doctor-slide .owl-dot.active {
+    background: #9DABAF;
+}
+.doctors  .detail .more {
+    padding: 5px 0!important;
+    line-height: 34px;
+}
+button.more {
+    background-color: #0d6efd!important;
+    border: 1px solid #0d6efd!important;
+    padding: 5px 15px!important;
+    border-radius: 4px!important;
+    color: #fff!important;
+    cursor: pointer!important;
+    width: auto;
+    height: 34px;
+    margin-top: 20px;
+}
+.achievement h3, .advisory h3 {
+    background: #F2F3F8;
+    font-weight: bold;
+    font-size: 26px;
+    text-transform: uppercase;
+    height: 48px;
+    line-height: 48px;
+    padding-left: 25px;
+    margin-top: 90px;
+    margin-bottom: 25px;
+}
+.form-group{
+    margin-top:20px;
+}
+.search-group .form-group input, .search-group select {
+    border: 1px solid #9DABAF;
+    margin-right: 5px;
+    height: 32px;
+    line-height: 32px;
+    width: 100%;
+    background-position: 98% 3px;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}

@@ -1,0 +1,139 @@
+.schedule-table {
+    width: 100%;
+    table-layout: fixed;
+}
+.title h2 {
+    font-size: 40px;
+    text-align: center;
+}
+.work {
+    padding: 2px;
+    margin: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+.work:hover {
+    background-color: #007BFF;
+    color: #fff;
+}
+.not_work{
+    padding: 2px;
+    margin: 5px;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: #ccc;
+    cursor: default;
+}
+.full{
+    padding: 2px;
+    margin: 5px;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 5px;
+    color: red;
+    cursor: default;
+}
+
+.selfbooked{
+    padding: 2px;
+    margin: 5px;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid #000;
+    background-color: gold;
+    border-radius: 5px;
+    color: black;
+    cursor: default;
+}
+
+.schedule-table th {
+    background-color: #f0f0f0;
+    font-size: 20px;
+    text-align: center;
+}
+td.empty {
+    background-color: #fff;
+}
+#btnCheckOut {
+    display: block;
+    margin: 0 auto;
+}
+.service_thumbnail {
+
+}
+.text-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time {
+    font-size: 2em;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.nextmonth-button {
+    background-color: #0074d9;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease-in-out;
+    line-height: 30px;
+}
+
+.nextmonth-button::after {
+    content: "→";
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nextmonth-button:hover {
+    background-color: #0056b3;
+}
+
+.nextmonth-button:disabled {
+    background-color: #ccc; 
+    cursor: not-allowed;
+}
+
+.previousmonth-button {
+    background-color: #0074d9;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease-in-out;
+    line-height: 30px;
+}
+
+.previousmonth-button::after {
+    content: "←";
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.previousmonth-button:hover {
+    background-color: #0056b3;
+}
+
+.previousmonth-button:disabled {
+    background-color: #ccc; 
+    cursor: not-allowed;
+}
