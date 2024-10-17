@@ -39,7 +39,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> getAllProducts(@RequestParam(defaultValue = "") String search,
                                                       @RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "1") int size) {
-        List<Product> products = productService.getAll(search, page, size);
+        List<Product> products = productService.getAll();
         List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
                 .productName(item.getProductName())

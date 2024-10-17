@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/assets/css/prettyPhoto.css" rel="stylesheet">
-    <link href="/assets/css/price-range.css" rel="stylesheet">
-    <link href="/assets/css/animate.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/css/responsive.css" rel="stylesheet">
-    <link href="/assets/css/cart.css">
-    <!--[if lt IE 9]>
-    <script src="/assets/js/html5shiv.js"></script>
-    <script src="/assets/js/respond.min.js"></script>
-    <![endif]-->
-    <link rel="shortcut icon" href="/assets/images/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/assets/images/ico/apple-touch-icon-57-precomposed.png">
-</head>
 
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+</head>
 <body>
     <header id="header"><!--header-->
         <div class="header_top"><!--header_top-->
@@ -57,7 +47,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="logo pull-left">
-                            <a href="/home"><img src="/assets/images/home/logo.png" alt="" /></a>
+                            <a href="home.html"><img src="/assets/images/home/logo.png" alt="" /></a>
                         </div>
                         <div class="btn-group pull-right">
                             <div class="btn-group">
@@ -101,13 +91,78 @@
     </header><!--/header-->
 
     <div class="container">
-        <div class="cart-container" id="cart-items">
-            <!-- Các sản phẩm sẽ được hiển thị tại đây -->
-        </div>
+        <h1>Giỏ hàng của bạn</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table cart-table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng cộng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Các sản phẩm trong giỏ hàng sẽ được hiển thị ở đây -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <div id="delivery-options">
+                    <h4>Chọn địa chỉ nhận hàng</h4>
+                    <div>
+                        <input type="radio" id="homeDelivery" name="delivery" value="home" checked>
+                        <label for="homeDelivery">Nhận hàng tại nhà</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="storePickup" name="delivery" value="store">
+                        <label for="storePickup">Nhận tại cửa hàng</label>
+                    </div>
+                    <div id="homeDeliveryDetails">
+                        <input type="text" placeholder="Họ và tên (*)" required>
+                        <input type="text" placeholder="Số điện thoại (*)" required>
+                        <input type="email" placeholder="Email">
+                        
+                        <select id="province" required>
+                            <option value="">Tỉnh/Thành phố (*)</option>
+                            <!-- Add options for provinces here -->
+                        </select>
+                        
+                        <select id="district" required>
+                            <option value="">Quận/Huyện (*)</option>
+                            <!-- Add options for districts here -->
+                        </select>
+                        
+                        <select id="ward" required>
+                            <option value="">Phường/Xã (*)</option>
+                            <!-- Add options for wards here -->
+                        </select>
+                        
+                        <input type="text" placeholder="Số nhà/Tên đường (*)" required>
+                        <textarea placeholder="Để lại lời nhắn"></textarea>
+                    </div>
+                </div>
 
-        <div class="cart-summary">
-            <h4>Tạm tính: <span class="cart-total">0₫</span></h4>
-            <button class="checkout-btn">Mua ngay</button>
+                <div id="payment-methods">
+                    <h4>Chọn hình thức thanh toán</h4>
+                    <div>
+                        <input type="radio" id="cod" name="payment" value="cod" checked>
+                        <label for="cod">Thanh toán khi nhận hàng</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="qr" name="payment" value="qr">
+                        <label for="qr">Thanh toán bằng mã QR</label>
+                    </div>
+                </div>
+
+                <div class="total-section">
+                    <h4>Tổng tiền: <span id="cart-total">0</span> VND</h4>
+                </div>
+
+                <button class="btn btn-primary" id="checkout-btn">Thanh toán -></button>
+            </div>
         </div>
     </div>
 
@@ -174,7 +229,6 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -193,7 +247,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="/assets/js/cart.js"></script>
-
 </body>
-
 </html>

@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll(String search, int page, int size) {
+    public List<Product> getAll() {
         return productRepository.findAllByDeletedIsFalse();
     }
 
