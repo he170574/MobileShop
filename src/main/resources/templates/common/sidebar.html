@@ -1,55 +1,84 @@
 <th:block>
-    <div class="left-sidebar">
+    <div>
         <h2>Category</h2>
-        <div class="panel-group category-products" id="accordian"><!--category-productsr-->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordian" href="#sportswear">
-                            <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                            Sportswear
-                        </a>
-                    </h4>
-                </div>
-                <div id="sportswear" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <ul>
-                            <li><a href="#">Nike </a></li>
-                            <li><a href="#">Under Armour </a></li>
-                            <li><a href="#">Adidas </a></li>
-                            <li><a href="#">Puma</a></li>
-                            <li><a href="#">ASICS </a></li>
-                        </ul>
+        <!-- Sidebar Start -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div>
+                <div class="brand-logo d-flex align-items-center justify-content-between">
+                    <a href="home.html" class="text-nowrap logo-img">
+                        <img src="/assets/images/logos/logo.png" width="180" alt="" />
+                    </a>
+                    <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                        <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/dashboard" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-layout-dashboard"></i>
+                                    </span>
+                                <span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/orders" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-article"></i>
+                                    </span>
+                                <span class="hide-menu">Order</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/product" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-alert-circle"></i>
+                                    </span>
+                                <span class="hide-menu">Products</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/members" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-file-description"></i>
+                                    </span>
+                                <span class="hide-menu">Member</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/reports" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-typography"></i>
+                                    </span>
+                                <span class="hide-menu">Reports</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordian" href="#mens">
-                            <span class="badge pull-right"><i class="fa fa-plus"></i></span>
-                            Mens
-                        </a>
-                    </h4>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!--  Sidebar End -->
+    </div>
+    <div id="nav-footer">
+        <div id="nav-footer-heading" class="justify-content-between">
+            <div class="d-flex align-items-center">
+                <div id="nav-footer-avatar">
+                    <img class="account-img" src="/static/img/avadef.png"/>
                 </div>
-                <div id="mens" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <ul>
-                            <li><a href="#">Fendi</a></li>
-                            <li><a href="#">Guess</a></li>
-                            <li><a href="#">Valentino</a></li>
-                            <li><a href="#">Dior</a></li>
-                            <li><a href="#">Versace</a></li>
-                            <li><a href="#">Armani</a></li>
-                            <li><a href="#">Prada</a></li>
-                            <li><a href="#">Dolce and Gabbana</a></li>
-                            <li><a href="#">Chanel</a></li>
-                            <li><a href="#">Gucci</a></li>
-                        </ul>
-                    </div>
+                <div id="nav-footer-titlebox">
+                    <span id="nav-footer-title">-UserName-</span>
+                    <span id="nav-footer-subtitle">-Role-</span>
                 </div>
             </div>
-            <!-- ... thêm các danh mục khác nếu cần ... -->
-        </div><!--/category-products-->
+            <a href="/logout" class="me-3" title="Logout" style="cursor: pointer">
+                <i class="bi bi-box-arrow-right text-light"></i>
+            </a>
+        </div>
     </div>
 </th:block>

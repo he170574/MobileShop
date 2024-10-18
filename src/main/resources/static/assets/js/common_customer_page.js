@@ -1,50 +1,15 @@
 $(document).ready(function () {
     loadAccountData();
-});
 
-function openLoginAndRegisterModal() {
-    $("#loginModal").on("click", function () {
-        Swal.fire({
-            showConfirmButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Login",
-            cancelButtonText: "Register",
-            didOpen: (popup) => {
-                const btnConfirm = popup.querySelector('.swal2-confirm')
-                btnConfirm.setAttribute("data-bs-toggle", "modal");
-                btnConfirm.setAttribute("data-bs-target", "#loginModal");
+    //
 
-                const btnCancel = popup.querySelector('.swal2-cancel')
-                btnCancel.setAttribute("data-bs-toggle", "modal");
-                btnCancel.setAttribute("data-bs-target", "#registerModal");
-            },
-            scrollbarPadding: false
-        });
+    $('.login-btn').on('click', function () {
+        $('#registerModal').modal('hide');
     });
-}
-
-// function openAccountModel(fullName){
-//     $("#account-logo").on("click", function () {
-//         Swal.fire({
-//             background: "#252525",
-//             color: "white",
-//             text: "Yo! " + fullName ,
-//             imageUrl: "/img/logo_img.png",
-//             imageWidth: 200,
-//             showConfirmButton: true,
-//             showCancelButton: true,
-//             confirmButtonText: "Logout",
-//             cancelButtonText: "Account & Service",
-//             scrollbarPadding: false
-//         }).then((result) => {
-//             if (result.isConfirmed) {
-//                 window.location.href = '/logout'
-//             } else if (result.dismiss === Swal.DismissReason.cancel) {
-//                 window.location.href = '/account-information'
-//             }
-//         });
-//     });
-// }
+    $('#register-btn').on('click', function () {
+        $('#loginModal').modal('hide');
+    });
+});
 
 function checkNotEmpty(fieldIds) {
     let allFilled = true;
@@ -69,18 +34,19 @@ function isValidEmail(email) {
 }
 
 function register() {
-    $('#submit-form-register').on('click',function (e) {
+    $('#submit-form-register').on('click', function (e) {
 
         const formData = {
-            username: $('#registerFullName').val(),
-            password: $('#registerPassword').val(),
+            username: $('#username-register').val(),
+            password: $('#password-register').val(),
             fullName: $('#full-name').val(),
+            gender: $('input[name="gender"]:checked').val(),
             dateOfBirth: $('#dob').val(),
-            email: $('#registerEmail').val(),
+            email: $('#email').val(),
             phoneNumber: $('#phone-number').val()
         };
         const fieldIds = ['username-register', 'password-register', 'confirm-password', 'full-name', 'dob', 'email', 'phone-number']; // Add all your input field IDs here
-        const confirmPasswordTag = $('#registerCfPassword');
+        const confirmPasswordTag = $('#confirm-password');
 
 
         if (!checkNotEmpty(fieldIds)) {
@@ -115,12 +81,12 @@ function register() {
                 text: "Invalid email address. Please enter a properly formatted email.",
                 confirmButtonText: "OK",
             });
-            $('#registerEmail').addClass('border-danger')
-            $('#registerEmail').removeClass('border-dark-subtle')
+            $('#email').addClass('border-danger')
+            $('#email').removeClass('border-dark-subtle')
             return;
         } else {
-            $('#registerEmail').removeClass('border-danger')
-            $('#registerEmail').addClass('border-dark-subtle')
+            $('#email').removeClass('border-danger')
+            $('#email').addClass('border-dark-subtle')
         }
 
         //Check Done => Send data
@@ -139,7 +105,7 @@ function register() {
                 Swal.fire({
                     title: "Register Success",
                     icon: "success",
-                    text: "",
+                    text: "Welcome To MobileShop",
                     confirmButtonText: "Let's Go",
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -151,7 +117,7 @@ function register() {
                 Swal.fire({
                     title: "Register Fail",
                     icon: "warning",
-                    text: "",
+                    text: "MB sr u",
                     confirmButtonText: "Let's Go",
                 });
                 // Code to run if the request fails
@@ -167,11 +133,11 @@ function register() {
 
 }
 
-function login(){
+function login() {
     // Submit form
-    $('#send-form-login').on('click',function(event) {
+    $('#send-form-login').on('click', function (event) {
         let isValidForm = true;
-        $('input[name="username"], input[name="password"]').each(function() {
+        $('input[name="username"], input[name="password"]').each(function () {
             if ($(this).val() === '') {
                 isValidForm = false;
                 $(this).addClass('border-danger').removeClass('border-dark-subtle');
@@ -179,7 +145,9 @@ function login(){
                 $(this).removeClass('border-danger').addClass('border-dark-subtle');
             }
         });
-        if(!isValidForm){return;}
+        if (!isValidForm) {
+            return;
+        }
         // Ngăn submit mặc định
         event.preventDefault();
         // Lấy data
@@ -192,11 +160,11 @@ function login(){
             type: 'POST',
             url: '/login',
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 // Xử lý khi đăng nhập thành công
                 window.location.href = '/home';
             },
-            error: function(error) {
+            error: function (error) {
                 Swal.fire({
                     title: "Login Fail",
                     icon: "error",
@@ -208,7 +176,8 @@ function login(){
 
     });
 }
-function loadAccountData(){
+
+function loadAccountData() {
     let lsdRing = $('.lsd-ring-container');
     $.ajax({
         url: '/get-account-using',
@@ -217,21 +186,19 @@ function loadAccountData(){
             lsdRing.removeClass('d-none');
         },
         success: function (response) {
-            if (response.data === null){    // NO LOGIN
-                openLoginAndRegisterModal();
+            if (response.data === null) {    // NO LOGIN
                 register();
                 login();
-            }else{                          //Logged
-                const account = response.data;
-                if (account.image !== null){
-                    $('#account-img').attr('src', account.image);
-                }
-                openAccountModel(account.fullName);
+            } else {                          //Logged
+
+                // $('#account-img').attr('src', account.image);
+                $('#logout-btn').css('display', 'block');
+                $('#login-btn').css('display', 'none');
+                // openAccountModel(account.fullName);
             }
         },
         error: function (xhr, status, error) {
             console.log('Error:', error);
-            openLoginAndRegisterModal();
             register();
             login();
         },

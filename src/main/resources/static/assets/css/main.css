@@ -2565,5 +2565,18 @@ h2.title {
   text-align: left; /* Căn trái giá */
 }
 
+.imgHome {
+  width: 260px; /* Image width */
+  height: 140px; /* Image height */
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding-left: 10px;  /* Adjust this value to make the left border smaller */
+  padding-right: 10px; /* Adjust this value to make the right border smaller */
+}
+
+.col-sm-8 {
+  margin-top: 50px; /* Adjust the top margin to move the bar down */
+}
 
 

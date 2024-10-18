@@ -36,5 +36,16 @@ public class AccountDTO {
         this.username = username;
         this.role = role;
     }
+
+    public AccountDTO(String address, LocalDate dateOfBirth, String email, String fullName, String image, String phoneNumber, String username, String role) {
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.fullName = fullName;
+        this.image = image;
+        this.phoneNumber = phoneNumber;
+        this.username = username;
+        this.role = role;
+    }
 }
 

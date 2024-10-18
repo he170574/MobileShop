@@ -1,11 +1,13 @@
+$(document).ready(function () {
+    fetchCartItems();
+});
 
 function fetchCartItems() {
-    // Giả sử bạn có một API để lấy sản phẩm
-    fetch('/api/cart-items')
+    fetch('/cart-items')
         .then(response => response.json())
         .then(data => {
-            cartItems = data; // Gán dữ liệu sản phẩm vào biến cartItems
-            renderCartItems(); // Render lại giỏ hàng
+            cartItems = data;
+            renderCartItems();
         })
         .catch(error => console.error('Error fetching cart items:', error));
 }
@@ -15,7 +17,7 @@ function calculateTotal() {
     var total = 0;
     cartItems.forEach(function (item) {
         if (item.selected) {
-            total += item.price * item.quantity;
+            total += item.productPrice * item.productStock;
         }
     });
     document.querySelector('.cart-total').innerText = total.toLocaleString() + '₫';
@@ -33,22 +35,15 @@ function renderCartItems() {
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
                     <p>
-                        <span class="price">${item.price.toLocaleString()}₫</span>
-                        <span class="original-price">${item.originalPrice.toLocaleString()}₫</span>
+                        <span class="price">${item.productPrice.toLocaleString()}₫</span>
                     </p>
-                    <p class="promotion">
-                        <i class="fa fa-gift icon"></i>Chương trình khuyến mãi: ${item.promotion}
-                    </p>
-                    <div class="warranty-section">
-                        <i class="fa fa-shield icon"></i>Bảo vệ: ${item.warranty} <span class="choose-warranty">Chọn gói ></span>
-                    </div>
                 </div>
                 <div class="quantity">
-                    <button class="btn btn-secondary" onclick="decreaseQuantity(${item.id})">-</button>
-                    <input type="number" value="${item.quantity}" min="1" id="quantity-${item.id}" readonly>
-                    <button class="btn btn-secondary" onclick="increaseQuantity(${item.id})">+</button>
+                    <button class="btn btn-secondary" onclick="decreaseQuantity(${item.productId})">-</button>
+                    <input type="number" value="${item.productStock}" min="1" id="quantity-${item.productId}" readonly>
+                    <button class="btn btn-secondary" onclick="increaseQuantity(${item.productId})">+</button>
                 </div>
-                <button class="btn btn-danger" onclick="removeItem(${item.id})">
+                <button class="btn btn-danger" onclick="removeItem(${item.productId})">
                     <i class="fa fa-trash"></i>
                 </button>
             </div>
@@ -56,17 +51,17 @@ function renderCartItems() {
     }).join('');
 
     document.getElementById('cart-items').innerHTML = cartItemsHTML;
-    calculateTotal(); // Tính tổng tiền sau khi render lại
+    calculateTotal();
 }
 
 // Hàm tăng số lượng sản phẩm
 function increaseQuantity(itemId) {
     var item = cartItems.find(function (item) {
-        return item.id === itemId;
+        return item.productId === itemId;
     });
 
     if (item) {
-        item.quantity++;
+        item.productStock++;
         renderCartItems();
     }
 }
@@ -74,11 +69,11 @@ function increaseQuantity(itemId) {
 // Hàm giảm số lượng sản phẩm
 function decreaseQuantity(itemId) {
     var item = cartItems.find(function (item) {
-        return item.id === itemId;
+        return item.productId === itemId;
     });
 
     if (item && item.quantity > 1) {
-        item.quantity--;
+        item.productStock--;
         renderCartItems();
     }
 }
@@ -86,7 +81,7 @@ function decreaseQuantity(itemId) {
 // Hàm xóa sản phẩm
 function removeItem(itemId) {
     cartItems = cartItems.filter(function (item) {
-        return item.id !== itemId;
+        return item.productId !== itemId;
     });
 
     renderCartItems();
@@ -95,7 +90,7 @@ function removeItem(itemId) {
 // Hàm bật/tắt chọn sản phẩm
 function toggleSelect(itemId) {
     var item = cartItems.find(function (item) {
-        return item.id === itemId;
+        return item.productId === itemId;
     });
 
     if (item) {

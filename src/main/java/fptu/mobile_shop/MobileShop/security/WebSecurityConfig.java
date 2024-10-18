@@ -22,7 +22,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/admin/dashboard").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/product").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/members").hasAnyRole("STAFF","ADMIN")
-                            .requestMatchers("/cart").hasAnyRole("MEMBER","STAFF","ADMIN")
+                            .requestMatchers("/admin/orders").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().permitAll();
                 })

@@ -9,8 +9,6 @@ import fptu.mobile_shop.MobileShop.final_attribute.ROLE;
 import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.AccountService;
 import fptu.mobile_shop.MobileShop.service.RoleService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +31,6 @@ public class AccountController {
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> postRegister(@RequestBody AccountDTO accountDTO) {
         Account account = Account.builder()
-                .address(accountDTO.getAddress())
                 .dateOfBirth(accountDTO.getDateOfBirth())
                 .email(accountDTO.getEmail())
                 .fullName(accountDTO.getFullName())
@@ -45,7 +42,7 @@ public class AccountController {
             account.setRole(roleService.getRoleByRoleName(ROLE.MEMBER));
             accountService.save(account);
             return ResponseEntity.ok().body(ResponseDTO.builder().message("Register Success").build());
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.badRequest().body(ResponseDTO.builder().message(e.getMessage()).build());
         }
@@ -84,25 +81,24 @@ public class AccountController {
     }
 
     @PostMapping("/update-account")
-    public ResponseEntity<ResponseDTO> updateAccount(@RequestBody AccountDTO accountDTO, Authentication
-            authentication) {
+    public ResponseEntity<ResponseDTO> updateAccount(@RequestBody AccountDTO accountDTO, Authentication authentication) {
         try {
-            if (authentication == null) {
+            if (authentication == null){
                 //Check Login
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseDTO.builder().message("Please Login!").build());
             }
             CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
             Account account = accountService.getByUsername(accountDTO.getUsername());
 
-            if ((!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
+            if (   (!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
 
                     accountDTO.getRole() != null)) {
                 // If update important filed, need to check
-                if (customAccount.getRole().equals(ROLE.ADMIN)) {
+                if (customAccount.getRole().equals(ROLE.ADMIN)){
                     //Is Admin
                     account.setRole(roleService.getRoleByRoleName(accountDTO.getRole()));
                     account.setUsername(accountDTO.getUsername());
-                } else {
+                }else{
                     //Not Admin
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseDTO.builder().message("No permission to update").build());
                 }
@@ -121,11 +117,10 @@ public class AccountController {
         }
     }
 
-
     @PostMapping("/forgot-pass")
     public ResponseEntity<ResponseDTO> getNewPassWord(@RequestBody String email) {
 
-        if (accountService.checkMailExist(email) == 0) {
+        if(accountService.checkMailExist( email) == 0){
             return ResponseEntity.badRequest().body(ResponseDTO.builder().message("Send Mail fail").build());
         }
         accountService.updateNewPassWord(email);
@@ -133,15 +128,15 @@ public class AccountController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<ResponseDTO> changePassWord(Authentication authentication, @RequestBody ChangePasswordDTO
-            changePasswordDTO) {
+    public ResponseEntity<ResponseDTO> changePassWord(Authentication authentication, @RequestBody ChangePasswordDTO changePasswordDTO){
         CustomAccount account = (CustomAccount) authentication.getPrincipal();
 
         int numberRowEffect = accountService.updateAccountByAccountUserName(account.getUsername(), changePasswordDTO.getNewPassword(), changePasswordDTO.getOldPassword());
 
-        if (numberRowEffect > 0) {
+        if(numberRowEffect > 0){
             return ResponseEntity.ok().body(ResponseDTO.builder().message("change password success").build());
         }
         return ResponseEntity.badRequest().body(ResponseDTO.builder().message("change password fail").data("Old Password Wrong").build());
     }
 }
+

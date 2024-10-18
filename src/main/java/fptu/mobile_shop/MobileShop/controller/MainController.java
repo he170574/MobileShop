@@ -12,9 +12,25 @@ import java.util.List;
 @Controller
 public class MainController {
 
-    @GetMapping("/home")
-    public String showHomePage() {
+    @GetMapping(value = {"/home", "/"})
+    public String getHome(Model model) {
+        model.addAttribute("homepage", "home");
         return "home";
+    }
+
+    @GetMapping("/login")
+    public String getLogin() {
+        return "redirect:/home";
+    }
+
+    @GetMapping("/forgot-pass")
+    public String getForgotPassword() {
+        return "forgotPass";
+    }
+
+    @GetMapping("/edit-info")
+    public String getEditAccInfo() {
+        return "editAccInfo";
     }
 
     @GetMapping("/admin/dashboard")
@@ -42,9 +58,5 @@ public class MainController {
         return "member";
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-        return "redirect:/home";
-    }
 
 }
