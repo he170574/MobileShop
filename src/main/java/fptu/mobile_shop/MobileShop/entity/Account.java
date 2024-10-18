@@ -33,10 +33,6 @@ public class Account {
     @Nationalized
     private String fullName;
 
-    @Column(name = "GENDER", nullable = false)
-    @Nationalized
-    private String gender;
-
     @Column(name = "IMAGE")
     @Nationalized
     private String image;

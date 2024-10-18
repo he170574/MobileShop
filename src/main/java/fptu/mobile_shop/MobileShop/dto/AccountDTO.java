@@ -16,7 +16,6 @@ public class AccountDTO {
     private LocalDate dateOfBirth;
     private String email;
     private String fullName;
-    private String gender;
     private String image;
     private String phoneNumber;
     private String username;
@@ -26,13 +25,12 @@ public class AccountDTO {
     private String password;
     private MultipartFile imgFile;
 
-    public AccountDTO(Integer accountId, String address, LocalDate dateOfBirth, String email, String fullName, String gender, String image, String phoneNumber, String username, String role) {
+    public AccountDTO(Integer accountId, String address, LocalDate dateOfBirth, String email, String fullName, String image, String phoneNumber, String username, String role) {
         this.accountId = accountId;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.fullName = fullName;
-        this.gender = gender;
         this.image = image;
         this.phoneNumber = phoneNumber;
         this.username = username;

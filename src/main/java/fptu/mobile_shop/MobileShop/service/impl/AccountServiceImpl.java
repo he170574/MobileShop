@@ -56,7 +56,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Transactional
     @Override
     public void updateAccount(Account account) {
@@ -68,24 +67,25 @@ public class AccountServiceImpl implements AccountService {
     public void updateAccountImage(String username, String newImage) {
         accountRepository.updateAccountImage(username, newImage);
     }
+
     @Transactional
     @Override
-    public int updateAccountByAccountUserName(String username, String newPass,String oldPassword) {
+    public int updateAccountByAccountUserName(String username, String newPass, String oldPassword) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
         Account account = accountRepository.getByUsernameAndDeletedIsFalse(username);
 
-        if (!bCryptPasswordEncoder.matches(oldPassword,account.getPassword())){
+        if (!bCryptPasswordEncoder.matches(oldPassword, account.getPassword())) {
             return 0;
         }
         String newPassBcrypt = bCryptPasswordEncoder.encode(newPass);
-        return accountRepository.updateAccountByAccountUserName(username,newPassBcrypt);
+        return accountRepository.updateAccountByAccountUserName(username, newPassBcrypt);
     }
 
     @Override
     public Page<Account> getAllSTAFF(String fullName, Pageable pageable) {
         Role role = roleRepository.getByRoleName(ROLE.STAFF);
-        return accountRepository.getByFullNameContainsAndRoleAndDeletedIsFalse(fullName,role,pageable);
+        return accountRepository.getByFullNameContainsAndRoleAndDeletedIsFalse(fullName, role, pageable);
     }
 
     @Override
@@ -97,12 +97,14 @@ public class AccountServiceImpl implements AccountService {
     public void deleteSTAFF(Account account) {
         accountRepository.deActiveAccount(account);
     }
+
     @Override
-    public void sentEmailToEmp(String pass,String account,String gmail){
-        sendAccountToEmailSTAFF(pass,account,gmail);
+    public void sentEmailToEmp(String pass, String account, String gmail) {
+        sendAccountToEmailSTAFF(pass, account, gmail);
     }
+
     @Override
-    public int checkMailExist(String email){
+    public int checkMailExist(String email) {
         boolean emailExists = accountRepository.existsByEmail(email);
         if (emailExists) {
             return 1;
@@ -110,6 +112,7 @@ public class AccountServiceImpl implements AccountService {
             return 0;
         }
     }
+
     @Override
     public List<Account> getAccountsByDeletedTrue() {
         // Lấy danh sách các Account đã bị đánh dấu là xóa
@@ -117,8 +120,11 @@ public class AccountServiceImpl implements AccountService {
 
         return accounts;
     }
+
     @Override
-    public void activeSTAFF(Account account){
+    public void activeSTAFF(Account account) {
         accountRepository.activeSTAFF(account);
     }
-}   
+
+}
+

@@ -11,23 +11,16 @@ import java.util.List;
 
 @Controller
 public class MainController {
-    private final ProductService productService;
-
-    @Autowired
-    public MainController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @GetMapping("/home")
-    public String showHomePage(Model model) {
-        // Lấy danh sách sản phẩm từ service
-        List<Product> products = productService.getAll();
-        model.addAttribute("products", products);
+    public String showHomePage() {
         return "home";
     }
-    
+
     @GetMapping("/admin/dashboard")
-    public String showDashboard(){ return "dashboard"; }
+    public String showDashboard() {
+        return "dashboard";
+    }
 
     @GetMapping("/admin/product")
     public String getAdminProduct() {
@@ -35,16 +28,23 @@ public class MainController {
     }
 
     @GetMapping("/cart")
-    public String showCartPage() { return "cart"; }
+    public String showCartPage() {
+        return "cart";
+    }
 
     @GetMapping("/admin/orders")
-    public String showOrder() { return "orders"; }
+    public String showOrder() {
+        return "orders";
+    }
 
     @GetMapping("/admin/members")
-    public String showMember() { return "member"; }
+    public String showMember() {
+        return "member";
+    }
 
     @GetMapping("/login")
-    public String showLoginPage() { return "redirect:/home"; }
-
+    public String getLogin() {
+        return "redirect:/home";
+    }
 
 }

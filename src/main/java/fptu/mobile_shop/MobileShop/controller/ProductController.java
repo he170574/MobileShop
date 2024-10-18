@@ -1,5 +1,6 @@
 package fptu.mobile_shop.MobileShop.controller;
 
+import org.springframework.ui.Model;
 import fptu.mobile_shop.MobileShop.dto.CategoryDTO;
 import fptu.mobile_shop.MobileShop.dto.ProductDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
@@ -37,8 +38,8 @@ public class ProductController {
 
     @GetMapping("/get-product")
     public ResponseEntity<ResponseDTO> getAllProducts(@RequestParam(defaultValue = "") String search,
-                                                      @RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "1") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size) {
         List<Product> products = productService.getAll();
         List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
@@ -196,4 +197,21 @@ public class ProductController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("/get-product-detail")
+    public ResponseEntity<Product> getProductById(@RequestParam Integer id) {
+        Optional<Product> product = productService.getById(id);
+        return product.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/productDetail")
+    public String showProductDetail(@RequestParam Integer id, Model model) {
+        Optional<Product> product = productService.getById(id);
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "productDetail"; // Trả về view productDetail.html
+        } else {
+            return "404"; // Hoặc trang lỗi nếu không tìm thấy sản phẩm
+        }
+    }
 }

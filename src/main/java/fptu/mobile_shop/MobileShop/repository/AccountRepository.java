@@ -48,4 +48,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Modifying
     @Query("UPDATE Account a set a.deleted = false WHERE a = :account")
     void activeSTAFF(Account account);
+
 }

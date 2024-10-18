@@ -25,6 +25,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Optional<Product> getById(Integer id) {
+        return productRepository.findById(id);
+    }
+
+    @Override
     public List<Product> getAll() {
         return productRepository.findAllByDeletedIsFalse();
     }

@@ -10,14 +10,15 @@ public interface AccountService {
     Account save(Account account);
 
     void updateNewPassWord(String email);
-    Account getByUsername (String userName);
+
+    Account getByUsername(String userName);
 
 
     void updateAccount(Account account);
 
-    void updateAccountImage(String username,String newImage);
+    void updateAccountImage(String username, String newImage);
 
-    int updateAccountByAccountUserName(String username,String newPass,String oldPassword);
+    int updateAccountByAccountUserName(String username, String newPass, String oldPassword);
 
     Page<Account> getAllSTAFF(String fullName, Pageable pageable);
 
@@ -25,12 +26,13 @@ public interface AccountService {
 
     void deleteSTAFF(Account account);
 
-    void sentEmailToEmp(String pass,String account,String gmail);
+    void sentEmailToEmp(String pass, String account, String gmail);
 
     int checkMailExist(String email);
 
     List<Account> getAccountsByDeletedTrue();
 
     void activeSTAFF(Account account);
+
 }
 

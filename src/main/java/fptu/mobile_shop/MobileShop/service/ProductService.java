@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
+    Optional<Product> getById(Integer id);
+
     List<Product> getAll();
 
     Optional<Product> getOne(Integer id);
@@ -22,4 +24,5 @@ public interface ProductService {
     Product updateProduct(Integer id, String name, String detail, String image, Double price, Integer quantity, String category);
 
     Product getProductByProductName(String name);
+
 }

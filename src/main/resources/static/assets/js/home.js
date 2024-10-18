@@ -1,49 +1,42 @@
-$(document).ready(function () {
-    // Switch to forgot password form
-    $('#forgotPasswordLink').click(function (e) {
-        e.preventDefault();
-        $('#loginForm').hide();
-        $('#forgotPasswordForm').show();
-    });
+$(document).ready(function() {
+    function loadAllProducts() {
+        $.ajax({
+            url: '/get-product', // Đường dẫn đến endpoint
+            method: 'GET',
+            success: function(response) {
+                if (response && response.data && Array.isArray(response.data)) {
+                    $('#product-list').empty(); // Xóa nội dung cũ
 
-    // Submit login form
-    $('#loginForm').submit(function (e) {
-        e.preventDefault();
-        $.post('/login', $(this).serialize(), function (response) {
-            if (response.success) {
-                window.location.href = '/home';
-            } else {
-                alert('Invalid credentials');
+                    // Duyệt qua từng sản phẩm và thêm vào danh sách
+                    response.data.forEach(function(product) {
+                        $('#product-list').append(`
+                            <div class="col-6 col-md-4 col-lg-2 mb-4 product-item" data-product-id="${product.productId}">
+                                <div class="card text-center">
+                                    <img src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${product.productName}</h5>
+                                        <p class="card-text text-danger">${product.price} đ</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    console.error("Unexpected data format received:", response);
+                    alert('Unexpected data format received.');
+                }
+            },
+            error: function(error) {
+                console.error("Error fetching products:", error);
+                alert('Unable to load products. Please try again later.');
             }
         });
-    });
+    }
 
-    // Submit register form
-    $('#registerForm').submit(function (e) {
-        e.preventDefault();
-        $.post('/register', $(this).serialize(), function (response) {
-            if (response.success) {
-                alert('Registration successful! Please login.');
-                $('#registerForm').trigger('reset'); // Clear the register form
-                $('#loginModal').modal('hide');
-            } else {
-                alert(response.message);
-            }
-        });
-    });
+    loadAllProducts();
 
-    // Submit forgot password form
-    $('#forgotPasswordForm').submit(function (e) {
-        e.preventDefault();
-        $.post('/forgot-password', $(this).serialize(), function (response) {
-            if (response.success) {
-                alert('A new password has been sent to your email.');
-                $('#forgotPasswordForm').trigger('reset');
-                $('#forgotPasswordForm').hide();
-                $('#loginForm').show();
-            } else {
-                alert(response.message);
-            }
-        });
+    $(document).on('click', '.card', function() {
+        const productId = $(this).closest('.product-item').data('product-id');
+        window.location.href = `/productDetail?id=${productId}`;
     });
 });

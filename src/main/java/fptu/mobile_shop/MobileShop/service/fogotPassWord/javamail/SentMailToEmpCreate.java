@@ -48,7 +48,7 @@ public class SentMailToEmpCreate {
                     "            <td style=\"background-color: #000000; padding: 20px; text-align: center;\">\n" +
                     "                <!-- Email Content -->\n" +
                     "                <img src=\"https://res.cloudinary.com/de6o7wax8/image/upload/v1710136865/%E1%BA%A2nh_ch%E1%BB%A5p_m%C3%A0n_h%C3%ACnh_2024-01-11_230903_edjqtz.png\" alt=\"Black Friday Sales\" style=\"width: 100%; height: auto; border: 0;\">\n" +
-                    "                <h3 style=\"color: #c1b37e;\">Wellcome to Netflex</h3>\n" +
+                    "                <h3 style=\"color: #c1b37e;\">Wellcome to MobileShop</h3>\n" +
                     "                <h1 style=\"color: #ececeb;\">The Account and PassWord</h1>\n" +
                     "                <h3 style=\"color: #d00701;\">Pass: "+pass+" and account: "+acc+"</h3>\n" +
                     "                <a href=\"http://localhost:8080/home\" class=\"btn btn-danger mt-4\">Go to home page</a>\n" +
@@ -57,8 +57,8 @@ public class SentMailToEmpCreate {
                     "        <tr>\n" +
                     "            <td style=\"padding: 20px; background-color: #EFEFEF; text-align: center;\">\n" +
                     "                <!-- Social Icons -->\n" +
-                    "                <a href=\"https://www.facebook.com/profile.php?id=100040323076309\" target=\"_blank\"><img src=\"https://res.cloudinary.com/de6o7wax8/image/upload/v1709621744/p0ratsgwcy6pjhsuqwyp.jpg\" alt=\"Twitter\" style=\"width: 32px; margin-right: 10px;\"></a>\n" +
-                    "                <a href=\"https://www.facebook.com/profile.php?id=100039906993007\" target=\"_blank\"><img src=\"https://res.cloudinary.com/de6o7wax8/image/upload/v1708861815/y8d81aqonbnyddf4fton.jpg\" alt=\"Facebook\" style=\"width: 32px; margin-right: 10px;\"></a>\n" +
+                    "                <a href=\"https://www.facebook.com/htphongg/\" target=\"_blank\"><img src=\"https://res.cloudinary.com/de6o7wax8/image/upload/v1709621744/p0ratsgwcy6pjhsuqwyp.jpg\" alt=\"Twitter\" style=\"width: 32px; margin-right: 10px;\"></a>\n" +
+                    "                <a href=\"\" target=\"_blank\"><img src=\"https://res.cloudinary.com/de6o7wax8/image/upload/v1708861815/y8d81aqonbnyddf4fton.jpg\" alt=\"Facebook\" style=\"width: 32px; margin-right: 10px;\"></a>\n" +
                     "                <!-- Add more social icons as needed -->\n" +
                     "            </td>\n" +
                     "        </tr>\n" +

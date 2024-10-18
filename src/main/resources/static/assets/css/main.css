@@ -8,9 +8,9 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  background:;
+  /*background:;*/
   position: relative;
-  font-weight:400px;
+  /*font-weight:400px;*/
 }
 
 ul li {
@@ -831,6 +831,7 @@ h2.title:before{
 
 .features_items{
 	overflow:hidden;
+    width: 1000px;
 }
 
 
@@ -899,7 +900,7 @@ h2.title {
   transition: height 500ms ease 0s;
   width: 100%;
   display: block;
-  opacity:;
+  /*opacity:;*/
 }
 
 .single-products:hover .product-overlay {
@@ -2141,7 +2142,7 @@ h2.title {
 
 .rating-area {
   border: 1px solid #F7F7F0;
-  direction: block;
+  /*direction: block;*/
   overflow: hidden;
 }
 
@@ -2519,5 +2520,50 @@ h2.title {
 .contact-info .social-networks ul li a:hover{
   color: #FE980F;
 }
+
+/* styles.css */
+.product-item {
+  margin: 10px; /* Khoảng cách giữa các sản phẩm */
+}
+
+.card {
+  border: 2px solid #e0e0e0; /* Viền cho thẻ card */
+  border-radius: 10px; /* Bo góc cho viền */
+  transition: box-shadow 0.3s; /* Hiệu ứng chuyển tiếp cho bóng đổ */
+  display: flex; /* Sử dụng flexbox để căn chỉnh */
+  flex-direction: column; /* Đặt chiều dọc cho các phần tử bên trong */
+  height: 300px; /* Cố định chiều cao cho thẻ card */
+  width: 180px; /* Cố định chiều rộng cho thẻ card */
+  box-sizing: border-box; /* Đảm bảo padding và border được tính vào kích thước */
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+}
+
+.card-img-top {
+  height: 150px; /* Điều chỉnh chiều cao hình ảnh */
+  object-fit: contain; /* Giữ tỷ lệ hình ảnh */
+  margin-bottom: 10px; /* Khoảng cách giữa hình ảnh và tên sản phẩm */
+}
+
+.card-body {
+  padding: 10px; /* Khoảng cách bên trong thẻ body */
+  display: flex; /* Sử dụng flexbox để căn giữa nội dung */
+  flex-direction: column; /* Đặt chiều dọc cho các phần tử bên trong */
+}
+
+.card-title {
+  margin-bottom: 5px; /* Khoảng cách giữa tên sản phẩm và giá */
+  text-align: left; /* Căn trái tiêu đề */
+}
+
+.card-text {
+  color: red; /* Màu sắc cho giá */
+  font-weight: bold;
+  margin-top: 5px; /* Khoảng cách giữa tên sản phẩm và giá */
+  text-align: left; /* Căn trái giá */
+}
+
 
 

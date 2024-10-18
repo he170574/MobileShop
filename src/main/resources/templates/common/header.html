@@ -31,39 +31,17 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="logo pull-left">
-                            <a href="/index"><img src="/assets/images/home/logo.png" alt="" /></a>
-                        </div>
-                        <div class="btn-group pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                    USA
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Canada</a></li>
-                                    <li><a href="#">UK</a></li>
-                                </ul>
-                            </div>
-
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-                                    DOLLAR
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Canadian Dollar</a></li>
-                                    <li><a href="#">Pound</a></li>
-                                </ul>
-                            </div>
+                            <a href="/home"><img src="/assets/images/home/logo.png" alt=""/></a>
                         </div>
                     </div>
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="#" data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i> Account</a></li>
-                                <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#loginModal"><i class="fa fa-user"></i>
+                                    Account</a></li>
+                                <!--<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>-->
                                 <li><a href="/cart"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#loginModal"><i class="fa fa-lock"></i> Login</a></li>
+                                <li><a href="#" data-toggle="modal" data-bs-dismiss="modal"  data-target="#loginModal"><i class="fa fa-lock"></i>Login</a></li>
                             </ul>
                         </div>
                     </div>
@@ -76,7 +54,8 @@
                 <div class="row">
                     <div class="col-sm-9">
                         <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                    data-target=".navbar-collapse">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
@@ -92,7 +71,7 @@
                                         <li><a href="product-details.html">Product Details</a></li>
                                         <li><a href="checkout.html">Checkout</a></li>
                                         <li><a href="/cart">Cart</a></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+                                        <li><a href="#" data-toggle="modal" data-bs-dismiss="modal"  data-target="#loginModal">Login</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
@@ -116,54 +95,124 @@
         </div><!--/header-bottom-->
     </header><!--/header-->
 
-    <!-- Login/Register Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login / Register</h5>
+                <div class="modal-header"  style="display: flex;justify-content: space-between">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Tabs for Login/Register -->
-                    <ul class="nav nav-tabs" id="loginRegisterTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="loginRegisterTabContent">
-                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-                            <form>
-                                <div class="form-group">
-                                    <label for="loginEmail">Email address</label>
-                                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter email">
-                                </div>
-                                <div class="form-group">
-                                    <label for="loginPassword">Password</label>
-                                    <input type="password" class="form-control" id="loginPassword" placeholder="Password">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </form>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginUsername">Username</label>
+                            <input type="text" class="form-control" id="loginUsername" placeholder="Enter Username">
                         </div>
-                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                            <form>
-                                <div class="form-group">
-                                    <label for="registerEmail">Email address</label>
-                                    <input type="email" class="form-control" id="registerEmail" placeholder="Enter email">
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between">
+                                    <label class="fw-semibold form-label" for="loginPassword">Password</label>
+                                    <a href="#" style="font-size: 14px;text-decoration: dashed;"
+                                       class="nav-link fw-semibold" data-toggle="modal"   data-bs-dismiss="modal"  data-target="#FPModal">Forgot Password?</a>
                                 </div>
-                                <div class="form-group">
-                                    <label for="registerPassword">Password</label>
-                                    <input type="password" class="form-control" id="registerPassword" placeholder="Password">
-                                </div>
-                                <button type="submit" class="btn btn-primary">Register</button>
-                            </form>
+                                <input type="password" class="form-control border border-dark-subtle" id="loginPassword"
+                                       name="password" autocomplete="current-password">
+                                <span class="form-message form-text text-danger"></span>
+                            </div>
+                            <button type="submit" id="send-form-login" class="btn btn-primary">Log in</button>
                         </div>
-                    </div>
+
+                        <div class="d-flex justify-content-center mt-3 mb-5">
+                            <span>New Member?</span>
+                            <a type="button" style="text-decoration: underline;" class="ms-1 nav-link fw-semibold"
+                               data-bs-toggle="modal" data-bs-target="#registerModal" href="#">Create a new
+                                account</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="display: flex;justify-content: space-between">
+                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="form-group">
+                            <label for="registerFullName">Full name</label>
+                            <input type="text" class="form-control" id="registerFullName" placeholder="Enter Full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerUsername">Username</label>
+                            <input type="text" class="form-control" id="registerUsername" placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerCfPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="registerCfPassword"
+                                   placeholder="Confirm Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email address</label>
+                            <input type="email" class="form-control" id="registerEmail" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label class="fw-semibold form-label" for="dob">Date of birth</label>
+                            <div>
+                                <input type="date" class="form-control border border-dark-subtle" id="dob" name="dob">
+                                <span class="form-message form-text text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between">
+                                <label class="fw-semibold form-label" for="phone-number">Phone number</label>
+                            </div>
+                            <input type="text" class="form-control border border-dark-subtle" id="phone-number"
+                                   name="phoneNumber">
+                            <span class="form-message form-text text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit-form-register">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Forgot Password-->
+    <div class="modal fade" id="FPModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header"  style="display: flex;justify-content: space-between">
+                    <h5 class="modal-title" id="FPModalLabel">Forgot password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="emailFP">Enter your Email</label>
+                            <input type="text" class="form-control" id="emailFP" placeholder="Enter your Email">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Get Password</button>
+                    </form>
                 </div>
             </div>
         </div>
