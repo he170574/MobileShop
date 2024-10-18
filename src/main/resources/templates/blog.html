@@ -103,6 +103,15 @@
 				<div class="left-sidebar">
 					<h2>Category</h2>
 					<div class="panel-group category-products" id="accordian"><!--category-products-->
+						<!-- Thêm lựa chọn "All" -->
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a th:href="@{/blog/category/All}" th:text="'All'">All</a>
+								</h4>
+							</div>
+						</div>
+						<!-- Hiển thị danh sách các category -->
 						<div th:each="category : ${categories}" class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
@@ -163,6 +172,7 @@
 		</div>
 	</div>
 </section>
+
 
 
 

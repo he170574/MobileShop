@@ -27,12 +27,18 @@ public class PostController {
         model.addAttribute("currentPage", postsPage.getNumber());
         model.addAttribute("totalPages", postsPage.getTotalPages());
         model.addAttribute("categories", categories); // Gán danh mục vào model
+        model.addAttribute("selectedCategory", "All"); // Gán danh mục đã chọn là "All"
         return "blog";
     }
 
     @GetMapping("/category/{category}")
     public String getPostsByCategory(@PathVariable String category, Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage = postService.getPostsByCategory(category, pageable);
+        Page<Post> postsPage;
+        if ("All".equals(category)) {
+            postsPage = postService.getAllPosts(pageable);
+        } else {
+            postsPage = postService.getPostsByCategory(category, pageable);
+        }
         List<String> categories = postService.getAllCategories(); // Lấy danh mục
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
@@ -49,6 +55,7 @@ public class PostController {
         List<String> categories = postService.getAllCategories(); // Lấy danh mục
         model.addAttribute("post", post);
         model.addAttribute("categories", categories); // Gán danh mục vào model
+        model.addAttribute("selectedCategory", "All"); // Gán danh mục đã chọn là "All"
         return "blog-single"; // Tên template cho bài viết đơn
     }
 
@@ -92,6 +99,7 @@ public class PostController {
         model.addAttribute("currentPage", postsPage.getNumber());
         model.addAttribute("totalPages", postsPage.getTotalPages());
         model.addAttribute("categories", categories); // Gán danh mục vào model
+        model.addAttribute("selectedCategory", "All"); // Gán danh mục đã chọn là "All"
         return "blog"; // Trả về template blog
     }
 }
