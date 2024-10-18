@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -48,6 +49,20 @@ public class PostService {
 
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
+    }
+    public Page<Post> getPostsByCategory(String category, Pageable pageable) {
+        return postRepository.findByCategoryPost(category, pageable);
+    }
+
+    public List<String> getAllCategories() {
+        return postRepository.findAll().stream()
+                .map(Post::getCategoryPost)
+                .distinct() // Lấy các danh mục duy nhất
+                .collect(Collectors.toList());
+    }
+
+    public Page<Post> searchByTitle(String title, Pageable pageable) {
+        return postRepository.findByTitleContaining(title, pageable);
     }
 }
 
