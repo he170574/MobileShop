@@ -1,6 +1,5 @@
 package fptu.mobile_shop.MobileShop.controller;
 
-
 import fptu.mobile_shop.MobileShop.entity.Post;
 import fptu.mobile_shop.MobileShop.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/blog")
@@ -21,17 +22,33 @@ public class PostController {
     @GetMapping
     public String getAllPosts(Model model, @PageableDefault(size = 5) Pageable pageable) {
         Page<Post> postsPage = postService.getAllPosts(pageable);
-        model.addAttribute("posts", postsPage.getContent()); // Danh sách bài viết
-        model.addAttribute("currentPage", postsPage.getNumber()); // Số trang hiện tại
-        model.addAttribute("totalPages", postsPage.getTotalPages()); // Tổng số trang
-        return "blog"; // Tên template cho danh sách bài viết
+        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        model.addAttribute("posts", postsPage.getContent());
+        model.addAttribute("currentPage", postsPage.getNumber());
+        model.addAttribute("totalPages", postsPage.getTotalPages());
+        model.addAttribute("categories", categories); // Gán danh mục vào model
+        return "blog";
+    }
+
+    @GetMapping("/category/{category}")
+    public String getPostsByCategory(@PathVariable String category, Model model, @PageableDefault(size = 5) Pageable pageable) {
+        Page<Post> postsPage = postService.getPostsByCategory(category, pageable);
+        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        model.addAttribute("posts", postsPage.getContent());
+        model.addAttribute("currentPage", postsPage.getNumber());
+        model.addAttribute("totalPages", postsPage.getTotalPages());
+        model.addAttribute("categories", categories); // Gán danh mục vào model
+        model.addAttribute("selectedCategory", category); // Gán danh mục đã chọn
+        return "blog";
     }
 
     @GetMapping("/{postId}")
     public String getPostById(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
+        List<String> categories = postService.getAllCategories(); // Lấy danh mục
         model.addAttribute("post", post);
+        model.addAttribute("categories", categories); // Gán danh mục vào model
         return "blog-single"; // Tên template cho bài viết đơn
     }
 
@@ -66,6 +83,15 @@ public class PostController {
         postService.deletePost(postId);
         return "redirect:/blog"; // Chuyển hướng đến danh sách bài viết
     }
+
+    @GetMapping("/search")
+    public String searchPosts(@RequestParam("title") String title, Model model, @PageableDefault(size = 5) Pageable pageable) {
+        Page<Post> postsPage = postService.searchByTitle(title, pageable);
+        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        model.addAttribute("posts", postsPage.getContent());
+        model.addAttribute("currentPage", postsPage.getNumber());
+        model.addAttribute("totalPages", postsPage.getTotalPages());
+        model.addAttribute("categories", categories); // Gán danh mục vào model
+        return "blog"; // Trả về template blog
+    }
 }
-
-
