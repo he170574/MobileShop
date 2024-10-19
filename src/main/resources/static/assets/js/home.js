@@ -14,8 +14,8 @@ $(document).ready(function() {
                                 <div class="card text-center">
                                     <img src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
                                     <div class="card-body">
-                                        <h5 class="card-title">${product.productName}</h5>
-                                        <p class="card-text text-danger">${product.price} đ</p>
+                                        <h5 class="card-title mb-0">${product.productName}</h5>
+                                        <p class="card-text text-danger mb-0">${product.price} đ</p>
                                     </div>
                                 </div>
                             </div>

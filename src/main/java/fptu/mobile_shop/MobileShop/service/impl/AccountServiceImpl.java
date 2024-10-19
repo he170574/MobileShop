@@ -62,11 +62,6 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     }
 
-    @Transactional
-    @Override
-    public void updateAccountImage(String username, String newImage) {
-        accountRepository.updateAccountImage(username, newImage);
-    }
 
     @Transactional
     @Override

@@ -162,6 +162,7 @@ function login() {
             data: formData,
             success: function (response) {
                 // Xử lý khi đăng nhập thành công
+                loadAccountData();
                 window.location.href = '/home';
             },
             error: function (error) {
@@ -194,7 +195,10 @@ function loadAccountData() {
                 // $('#account-img').attr('src', account.image);
                 $('#logout-btn').css('display', 'block');
                 $('#login-btn').css('display', 'none');
-                // openAccountModel(account.fullName);
+
+                if (response.data.role === 'ROLE_ADMIN' || response.data.role === 'ROLE_STAFF') {
+                    $('#manage-btn').css('display', 'block');
+                }
             }
         },
         error: function (xhr, status, error) {

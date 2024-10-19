@@ -13,10 +13,7 @@ public interface AccountService {
 
     Account getByUsername(String userName);
 
-
     void updateAccount(Account account);
-
-    void updateAccountImage(String username, String newImage);
 
     int updateAccountByAccountUserName(String username, String newPass, String oldPassword);
 
