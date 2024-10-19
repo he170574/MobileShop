@@ -65,7 +65,6 @@ public class AccountController {
                         account.getDateOfBirth(),
                         account.getEmail(),
                         account.getFullName(),
-                        account.getImage(),
                         account.getPhoneNumber(),
                         account.getUsername(),
                         account.getRole().getRoleName()

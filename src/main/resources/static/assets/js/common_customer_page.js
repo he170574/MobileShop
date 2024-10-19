@@ -1,8 +1,6 @@
 $(document).ready(function () {
     loadAccountData();
 
-    //
-
     $('.login-btn').on('click', function () {
         $('#registerModal').modal('hide');
     });
@@ -188,6 +186,7 @@ function loadAccountData() {
         },
         success: function (response) {
             if (response.data === null) {    // NO LOGIN
+                $('#accountBtn').css('display', 'none');
                 register();
                 login();
             } else {                          //Logged
@@ -195,6 +194,7 @@ function loadAccountData() {
                 // $('#account-img').attr('src', account.image);
                 $('#logout-btn').css('display', 'block');
                 $('#login-btn').css('display', 'none');
+                $('#accountBtn').css('display', 'block');
 
                 if (response.data.role === 'ROLE_ADMIN' || response.data.role === 'ROLE_STAFF') {
                     $('#manage-btn').css('display', 'block');
