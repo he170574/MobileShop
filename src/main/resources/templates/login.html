@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Login | E-Shopper</title>
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/css/prettyPhoto.css" rel="stylesheet">
+	<link href="/assets/css/price-range.css" rel="stylesheet">
+	<link href="/assets/css/animate.css" rel="stylesheet">
+	<link href="/assets/css/main.css" rel="stylesheet">
+	<link href="/assets/css/responsive.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="/assets/js/html5shiv.js"></script>
+	<script src="/assets/js/respond.min.js"></script>
+	<![endif]-->
+	<link rel="shortcut icon" href="/assets/images/ico/favicon.ico">
+	<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/ico/apple-touch-icon-144-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/ico/apple-touch-icon-114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/ico/apple-touch-icon-72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="/assets/images/ico/apple-touch-icon-57-precomposed.png">
+</head>
+
+<body>
+<header id="header">
+	<div class="header_top">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="contactinfo">
+						<ul class="nav nav-pills">
+							<li><a href=""><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
+							<li><a href=""><i class="fa fa-envelope"></i> info@domain.com</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="social-icons pull-right">
+						<ul class="nav navbar-nav">
+							<li><a href=""><i class="fa fa-facebook"></i></a></li>
+							<li><a href=""><i class="fa fa-twitter"></i></a></li>
+							<li><a href=""><i class="fa fa-linkedin"></i></a></li>
+							<li><a href=""><i class="fa fa-dribbble"></i></a></li>
+							<li><a href=""><i class="fa fa-google-plus"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="header-middle">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="logo pull-left">
+						<a href=""><img src="/assets/images/home/logo.png" alt="" /></a>
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<div class="shop-menu pull-right">
+						<ul class="nav navbar-nav">
+							<li><a href=""><i class="fa fa-user"></i> Tài khoản</a></li>
+							<li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
+							<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
+							<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
+							<li><a href="/auth/login" class="active"><i class="fa fa-lock"></i> Đăng nhập</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="header-bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-9">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+					<div class="mainmenu pull-left">
+						<ul class="nav navbar-nav collapse navbar-collapse">
+							<li><a href="">Trang chủ</a></li>
+							<li class="dropdown"><a href="#">Cửa hàng<i class="fa fa-angle-down"></i></a>
+								<ul role="menu" class="sub-menu">
+									<li><a href="shop.html">Sản phẩm</a></li>
+									<li><a href="product-details.html">Chi tiết sản phẩm</a></li>
+									<li><a href="checkout.html">Thanh toán</a></li>
+									<li><a href="cart.html">Giỏ hàng</a></li>
+									<li><a href="/auth/login" class="active">Đăng nhập</a></li>
+								</ul>
+							</li>
+							<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
+								<ul role="menu" class="sub-menu">
+									<li><a href="blog.html">Danh sách Blog</a></li>
+									<li><a href="blog-single.html">Blog Chi tiết</a></li>
+								</ul>
+							</li>
+							<li><a href="404.html">404</a></li>
+							<li><a href="contact-us.html">Liên hệ</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="search_box pull-right">
+						<input type="text" placeholder="Tìm kiếm"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<section id="form">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<div class="login-form">
+					<h2>Đăng nhập vào tài khoản của bạn</h2>
+					<form action="/auth/login" method="post" id="login-form">
+						<input type="email" id="email" name="email" placeholder="Địa chỉ Email" required />
+						<input type="password" id="password" name="password" placeholder="Mật khẩu" required />
+						<span>
+        <input type="checkbox" class="checkbox"> Giữ tôi đăng nhập
+    </span>
+						<button type="submit" class="btn btn-default" id="loginBtn">Đăng nhập</button>
+					</form>
+
+					<div>
+
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-1">
+				<h2 class="or">HOẶC</h2>
+			</div>
+			<div class="col-sm-4">
+				<div class="signup-form">
+					<h2>Đăng ký người dùng mới!</h2>
+					<form action="/auth/register" method="post">
+						<input type="text" name="userName" placeholder="Tên" required />
+						<input type="email" name="email" placeholder="Địa chỉ Email" required />
+						<input type="password" name="password" placeholder="Mật khẩu" required />
+						<button type="submit" class="btn btn-default">Đăng ký</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<footer id="footer">
+	<div class="footer-bottom">
+		<div class="container">
+			<div class="row">
+				<p class="pull-left">Bản quyền © 2024 E-Shopper. Tất cả quyền được bảo lưu.</p>
+				<p class="pull-right">Thiết kế bởi <span><a target="_blank" href="#">Tên bạn</a></span></p>
+			</div>
+		</div>
+	</div>
+</footer>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.scrollUp.min.js"></script>
+<script src="/assets/js/price-range.js"></script>
+<script src="/assets/js/jquery.prettyPhoto.js"></script>
+<script src="/assets/js/main.js"></script>
+
+<script>
+	$('#login-form').submit(function(event) {
+		event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+		$.ajax({
+			type: 'POST',
+			url: '/auth/login',
+			data: {
+				email: $('#email').val(),
+				password: $('#password').val()
+			},
+			contentType: 'application/x-www-form-urlencoded', // Đổi kiểu contentType
+			success: function(response) {
+				console.log(response);  // Kiểm tra nội dung phản hồi
+				try {
+					const res = JSON.parse(response);  // Đảm bảo phản hồi là JSON
+					if (res.status === 'success') {
+						window.location.href = '/dashboard'; // Điều hướng tới trang sau khi đăng nhập thành công
+					} else {
+						alert(res.message); // Hiển thị thông báo lỗi
+					}
+				} catch (e) {
+					alert('Phản hồi từ server không phải định dạng JSON.');
+				}
+			},
+			error: function(xhr, status, error) {
+				console.log("Status: " + status);
+				console.log("Error: " + error);
+				console.log("Response: " + xhr.responseText);
+				alert('Lỗi: ' + xhr.responseText);
+			}
+		});
+	});
+
+</script>
+</body>
+</html>
