@@ -13,6 +13,7 @@
     <link href="/assets/css/animate.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -89,6 +90,34 @@
         </div>
     </section><!--/slider-->
 
+    <!-- Brand Filter -->
+    <section id="brand-search" class="container mt-3">
+        <h4>Search by Brand</h4>
+        <div class="brand-container d-flex flex-wrap">
+            <button class="brand btn btn-outline-secondary" data-brand="apple">Apple</button>
+            <button class="brand btn btn-outline-secondary" data-brand="samsung">Samsung</button>
+            <button class="brand btn btn-outline-secondary" data-brand="xiaomi">Xiaomi</button>
+            <!-- Add more brand buttons dynamically from DB -->
+        </div>
+    </section>
+
+    <!-- Price Filter -->
+    <section id="price-filter" class="container mt-3">
+        <button id="toggle-price" class="btn btn-outline-primary">
+            <i class="fa fa-money"></i> Giá
+        </button>
+    </section>
+
+    <!-- Sorting Section -->
+    <section id="sorting-options" class="container mt-3">
+        <h4>Sort By</h4>
+        <button id="sort-high-to-low" class="sort-btn btn btn-outline-secondary">Giá Cao - Thấp</button>
+        <button id="sort-low-to-high" class="sort-btn btn btn-outline-secondary">Giá Thấp - Cao</button>
+    </section>
+
+
+
+    <!-- Product List -->
     <section>
         <div class="container">
             <div class="row">
@@ -103,6 +132,8 @@
             </div>
         </div>
     </section>
+
+
 </main>
 
 <th:block th:replace="common/footer.html"></th:block>
@@ -114,5 +145,6 @@
 <script src="/assets/js/jquery.prettyPhoto.js"></script>
 <script src="/assets/js/common_customer_page.js"></script>
 <script src="/assets/js/home.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
 </body>
 </html>

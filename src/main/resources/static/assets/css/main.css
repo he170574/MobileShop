@@ -2580,4 +2580,34 @@ h2.title {
   margin-top: 50px; /* Adjust the top margin to move the bar down */
 }
 
+/* Custom styling for the modal */
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#price-slider {
+  margin-top: 20px;
+}
+
+#price-display {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #e60000;  /* Red for highlighting the price */
+}
+
+/* Button styling inside the modal */
+.modal-footer .btn {
+  width: 100%;
+  padding: 10px;
+}
+
+.modal-footer .btn-danger {
+  background-color: #e60000;
+  border-color: #e60000;
+}
+
+#toggle-price{
+  margin-top: 10px;
+}
 
