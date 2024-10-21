@@ -3,11 +3,14 @@ package fptu.mobile_shop.MobileShop.service;
 import fptu.mobile_shop.MobileShop.entity.Post;
 import fptu.mobile_shop.MobileShop.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -15,8 +18,8 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public Page<Post> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     public Optional<Post> getPostById(Long postId) {
@@ -46,6 +49,20 @@ public class PostService {
 
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
+    }
+    public Page<Post> getPostsByCategory(String category, Pageable pageable) {
+        return postRepository.findByCategoryPost(category, pageable);
+    }
+
+    public List<String> getAllCategories() {
+        return postRepository.findAll().stream()
+                .map(Post::getCategoryPost)
+                .distinct() // Lấy các danh mục duy nhất
+                .collect(Collectors.toList());
+    }
+
+    public Page<Post> searchByTitle(String title, Pageable pageable) {
+        return postRepository.findByTitleContaining(title, pageable);
     }
 }
 
