@@ -1,6 +1,5 @@
 package fptu.mobile_shop.MobileShop.controller;
 
-
 import fptu.mobile_shop.MobileShop.dto.AccountDTO;
 import fptu.mobile_shop.MobileShop.dto.ChangePasswordDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
@@ -10,11 +9,17 @@ import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.AccountService;
 import fptu.mobile_shop.MobileShop.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class AccountController {
@@ -27,6 +32,49 @@ public class AccountController {
         this.accountService = accountService;
         this.roleService = roleService;
     }
+
+//    @GetMapping("/get-all-users")
+//    public ResponseEntity<ResponseDTO> getAllUsers(Authentication authentication,
+//                                                   @RequestParam Integer pageNumber,
+//                                                   @RequestParam Integer pageSize,
+//                                                   @RequestParam(defaultValue = "") String search) {
+//        if (authentication == null) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                    .body(ResponseDTO.builder().message("Login before").build());
+//        }
+//
+//        if (!((CustomAccount) authentication.getPrincipal()).getRole().equals(ROLE.ADMIN)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                    .body(ResponseDTO.builder().message("Don't have permission").build());
+//        }
+//
+//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+//
+//        Page<Account> pageUsers = accountService.getAllActiveAccounts(search, pageable);
+//
+//        List<AccountDTO> lstUsers = pageUsers.stream().map(item -> AccountDTO.builder()
+//                .accountId(item.getAccountId())
+//                .fullName(item.getFullName())
+//                .email(item.getEmail())
+//                .phoneNumber(item.getPhoneNumber())
+//                .role(item.getRole().getRoleName())
+//                .deleted(item.getDeleted())
+//                .build()).toList();
+//
+//        // Tạo map để chứa thông tin phân trang
+//        HashMap<String, Object> mapUsers = new HashMap<>();
+//        mapUsers.put("lstUsers", lstUsers);
+//        mapUsers.put("pageNumber", pageUsers.getNumber());
+//        mapUsers.put("pageSize", pageUsers.getSize());
+//        mapUsers.put("totalPage", pageUsers.getTotalPages());
+//        mapUsers.put("totalElements", pageUsers.getTotalElements());
+//
+//        // Trả về ResponseDTO
+//        return ResponseEntity.ok().body(ResponseDTO.builder()
+//                .message("Success")
+//                .data(mapUsers)
+//                .build());
+//    }
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> postRegister(@RequestBody AccountDTO accountDTO) {
@@ -42,7 +90,7 @@ public class AccountController {
             account.setRole(roleService.getRoleByRoleName(ROLE.MEMBER));
             accountService.save(account);
             return ResponseEntity.ok().body(ResponseDTO.builder().message("Register Success").build());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(ResponseDTO.builder().message(e.getMessage()).build());
         }
@@ -67,8 +115,7 @@ public class AccountController {
                         account.getFullName(),
                         account.getPhoneNumber(),
                         account.getUsername(),
-                        account.getRole().getRoleName()
-                );
+                        account.getRole().getRoleName());
                 responseDTO.setData(accountDTO);
             }
             return ResponseEntity.ok().body(responseDTO);
@@ -80,26 +127,29 @@ public class AccountController {
     }
 
     @PostMapping("/update-account")
-    public ResponseEntity<ResponseDTO> updateAccount(@RequestBody AccountDTO accountDTO, Authentication authentication) {
+    public ResponseEntity<ResponseDTO> updateAccount(@RequestBody AccountDTO accountDTO,
+                                                     Authentication authentication) {
         try {
-            if (authentication == null){
-                //Check Login
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseDTO.builder().message("Please Login!").build());
+            if (authentication == null) {
+                // Check Login
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ResponseDTO.builder().message("Please Login!").build());
             }
             CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
             Account account = accountService.getByUsername(accountDTO.getUsername());
 
-            if (   (!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
+            if ((!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
 
                     accountDTO.getRole() != null)) {
                 // If update important filed, need to check
-                if (customAccount.getRole().equals(ROLE.ADMIN)){
-                    //Is Admin
+                if (customAccount.getRole().equals(ROLE.ADMIN)) {
+                    // Is Admin
                     account.setRole(roleService.getRoleByRoleName(accountDTO.getRole()));
                     account.setUsername(accountDTO.getUsername());
-                }else{
-                    //Not Admin
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ResponseDTO.builder().message("No permission to update").build());
+                } else {
+                    // Not Admin
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(ResponseDTO.builder().message("No permission to update").build());
                 }
             }
 
@@ -118,24 +168,59 @@ public class AccountController {
 
     @PostMapping("/forgot-pass")
     public ResponseEntity<ResponseDTO> getNewPassWord(@RequestBody String email) {
-
-        if(accountService.checkMailExist( email) == 0){
-            return ResponseEntity.badRequest().body(ResponseDTO.builder().message("Send Mail fail").build());
+        // Kiểm tra xem email có tồn tại không
+        if (accountService.checkMailExist(email) == 0) {
+            return ResponseEntity.badRequest().body(ResponseDTO.builder().message("Email không tồn tại").build());
         }
-        accountService.updateNewPassWord(email);
-        return ResponseEntity.ok().body(ResponseDTO.builder().message("Send Mail Success").build());
+
+        // Gửi email với mật khẩu mới
+        try {
+            accountService.updateNewPassWord(email);
+            return ResponseEntity.ok().body(ResponseDTO.builder().message("Gửi email thành công").build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseDTO.builder().message("Gửi email thất bại: " + e.getMessage()).build());
+        }
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<ResponseDTO> changePassWord(Authentication authentication, @RequestBody ChangePasswordDTO changePasswordDTO){
+    public ResponseEntity<ResponseDTO> changePassWord(Authentication authentication,
+                                                      @RequestBody ChangePasswordDTO changePasswordDTO) {
         CustomAccount account = (CustomAccount) authentication.getPrincipal();
 
-        int numberRowEffect = accountService.updateAccountByAccountUserName(account.getUsername(), changePasswordDTO.getNewPassword(), changePasswordDTO.getOldPassword());
+        int numberRowEffect = accountService.updateAccountByAccountUserName(account.getUsername(),
+                changePasswordDTO.getNewPassword(), changePasswordDTO.getOldPassword());
 
-        if(numberRowEffect > 0){
+        if (numberRowEffect > 0) {
             return ResponseEntity.ok().body(ResponseDTO.builder().message("change password success").build());
         }
-        return ResponseEntity.badRequest().body(ResponseDTO.builder().message("change password fail").data("Old Password Wrong").build());
+        return ResponseEntity.badRequest()
+                .body(ResponseDTO.builder().message("change password fail").data("Old Password Wrong").build());
+    }
+
+    @PostMapping("/toggle-account-status")
+    public ResponseEntity<ResponseDTO> toggleAccountStatus(@RequestParam Integer accountId, Authentication authentication) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
+            Account account = accountService.getAccountByAccountId(accountId);
+
+            if (customAccount.getRole().equals(ROLE.ADMIN)) {
+                // Admin không thể thay đổi trạng thái của tài khoản
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ResponseDTO.builder().message("Admin cannot change account status").build());
+            }
+
+            if (account.getDeleted()) {
+                account.setDeleted(false); // Kích hoạt
+            } else {
+                account.setDeleted(true); // Hủy kích hoạt
+            }
+            accountService.updateAccount(account);
+            responseDTO.setMessage("Account status updated successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setMessage("Internal Server Error");
+            return ResponseEntity.internalServerError().body(responseDTO);
+        }
     }
 }
-
