@@ -41,7 +41,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("UPDATE Account a set a.deleted = true WHERE a = :account")
     void deActiveAccount(Account account);
 
-    boolean existsByEmail(String email);
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Account a WHERE LOWER(a.email) = LOWER(:email)")
+    boolean existsByEmail(@Param("email") String email);
 
     List<Account> getAccountsByDeletedTrue();
     @Transactional

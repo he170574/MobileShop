@@ -3,13 +3,12 @@ $(document).ready(function() {
 });
 let lsdRing = $('.lsd-ring-container');
 function sendForm(){
-    $('#form-forgot').on('click',function (e){
-
-        const email = $('#email-forgot-password').val();
+    $('#form-forgot').on('click', function (e) {
+        const email = $('#email-forgot-password').val().trim().toLowerCase(); // Ensure the email is lowercase and trimmed
 
         $.ajax({
             url: '/forgot-pass',
-            data: email,
+            data: JSON.stringify({ email: email }), // Make sure this sends the correct JSON
             type: 'POST',
             contentType: 'application/json',
             beforeSend: function () {
@@ -19,30 +18,27 @@ function sendForm(){
                 Swal.fire({
                     title: "Get Password Success",
                     icon: "success",
-                    text: "Please ensure check your mail to get password",
+                    text: "Please check your mail for the new password",
                     confirmButtonText: "OK",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = '/home'
+                        window.location.href = '/home';
                     }
                 });
             },
             error: function (xhr, status, error) {
-                console.log('Error:', error);
+                const response = JSON.parse(xhr.responseText);
                 Swal.fire({
-                    title: "Get Password fail",
+                    title: "Get Password Fail",
                     icon: "error",
-                    text: "The email is not exist",
+                    text: response.message || "The email does not exist",
                     confirmButtonText: "OK",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/forgot-password'
-                    }
                 });
             },
-            complete: function (xhr, status) {
+            complete: function () {
                 lsdRing.addClass('d-none');
             }
         });
-    })
+    });
+
 }

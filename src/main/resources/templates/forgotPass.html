@@ -13,50 +13,63 @@
     <link href="/assets/css/animate.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .center-content {
+            min-height: 30vh; /* Chiều cao tối thiểu là 100% chiều cao của màn hình */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
+        .content-box {
+            background-color: white; /* Màu nền của hộp nội dung */
+            border: 2px solid #000; /* Viền đen xung quanh hộp nội dung */
+            border-radius: 10px; /* Bo góc viền */
+            padding: 20px; /* Khoảng cách bên trong hộp nội dung */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho hộp nội dung */
+            width: 400px; /* Chiều rộng cố định */
+        }
+        .form-forgot{
+
+        }
+    </style>
 </head>
 
 <body>
 
 <th:block th:replace="common/header.html"></th:block>
 
-<main>
-    <div class="bg-light d-flex justify-content-center">
-        <div class="my-5" style="height: 420px;">
-            <div class="px-5 mb-3 mt-5">
-                <div class="d-flex justify-content-center my-3">
-                    <h4 class="fw-bold">Forgot Password?</h4>
-                </div>
-                <div class="d-flex align-items-center justify-content-center" style="color: grey;">
-                    Enter your email and we'll send you new password.
-                    <!-- <a type="button" class="ms-1" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">Sign in</a> -->
-                </div>
-            </div>
-
-            <div>
-
-                <div class="form-group mb-4">
-                    <div class="d-flex justify-content-between">
-                        <label class="fw-semibold form-label" for="email-forgot-password">Email</label>
-                        <!-- <a href="" style="font-size: 14px">Remind me</a> -->
-                    </div>
-                    <input type="text" class="form-control border border-dark-subtle mt-3"
-                           placeholder="Enter your email" id="email-forgot-password" name="email"
-                           aria-describedby="emailHelp" autocomplete="e">
-                    <span class="form-message form-text text-danger"></span>
-                </div>
-
-                <button type="button" id="form-forgot" class="btn btn-dark fw-semibold" style="width: 100%;">Get
-                    Password
-                </button>
-            </div>
+<main class="center-content">
+    <div class="content-box">
+        <div class="d-flex justify-content-center my-3">
+            <h4 class="fw-bold">Forgot Password?</h4>
         </div>
+        <div class="d-flex align-items-center justify-content-center" style="color: grey;">
+            Enter your email and we'll send you new password.
+        </div>
+
+        <div class="form-group mb-4">
+            <div class="d-flex justify-content-between">
+                <label class="fw-semibold form-label" for="email-forgot-password">Email</label>
+            </div>
+            <input type="text" class="form-control border border-dark-subtle mt-3"
+                   placeholder="Enter your email" id="email-forgot-password" name="email"
+                   aria-describedby="emailHelp" autocomplete="e">
+            <span class="form-message form-text text-danger"></span>
+        </div>
+
+        <button type="button" id="form-forgot" class="btn btn-danger fw-semibold" style="width: 100%;">Get Password</button>
     </div>
 </main>
 
 <th:block th:replace="common/footer.html"></th:block>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/js/forgotPass.js"></script>
 <script src="/js/common_customer_page.js"></script>
+
 </body>
 </html>

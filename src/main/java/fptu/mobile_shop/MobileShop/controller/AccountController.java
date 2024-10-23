@@ -168,12 +168,18 @@ public class AccountController {
 
     @PostMapping("/forgot-pass")
     public ResponseEntity<ResponseDTO> getNewPassWord(@RequestBody String email) {
-
+        // Kiểm tra xem email có tồn tại không
         if (accountService.checkMailExist(email) == 0) {
-            return ResponseEntity.badRequest().body(ResponseDTO.builder().message("Send Mail fail").build());
+            return ResponseEntity.badRequest().body(ResponseDTO.builder().message("Email không tồn tại").build());
         }
-        accountService.updateNewPassWord(email);
-        return ResponseEntity.ok().body(ResponseDTO.builder().message("Send Mail Success").build());
+
+        // Gửi email với mật khẩu mới
+        try {
+            accountService.updateNewPassWord(email);
+            return ResponseEntity.ok().body(ResponseDTO.builder().message("Gửi email thành công").build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ResponseDTO.builder().message("Gửi email thất bại: " + e.getMessage()).build());
+        }
     }
 
     @PostMapping("/changePassword")
