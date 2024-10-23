@@ -48,7 +48,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong','hothephong2003@gmail.com','0978541603','2003-02-02','Hanoi',NULL,'2024-10-18 04:40:15',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,NULL,'2024-10-19 00:00:00',0,3);
+INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong',NULL,NULL,NULL,NULL,NULL,'2024-10-18 04:40:15',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,NULL,'2024-10-19 00:00:00',0,3);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +239,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'iphone 16 Pro Max 1TB','Titan Đen 1','https://res.cloudinary.com/dvshotakm/image/upload/v1728594813/mflrimfyqklobs6bjnau.webp','samsung',34999000,10,_binary '\0'),(2,'iphone 16 Pro Max 512GB','Titan Trắng','https://res.cloudinary.com/dvshotakm/image/upload/v1729530780/mrhafg0reyjqplyputty.webp','Apple',35999000,10,_binary '\0'),(3,'iphone 16 Pro Max ','Titan Xám','https://res.cloudinary.com/dvshotakm/image/upload/v1728594867/lggz6ruxllph2hatqqzl.webp','Xiaomi',45899000,21,_binary '\0'),(4,'iphone 15','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729530797/onlfg5eexbedxpcl2cng.jpg','Apple',21899000,25,_binary '\0'),(5,'iphone 15 Plus','Hồng','https://res.cloudinary.com/dvshotakm/image/upload/v1729364509/vnnqztc04todqxodalya.jpg','samsung',22500000,12,_binary '\0'),(6,'iphone 15 Pro','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729364574/d3wqg9mpd8lsueh8f5ia.jpg','Xiaomi',23670000,11,_binary '\0'),(7,'iphone 15 Pro Max ','Titan xanh dương','https://res.cloudinary.com/dvshotakm/image/upload/v1729530821/l2bejiljpjwahredaltn.jpg','Apple',30499000,5,_binary '\0');
+INSERT INTO `product` VALUES (1,'iphone 16 Pro Max 1TB','Titan Đen 1','https://res.cloudinary.com/dvshotakm/image/upload/v1728594813/mflrimfyqklobs6bjnau.webp','samsung',34999000,10,_binary '\0'),(2,'iphone 16 Pro Max 512GB','Titan Trắng','https://res.cloudinary.com/dvshotakm/image/upload/v1728593356/rxjujhbsagtmqfhifral.webp','iphone',35999000,10,_binary '\0'),(3,'iphone 16 Pro Max ','Titan Xám','https://res.cloudinary.com/dvshotakm/image/upload/v1728594867/lggz6ruxllph2hatqqzl.webp','Xiaomi',45899000,21,_binary '\0'),(4,'iphone 15','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729364429/gtzueqykoi3waanqy44j.jpg','iphone',21899000,25,_binary '\0'),(5,'iphone 15 Plus','Hồng','https://res.cloudinary.com/dvshotakm/image/upload/v1729364509/vnnqztc04todqxodalya.jpg','samsung',22500000,12,_binary '\0'),(6,'iphone 15 Pro','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729364574/d3wqg9mpd8lsueh8f5ia.jpg','Xiaomi',23670000,11,_binary '\0'),(7,'iphone 15 Pro Max ','Titan xanh dương','https://res.cloudinary.com/dvshotakm/image/upload/v1729371368/u2fp42gpzprltbnicri0.jpg','iphone',30499000,5,_binary '\0');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -256,7 +256,7 @@ CREATE TABLE `productcategory` (
   `DELETED` tinyint(1) DEFAULT '0',
   `category_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`CategoryID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,7 +265,7 @@ CREATE TABLE `productcategory` (
 
 LOCK TABLES `productcategory` WRITE;
 /*!40000 ALTER TABLE `productcategory` DISABLE KEYS */;
-INSERT INTO `productcategory` VALUES (2,'Samsung',0,NULL),(3,'Xiaomi',0,NULL),(4,'Apple',0,NULL);
+INSERT INTO `productcategory` VALUES (1,'iphone',0,NULL),(2,'samsung',0,NULL),(3,'Xiaomi',0,NULL);
 /*!40000 ALTER TABLE `productcategory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -356,4 +356,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23 13:21:47
+-- Dump completed on 2024-10-21 23:10:43
