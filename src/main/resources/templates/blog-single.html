@@ -181,16 +181,9 @@
 							<h3 th:text="${post.title}">Tiêu đề bài viết</h3>
 							<div class="post-meta">
 								<ul>
-									<li><i class="fa fa-user"></i> <span th:text="${post.authorID}">Author Name</span></li>
+									<li><i class="fa fa-user"></i> <span th:text="${post.author.fullName}">Author Name</span></li>
 									<li><i class="fa fa-calendar"></i> <span th:text="${post.createdDate}">DEC 5, 2013</span></li>
 								</ul>
-								<span>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-o"></i>
-                    </span>
 							</div>
 							<a th:href="@{${post.thumbnail}}" th:src="${post.thumbnail}">
 								<img th:src="${post.thumbnail}" alt="Thumbnail" />
