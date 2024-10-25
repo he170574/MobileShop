@@ -9,15 +9,6 @@
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
-    <style>
-        #submit-form {
-            margin-top: 15px;
-        }
-
-        #changePass{
-            margin-top: 15px
-        }
-    </style>
 </head>
 <body>
 <th:block th:replace="common/header.html"></th:block>
@@ -56,63 +47,19 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between">
-        <button type="button" class="btn text-light" id="submit-form"
-                style="background-color: blue; color: white">
-            Update
-        </button>
-        <button type="button" class="btn text-light bg-secondary ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="changePass">
-            Change Password
-        </button>
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Update Account</button>
     </div>
 </form>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="width: 450px;">
-        <div class="modal-content" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <div class="modal-header d-flex justify-content-center header-login bg-dark p-3"
-                 style="border-top-right-radius: 6px;border-top-left-radius: 6px;">
-                <img src="/assets" style="width: 150px;" alt="">
-            </div>
-            <div class="modal-body body-login p-4">
-                <div class="px-5 mb-3">
-                    <div class="d-flex justify-content-center my-3">
-                        <h4 class="fw-bold">Change PassWord!</h4>
-                    </div>
-                </div>
-                <form>
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="fw-semibold form-label" for="old-pass">Old Password</label>
-                        </div>
-                        <input type="password" class="form-control border border-dark-subtle" id="old-pass" aria-describedby="emailHelp" autocomplete="username">
-                        <span class="form-message form-text text-danger"></span>
-                    </div>
-                    <div class="mb-4">
-                        <div class="d-flex justify-content-between">
-                            <label class="fw-semibold form-label" for="new-pass">New Password</label>
-                        </div>
-                        <input type="password" class="form-control border border-dark-subtle" id="new-pass" name="password" autocomplete="current-password">
-                        <span class="form-message form-text text-danger"></span>
-                    </div>
-                    <button type="button" id="form-change-pass" class="btn btn-dark fw-semibold" style="width: 100%;">
-                        Save
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <th:block th:replace="common/footer.html"></th:block>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!--<script src="/js/common_customer_page.js"></script>-->
-<script src="/js/editAccInfo.js"></script>
 <script src="/js/common_customer_page.js"></script>
+<script src="/js/editAccInfo.js"></script>
 </body>
 </html>

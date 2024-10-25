@@ -592,16 +592,18 @@ ul.sub-menu {
 }
 
 .girl {
-  margin-left: 80px;
-  margin-top: 80px;
+  margin-left: 0;
 }
 
 .item h1 {
-  color: #a020f0;
+  color: #B4B1AB;
   font-family: abel;
   font-size: 48px;
   margin-top: 115px;
-  font-weight: bold;
+}
+
+.item h1 span {
+	color:#FE980F;
 }
 
 .item h2 {
