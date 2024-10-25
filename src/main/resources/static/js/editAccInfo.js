@@ -21,11 +21,11 @@ function loadData() {
                 if (account.image !== null) {
                     $('#preview-img').attr('src', account.image);
                 }
-                $('#username').val(account.username);
+                $('#username1').val(account.username);
                 $('#fullName').val(account.fullName);
-                $('#email').val(account.email);
+                $('#email1').val(account.email);
                 $('#phoneNumber').val(account.phoneNumber);
-                $('#dob').val(account.dateOfBirth);
+                $('#dob1').val(account.dateOfBirth);
                 $('#address').val(account.address);
             }
         },
