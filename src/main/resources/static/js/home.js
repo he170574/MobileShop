@@ -35,8 +35,4 @@ $(document).ready(function() {
 
     loadAllProducts();
 
-    $(document).on('click', '.card', function() {
-        const productId = $(this).closest('.product-item').data('product-id');
-        window.location.href = `/productDetail?id=${productId}`;
-    });
 });

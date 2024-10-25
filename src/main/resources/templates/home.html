@@ -14,13 +14,17 @@
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/css/responsive.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
 <th:block th:replace="common/header.html"></th:block>
 
 <main>
-    <section id="slider"><!--slider-->
+
+
+    <!-- slide -->
+    <section id="slider">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -34,41 +38,44 @@
                         <div class="carousel-inner">
                             <div class="item active">
                                 <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
-                                    <h2>Free E-Commerce Template</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
+                                    <h1>Mobile Shop</h1>
+                                    <h2>iPhone 16 Pro Max</h2>
+                                    <p>Thinner bezels, for a larger screen. Durable Titanium design.
+                                        Cinema master. Divine resolution. A18 chip has great capacity.
+                                        The first line is designed for Apple Intelligence</p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <img src="/assets/images/home/girl1.jpg" class="girl img-responsive" alt=""/>
-                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>
+                                    <img src="/img/16prm.webp" class="girl img-responsive" alt=""/>
+<!--                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>-->
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
+                                    <h1>Mobile Shop</h1>
                                     <h2>100% Responsive Design</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
+                                    <p>Thinner bezels, for a larger screen. Durable Titanium design.
+                                        Cinema master. Divine resolution. A18 chip has great capacity.
+                                        The first line is designed for Apple Intelligence</p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <img src="/assets/images/home/girl2.jpg" class="girl img-responsive" alt=""/>
-                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>
+                                    <img src="/img/16.webp" class="girl img-responsive" alt=""/>
+<!--                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>-->
                                 </div>
                             </div>
                             <div class="item">
                                 <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
+                                    <h1>Mobile Shop</h1>
                                     <h2>Free Ecommerce Template</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
+                                    <p>Thinner bezels, for a larger screen. Durable Titanium design.
+                                        Cinema master. Divine resolution. A18 chip has great capacity.
+                                        The first line is designed for Apple Intelligence</p>
                                     <button type="button" class="btn btn-default get">Get it now</button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <img src="/assets/images/home/girl3.jpg" class="girl img-responsive" alt=""/>
-                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>
+                                    <img src="/img/15prm1.webp" class="girl img-responsive" alt=""/>
+<!--                                    <img src="/assets/images/home/pricing.png" class="pricing" alt=""/>-->
                                 </div>
                             </div>
                         </div>
@@ -83,7 +90,7 @@
                 </div>
             </div>
         </div>
-    </section><!--/slider-->
+    </section>
 
     <!-- Brand Filter -->
     <section id="brand-search" class="container mt-3">
@@ -99,18 +106,18 @@
     <!-- Price Filter -->
     <section id="price-filter" class="container mt-3">
         <button id="toggle-price" class="btn btn-outline-primary">
-            <i class="fa fa-money"></i> Giá
+            <i class="fa fa-money"></i> Price
         </button>
     </section>
 
     <!-- Sorting Section -->
     <section id="sorting-options" class="container mt-3">
         <h4>Sort By</h4>
-        <button id="sort-high-to-low" class="sort-btn btn btn-outline-secondary">Giá Cao - Thấp</button>
-        <button id="sort-low-to-high" class="sort-btn btn btn-outline-secondary">Giá Thấp - Cao</button>
+        <button id="sort-high-to-low" class="sort-btn btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-down-wide-short"></i> High - Low</button>
+        <button id="sort-low-to-high" class="sort-btn btn btn-outline-secondary ">
+            <i class="fa-solid fa-arrow-down-short-wide"></i> Low - High</button>
     </section>
-
-
 
     <!-- Product List -->
     <section>
