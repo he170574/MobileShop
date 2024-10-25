@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
--- Host: localhost    Database: mobileshop
+-- Host: 127.0.0.1    Database: mobileshop
 -- ------------------------------------------------------
--- Server version	8.0.39
+-- Server version	8.0.32
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,7 +31,6 @@ CREATE TABLE `account` (
   `PHONE_NUMBER` varchar(20) DEFAULT NULL,
   `DATE_OF_BIRTH` date DEFAULT NULL,
   `ADDRESS` varchar(255) DEFAULT NULL,
-  `IMAGE` varchar(255) DEFAULT NULL,
   `REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP,
   `DELETED` tinyint(1) DEFAULT '0',
   `ROLE_ID` int DEFAULT NULL,
@@ -39,7 +38,7 @@ CREATE TABLE `account` (
   UNIQUE KEY `USERNAME` (`USERNAME`),
   KEY `ROLE_ID` (`ROLE_ID`),
   CONSTRAINT `account_ibfk_1` FOREIGN KEY (`ROLE_ID`) REFERENCES `role` (`ROLE_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,7 +47,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong','hothephong2003@gmail.com','0978541603','2003-02-02','Hanoi',NULL,'2024-10-18 04:40:15',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,NULL,'2024-10-19 00:00:00',0,3);
+INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong1','hothephong2003@gmail.com','0978541603','2003-02-02','Hanoi','2024-10-18 00:00:00',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,'2024-10-19 00:00:00',0,3),(5,'phong1','$2a$10$8yR0jK8j1mW4tS4g8YfngufpUr3wNmlPeHqQjz5ZNWOCvhrXkL9Ym','nguyen thi u2','phonghthe170574@fpt.edu.vn','1234567890','2000-02-02',NULL,'2024-10-23 00:00:00',0,3),(6,'k1','$2a$10$zyDzhAxHy8pySbSzDWFP0.TgicXWBmKvuRXlqcly9JEypsKzigepu','nguyen thi x1','ngnga020203@gmail.com','1098765432','2000-02-20',NULL,'2024-10-24 00:00:00',1,3);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +86,10 @@ DROP TABLE IF EXISTS `cart`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cart` (
   `CartID` bigint NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`CartID`)
+  `AccountID` int NOT NULL,
+  PRIMARY KEY (`CartID`),
+  KEY `AccountID` (`AccountID`),
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `account` (`ACCOUNT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -139,7 +141,7 @@ DROP TABLE IF EXISTS `orderhistory`;
 CREATE TABLE `orderhistory` (
   `OrderHistoryID` int NOT NULL AUTO_INCREMENT,
   `OrderID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL,
+  `ACCOUNT_ID` int NOT NULL,
   `Status` varchar(50) DEFAULT NULL,
   `UpdatedDate` datetime DEFAULT NULL,
   `Notes` varchar(255) DEFAULT NULL,
@@ -165,7 +167,7 @@ DROP TABLE IF EXISTS `orders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `orders` (
   `OrderID` int NOT NULL AUTO_INCREMENT,
-  `UserID` int DEFAULT NULL,
+  `ACCOUNT_ID` int NOT NULL,
   `OrderDate` datetime DEFAULT NULL,
   `OrderStatus` varchar(50) DEFAULT NULL,
   `TotalAmount` decimal(10,2) DEFAULT NULL,
@@ -190,17 +192,19 @@ DROP TABLE IF EXISTS `post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `post` (
-  `postid` bigint NOT NULL AUTO_INCREMENT,
-  `authorid` bigint DEFAULT NULL,
-  `brief_info` text,
-  `category_post` varchar(255) DEFAULT NULL,
-  `content` text,
-  `counts` int NOT NULL,
-  `created_date` datetime(6) DEFAULT NULL,
-  `status_post` varchar(255) DEFAULT NULL,
-  `thumbnail` varchar(255) DEFAULT NULL,
+  `postID` int NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  PRIMARY KEY (`postid`)
+  `content` text,
+  `briefInfo` text,
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `counts` int DEFAULT '0',
+  `authorID` int NOT NULL,
+  `createdDate` datetime DEFAULT NULL,
+  `categoryPost` varchar(255) DEFAULT NULL,
+  `statusPost` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`postID`),
+  KEY `authorID` (`authorID`),
+  CONSTRAINT `post_ibfk_1` FOREIGN KEY (`authorID`) REFERENCES `account` (`ACCOUNT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -254,7 +258,6 @@ CREATE TABLE `productcategory` (
   `CategoryID` int NOT NULL AUTO_INCREMENT,
   `CategoryName` varchar(100) NOT NULL,
   `DELETED` tinyint(1) DEFAULT '0',
-  `category_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`CategoryID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -265,7 +268,7 @@ CREATE TABLE `productcategory` (
 
 LOCK TABLES `productcategory` WRITE;
 /*!40000 ALTER TABLE `productcategory` DISABLE KEYS */;
-INSERT INTO `productcategory` VALUES (2,'Samsung',0,NULL),(3,'Xiaomi',0,NULL),(4,'Apple',0,NULL);
+INSERT INTO `productcategory` VALUES (2,'Samsung',0),(3,'Xiaomi',0),(4,'Apple',0);
 /*!40000 ALTER TABLE `productcategory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -279,7 +282,7 @@ DROP TABLE IF EXISTS `productcomment`;
 CREATE TABLE `productcomment` (
   `CommentID` int NOT NULL AUTO_INCREMENT,
   `ProductID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL,
+  `ACCOUNT_ID` int NOT NULL,
   `CommentText` text NOT NULL,
   `CommentDate` datetime DEFAULT NULL,
   PRIMARY KEY (`CommentID`)
@@ -305,7 +308,7 @@ DROP TABLE IF EXISTS `productrating`;
 CREATE TABLE `productrating` (
   `RatingID` int NOT NULL AUTO_INCREMENT,
   `ProductID` int DEFAULT NULL,
-  `UserID` int DEFAULT NULL,
+  `ACCOUNT_ID` int NOT NULL,
   `RatingValue` int DEFAULT NULL,
   `RatingDate` datetime DEFAULT NULL,
   PRIMARY KEY (`RatingID`)
@@ -356,4 +359,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23 13:21:47
+-- Dump completed on 2024-10-25 16:07:17
