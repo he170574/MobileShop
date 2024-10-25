@@ -28,6 +28,15 @@ function loadData() {
                 $('#fullName').val(account.fullName || '');
                 $('#phoneNumber').val(account.phoneNumber || '');
                 $('#address').val(account.address || '');
+                if (account.image !== null) {
+                    $('#preview-img').attr('src', account.image);
+                }
+                $('#username1').val(account.username);
+                $('#fullName').val(account.fullName);
+                $('#email1').val(account.email);
+                $('#phoneNumber').val(account.phoneNumber);
+                $('#dob1').val(account.dateOfBirth);
+                $('#address').val(account.address);
             }
         },
         complete: function () {

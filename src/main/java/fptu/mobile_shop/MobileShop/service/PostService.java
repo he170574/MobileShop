@@ -39,7 +39,7 @@ public class PostService {
                     post.setBriefInfo(postDetails.getBriefInfo());
                     post.setThumbnail(postDetails.getThumbnail());
                     post.setCounts(postDetails.getCounts());
-                    post.setAuthorID(postDetails.getAuthorID());
+                    post.setAuthor(postDetails.getAuthor()); // Cập nhật đối tượng Account (tác giả)
                     post.setCategoryPost(postDetails.getCategoryPost());
                     post.setStatusPost(postDetails.getStatusPost());
                     return postRepository.save(post);
@@ -50,6 +50,7 @@ public class PostService {
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
     }
+
     public Page<Post> getPostsByCategory(String category, Pageable pageable) {
         return postRepository.findByCategoryPost(category, pageable);
     }
@@ -65,4 +66,5 @@ public class PostService {
         return postRepository.findByTitleContaining(title, pageable);
     }
 }
+
 
