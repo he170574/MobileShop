@@ -55,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
                 .productDetails(productDTO.getProductDetails())
                 .productImage(productDTO.getProductImageUrl()) // Lưu đường dẫn hình ảnh
                 .price(productDTO.getPrice())
+                .cost(productDTO.getCost())
                 .categoryName(productDTO.getCategoryName())
                 .stockQuantity(productDTO.getStockQuantity())
                 .build();

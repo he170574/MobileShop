@@ -26,6 +26,8 @@ public class ProductDTO {
     @NotNull(message = "Price is required")
     private Double price;
 
+    private Double cost;
+
     @NotNull(message = "Category is required")
     private String categoryName;
 
