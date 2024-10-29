@@ -1,6 +1,8 @@
 package fptu.mobile_shop.MobileShop.repository;
 
 import fptu.mobile_shop.MobileShop.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findProductByProductName(String productName);
     Product findProductByProductID(Integer id);
     List<Product> findAllByDeletedIsFalse();
+    Page<Product> findByProductNameContaining(String productName, Pageable pageable);
 }

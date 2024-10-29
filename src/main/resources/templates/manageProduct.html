@@ -73,15 +73,21 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Image</th>
-                            <th onclick="sortProducts(4)">Price (vnd)
+                            <th onclick="sortProducts(4)">Cost (vnd)
                                 <button class="btn btn-link btn-sm" onclick="sortProducts(4)"
                                         style="float: right; padding: 0; margin: 0;">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
+                            <th onclick="sortProducts(5)">Price (vnd)
+                                <button class="btn btn-link btn-sm" onclick="sortProducts(5)"
+                                        style="float: right; padding: 0; margin: 0;">
+                                    <i class="fas fa-sort"></i>
+                                </button>
+                            </th>
                             <th>Category Name</th>
-                            <th onclick="sortProducts(6)">Quantity
-                                <button class="btn btn-link btn-sm" onclick="sortProducts(6)"
+                            <th onclick="sortProducts(7)">Quantity
+                                <button class="btn btn-link btn-sm" onclick="sortProducts(7)"
                                         style="float: right; padding: 0; margin: 0;">
                                     <i class="fas fa-sort"></i>
                                 </button>
@@ -98,13 +104,10 @@
 
                     <div class="d-flex justify-content-end">
                         <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item"><span class="page-link">Previous</span></li>
-                                <li class="page-item"><span class="page-link active">1</span></li>
-                                <li class="page-item"><span class="page-link">Next</span></li>
-                            </ul>
+                            <ul class="pagination" id="pagination"></ul>
                         </nav>
                     </div>
+
 
                 </div>
             </div>
@@ -135,6 +138,11 @@
                                 <label for="imageUpload">Product Image:</label>
                                 <input type="file" id="imageUpload" name="imageUpload" class="form-control"
                                        accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="productCost">Cost:</label>
+                                <input type="number" class="form-control" id="productCost" name="productCost"
+                                       step="0.01" required>
                             </div>
                             <div class="form-group">
                                 <label for="productPrice">Price:</label>
@@ -189,6 +197,11 @@
                                 <label for="editImageUpload">Product Image:</label>
                                 <input type="file" id="editImageUpload" name="editImageUpload" class="form-control"
                                        accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="editProductCost">Cost:</label>
+                                <input type="number" class="form-control" id="editProductCost" name="productCost"
+                                       step="0.01" required readonly>
                             </div>
                             <div class="form-group">
                                 <label for="editProductPrice">Price:</label>

@@ -7,6 +7,10 @@ import fptu.mobile_shop.MobileShop.repository.ProductRepository;
 import fptu.mobile_shop.MobileShop.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,5 +97,14 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByProductName(productName);
     }
 
+    @Override
+    public Page<Product> searchProducts(String searchTerm, int page, int size) {
+        // Đảm bảo chỉ số trang không nhỏ hơn 0
+        if (page < 0) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findByProductNameContaining(searchTerm, pageable);
+    }
 
 }

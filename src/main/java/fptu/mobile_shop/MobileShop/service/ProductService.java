@@ -4,6 +4,7 @@ package fptu.mobile_shop.MobileShop.service;
 
 import fptu.mobile_shop.MobileShop.dto.ProductDTO;
 import fptu.mobile_shop.MobileShop.entity.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,5 +25,7 @@ public interface ProductService {
     Product updateProduct(Integer id, String name, String detail, String image, Double price, Integer quantity, String category);
 
     Product getProductByProductName(String name);
+
+    Page<Product> searchProducts(String searchTerm, int page, int size);
 
 }

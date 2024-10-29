@@ -10,4 +10,6 @@ import lombok.*;
 public class ResponseDTO {
     private String message;
     private Object data;
+    private int totalPages;
+    private int currentPage;
 }

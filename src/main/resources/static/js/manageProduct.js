@@ -13,27 +13,31 @@ $(document).ready(function () {
     });
 });
 
+function formatCurrency(value) {
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0
+    });
+    return formatter.format(value).replace('₫', 'đ');
+}
+
 // Load all product
 function loadProducts(page = 1) {
     const searchTerm = $('#searchInput').val();
+    const pageSize = 6;
+
     $.ajax({
         url: `/get-product`,
         type: 'GET',
         data: {
             search: searchTerm,
-            page: page,
-            size: 1
+            page: page - 1,
+            size: pageSize
         },
         success: function (response) {
-            var tableBody = $('#productTableBody');
-            tableBody.empty();
-
-            $.each(response.data, function (index, product) {
-                var productHtml = createProductRow(product);
-                tableBody.append(productHtml);
-            });
-
-            handlePagination(response.totalPages, page);
+            renderProductTable(response.data);
+            renderPagination(response.totalPages, page);
 
             $('.edit-product').on('click', function () {
                 var productId = $(this).data('product-id');
@@ -56,77 +60,87 @@ function loadProducts(page = 1) {
     });
 }
 
-function handlePagination(totalPages, currentPage) {
-    const paginationContainer = $('#pagination');
-    paginationContainer.empty();
+// Product Table
+function renderProductTable(products) {
+    const tableBody = $('#productTableBody');
+    tableBody.empty();
 
-    // Previous button
-    if (currentPage > 1) {
-        paginationContainer.append(`<button onclick="loadProducts(${currentPage - 1})">Previous</button>`);
-    }
-
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        paginationContainer.append(`<button onclick="loadProducts(${i})">${i}</button>`);
-    }
-
-    // Next button
-    if (currentPage < totalPages) {
-        paginationContainer.append(`<button onclick="loadProducts(${currentPage + 1})">Next</button>`);
-    }
-}
-// Load all category
-function loadCategories() {
-    $.ajax({
-        url: '/get-category',
-        type: 'GET',
-        success: function (response) {
-            var categorySelect = $('#categoryName, #editCategoryName');
-            categorySelect.empty();
-
-            $.each(response.data, function (index, category) {
-                categorySelect.append($('<option>', {
-                    value: category.categoryId,
-                    text: category.categoryName
-                }));
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error("Error loading categories:", error);
-        }
-    });
-}
-
-function createProductRow(product) {
-    const formatter = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-        minimumFractionDigits: 0
-    });
-    let priceFormatted = formatter.format(product.price);
-    let price = priceFormatted.replace('₫', 'đ');
-
-    return `
-        <tr class="product">
+    if (products.length) {
+        products.forEach(product => {
+            const productHtml = `
+                <tr>
                     <td>${product.productId}</td>
                     <td>${product.productName}</td>
                     <td>${product.productDetails}</td>
                     <td><img src="${product.productImageUrl}" alt="${product.productName}" width="100" /></td>
-                    <td>${price}</td>
+                    <td>${formatCurrency(product.cost)}</td>
+                    <td>${formatCurrency(product.price)}</td>
                     <td>${product.categoryName}</td>
                     <td>${product.stockQuantity}</td>
                     <td>
-                <button class="btn btn-warning col me-3 edit-product" data-product-id="${product.productId}">
+                    <button class="btn btn-warning col me-3 edit-product" data-product-id="${product.productId}">
                     <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-danger col delete-product" data-product-id="${product.productId}">
+                    </button>
+                    <button class="btn btn-danger col delete-product" data-product-id="${product.productId}">
                     <i class="fas fa-trash"></i> 
-                </button>
-            </td>
-        </tr>
-    `;
+                    </button>
+                    </td>
+                </tr>
+            `;
+            tableBody.append(productHtml);
+        });
+
+        $('#productTable').show();
+        $('#noDataMessage').hide();
+    } else {
+        // Hiển thị thông báo nếu không có sản phẩm nào
+        $('#productTable').hide();
+        $('#noDataMessage').show();
+    }
 }
 
+// Paging
+// Hàm renderPagination để hiển thị các nút phân trang
+function renderPagination(totalPages, currentPage) {
+    const paginationContainer = $('#pagination');
+    paginationContainer.empty(); // Xóa các nút phân trang cũ
+
+    if (totalPages > 1) { // Chỉ hiển thị phân trang khi có nhiều hơn 1 trang
+        // Nút Previous nếu không ở trang đầu tiên
+        if (currentPage > 1) {
+            paginationContainer.append(`<li class="page-item"><button class="page-link page-btn" data-page="${currentPage - 1}">Previous</button></li>`);
+        }
+
+        // Hiển thị tối đa 5 nút phân trang xung quanh trang hiện tại
+        const maxDisplayPages = 5;
+        let startPage = Math.max(currentPage - Math.floor(maxDisplayPages / 2), 1);
+        let endPage = Math.min(startPage + maxDisplayPages - 1, totalPages);
+
+        if (endPage - startPage < maxDisplayPages - 1) {
+            startPage = Math.max(endPage - maxDisplayPages + 1, 1);
+        }
+
+        // Lặp qua các trang và tạo các nút phân trang
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === currentPage ? 'active' : '';
+            paginationContainer.append(`<li class="page-item ${activeClass}"><button class="page-link page-btn" data-page="${i}">${i}</button></li>`);
+        }
+
+        // Nút Next nếu không ở trang cuối cùng
+        if (currentPage < totalPages) {
+            paginationContainer.append(`<li class="page-item"><button class="page-link page-btn" data-page="${currentPage + 1}">Next</button></li>`);
+        }
+    }
+
+    // Gắn sự kiện click cho mỗi nút phân trang
+    $('.page-btn').on('click', function () {
+        const selectedPage = $(this).data('page');
+        loadProducts(selectedPage);
+    });
+}
+
+
+// Modal Add
 function showAddProductModal() {
     $('#addProductModal').modal('show');
     $('.modal-backdrop').remove();
@@ -201,6 +215,7 @@ function editProduct(productId) {
             $('#editProductName').val(product.productName);
             $('#editProductDescription').val(product.productDetails);
             $('#editImageUrl').val(product.productImage);
+            $('#editProductCost').val(product.cost);
             $('#editProductPrice').val(product.price);
             $('#editCategoryName').val(product.categoryName);
             $('#editProductStock').val(product.stockQuantity);
@@ -223,9 +238,9 @@ $('#editProductForm').on('submit', function (event) {
     $.ajax({
         url: '/save-edit-product',
         type: 'POST',
-        processData: false, // Không xử lý dữ liệu
-        contentType: false, // Không gửi content type
-        data: formData, // Gửi dữ liệu FormData
+        processData: false,
+        contentType: false,
+        data: formData,
         success: function (response) {
             alert(response.message);
             $('#editProductModal').modal('hide');
@@ -244,9 +259,9 @@ function deleteProduct(productId) {
         $.ajax({
             url: '/delete-product',
             type: 'POST',
-            data: { id: productId },  // Truyền productId vào đây
+            data: { id: productId },
             success: function (response) {
-                alert(response.message);  // Hiển thị message trong response
+                alert(response.message);
                 loadProducts();
             },
             error: function () {
@@ -258,7 +273,7 @@ function deleteProduct(productId) {
 
 // Sort
 function sortProducts(columnIndex) {
-    if (columnIndex !== 0 && columnIndex !== 4 && columnIndex !== 6) {
+    if (columnIndex !== 0 && columnIndex !== 4 && columnIndex !== 5 && columnIndex !== 7) {
         return;
     }
 
@@ -282,6 +297,28 @@ function sortProducts(columnIndex) {
 
     rows.forEach(function (row) {
         tableBody.append(row);
+    });
+}
+
+// Load all category
+function loadCategories() {
+    $.ajax({
+        url: '/get-category',
+        type: 'GET',
+        success: function (response) {
+            var categorySelect = $('#categoryName, #editCategoryName');
+            categorySelect.empty();
+
+            $.each(response.data, function (index, category) {
+                categorySelect.append($('<option>', {
+                    value: category.categoryId,
+                    text: category.categoryName
+                }));
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading categories:", error);
+        }
     });
 }
 

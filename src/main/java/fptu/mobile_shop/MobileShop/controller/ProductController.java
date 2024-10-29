@@ -1,5 +1,6 @@
 package fptu.mobile_shop.MobileShop.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import fptu.mobile_shop.MobileShop.dto.CategoryDTO;
 import fptu.mobile_shop.MobileShop.dto.ProductDTO;
@@ -18,9 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,24 +36,33 @@ public class ProductController {
     }
 
     @GetMapping("/get-product")
-    public ResponseEntity<ResponseDTO> getAllProducts(@RequestParam(defaultValue = "") String search,
+    public ResponseEntity<ResponseDTO> getAllProducts(
+            @RequestParam(defaultValue = "") String search,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "1") int size) {
-        List<Product> products = productService.getAll();
-        List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
+            @RequestParam(defaultValue = "6") int size) {
+
+        Page<Product> productPage = productService.searchProducts(search, page, size);
+
+        List<ProductDTO> productDTOs = productPage.getContent().stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
                 .productName(item.getProductName())
                 .productDetails(item.getProductDetails())
                 .productImageUrl(item.getProductImage())
                 .price(item.getPrice())
+                .cost(item.getCost())
                 .categoryName(item.getCategoryName())
                 .stockQuantity(item.getStockQuantity())
                 .build()).toList();
+
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage("Get success");
         responseDTO.setData(productDTOs);
+        responseDTO.setTotalPages(productPage.getTotalPages());
+        responseDTO.setCurrentPage(page + 1);
+
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
 
     @PostMapping("/edit-product")
     public ResponseEntity<ResponseDTO> getProductById(@Valid @RequestBody ProductDTO productDTO,
