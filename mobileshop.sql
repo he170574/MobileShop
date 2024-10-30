@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: mobileshop
+-- Host: localhost    Database: mobileshop
 -- ------------------------------------------------------
--- Server version	8.0.32
+-- Server version	8.0.39
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -47,7 +47,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong1','hothephong2003@gmail.com','0978541603','2003-02-02','Hanoi','2024-10-18 00:00:00',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,'2024-10-19 00:00:00',0,3),(5,'phong1','$2a$10$8yR0jK8j1mW4tS4g8YfngufpUr3wNmlPeHqQjz5ZNWOCvhrXkL9Ym','nguyen thi u2','phonghthe170574@fpt.edu.vn','1234567890','2000-02-02',NULL,'2024-10-23 00:00:00',0,3),(6,'k1','$2a$10$zyDzhAxHy8pySbSzDWFP0.TgicXWBmKvuRXlqcly9JEypsKzigepu','nguyen thi x1','ngnga020203@gmail.com','1098765432','2000-02-20',NULL,'2024-10-24 00:00:00',1,3);
+INSERT INTO `account` VALUES (1,'phong','$2a$12$EH13YGDVPUvQIiAEKl5kSuWsHUft.IrSgBikbeRL2nAjSHpDxrjvK','hothephong1','hothephong2003@gmail.com','0978541603','2003-02-02','Hanoi','2024-10-18 00:00:00',0,1),(2,'dang','$2a$10$0tKmjceR7DnjVQo2eGURROZfyZ7bANR9qu1MUKlUFQvDimjEipURy','nguyen thi k1','x1nt@gmail.com','0987654321','1111-11-11',NULL,'2024-10-19 00:00:00',0,3),(5,'phong1','$2a$10$8yR0jK8j1mW4tS4g8YfngufpUr3wNmlPeHqQjz5ZNWOCvhrXkL9Ym','nguyen thi u2','phonghthe170574@fpt.edu.vn','1234567890','2000-02-02',NULL,'2024-10-23 00:00:00',0,2),(6,'k1','$2a$10$zyDzhAxHy8pySbSzDWFP0.TgicXWBmKvuRXlqcly9JEypsKzigepu','nguyen thi x1','ngnga020203@gmail.com','1098765432','2000-02-20',NULL,'2024-10-24 00:00:00',1,3);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,19 +192,17 @@ DROP TABLE IF EXISTS `post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `post` (
-  `postID` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
+  `postid` bigint NOT NULL AUTO_INCREMENT,
+  `authorid` bigint DEFAULT NULL,
+  `brief_info` text,
+  `category_post` varchar(255) DEFAULT NULL,
   `content` text,
-  `briefInfo` text,
+  `counts` int NOT NULL,
+  `created_date` datetime(6) DEFAULT NULL,
+  `status_post` varchar(255) DEFAULT NULL,
   `thumbnail` varchar(255) DEFAULT NULL,
-  `counts` int DEFAULT '0',
-  `authorID` int NOT NULL,
-  `createdDate` datetime DEFAULT NULL,
-  `categoryPost` varchar(255) DEFAULT NULL,
-  `statusPost` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`postID`),
-  KEY `authorID` (`authorID`),
-  CONSTRAINT `post_ibfk_1` FOREIGN KEY (`authorID`) REFERENCES `account` (`ACCOUNT_ID`)
+  `title` varchar(255) NOT NULL,
+  PRIMARY KEY (`postid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -233,6 +231,7 @@ CREATE TABLE `product` (
   `price` double DEFAULT NULL,
   `StockQuantity` int DEFAULT NULL,
   `Deleted` bit(1) DEFAULT NULL,
+  `Cost` bigint DEFAULT NULL,
   PRIMARY KEY (`ProductID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -243,7 +242,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'iphone 16 Pro Max 1TB','Titan Đen 1','https://res.cloudinary.com/dvshotakm/image/upload/v1728594813/mflrimfyqklobs6bjnau.webp','samsung',34999000,10,_binary '\0'),(2,'iphone 16 Pro Max 512GB','Titan Trắng','https://res.cloudinary.com/dvshotakm/image/upload/v1729530780/mrhafg0reyjqplyputty.webp','Apple',35999000,10,_binary '\0'),(3,'iphone 16 Pro Max ','Titan Xám','https://res.cloudinary.com/dvshotakm/image/upload/v1728594867/lggz6ruxllph2hatqqzl.webp','Xiaomi',45899000,21,_binary '\0'),(4,'iphone 15','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729530797/onlfg5eexbedxpcl2cng.jpg','Apple',21899000,25,_binary '\0'),(5,'iphone 15 Plus','Hồng','https://res.cloudinary.com/dvshotakm/image/upload/v1729364509/vnnqztc04todqxodalya.jpg','samsung',22500000,12,_binary '\0'),(6,'iphone 15 Pro','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729364574/d3wqg9mpd8lsueh8f5ia.jpg','Xiaomi',23670000,11,_binary '\0'),(7,'iphone 15 Pro Max ','Titan xanh dương','https://res.cloudinary.com/dvshotakm/image/upload/v1729530821/l2bejiljpjwahredaltn.jpg','Apple',30499000,5,_binary '\0');
+INSERT INTO `product` VALUES (1,'iphone 16 Pro Max 1TB','Titan Đen 1','https://res.cloudinary.com/dvshotakm/image/upload/v1728594813/mflrimfyqklobs6bjnau.webp','samsung',34999000,10,_binary '\0',NULL),(2,'iphone 16 Pro Max 512GB','Titan Trắng','https://res.cloudinary.com/dvshotakm/image/upload/v1729530780/mrhafg0reyjqplyputty.webp','Apple',35999000,10,_binary '\0',NULL),(3,'iphone 16 Pro Max ','Titan Xám','https://res.cloudinary.com/dvshotakm/image/upload/v1728594867/lggz6ruxllph2hatqqzl.webp','Xiaomi',45899000,21,_binary '\0',NULL),(4,'iphone 15','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729530797/onlfg5eexbedxpcl2cng.jpg','Apple',21899000,25,_binary '\0',NULL),(5,'iphone 15 Plus','Hồng','https://res.cloudinary.com/dvshotakm/image/upload/v1729364509/vnnqztc04todqxodalya.jpg','samsung',22500000,12,_binary '\0',NULL),(6,'iphone 15 Pro','512GB (Natural Titanium)','https://res.cloudinary.com/dvshotakm/image/upload/v1729364574/d3wqg9mpd8lsueh8f5ia.jpg','Xiaomi',23670000,11,_binary '\0',NULL),(7,'iphone 15 Pro Max ','Titan xanh dương','https://res.cloudinary.com/dvshotakm/image/upload/v1729530821/l2bejiljpjwahredaltn.jpg','Apple',30499000,5,_binary '\0',NULL);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +345,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'ROLE_ADMIN',0),(2,'ROLE_STAFF',0),(3,'ROLE_MEMBER',0);
+INSERT INTO `role` VALUES (1,'ROLE_ADMIN',0),(2,'ROLE_STAFF',0),(3,'ROLE_MEMBER',0),(4,'ROLE_SHIPPER',0);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -359,4 +358,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-25 16:07:17
+-- Dump completed on 2024-10-28 23:25:43
