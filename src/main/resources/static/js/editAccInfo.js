@@ -14,10 +14,20 @@ function loadData() {
             lsdRing.removeClass('d-none');
         },
         success: function (response) {
-            if (response.data === null) { // Not logged in
+            console.log(response); // Kiểm tra phản hồi của server
+
+            if (!response || response.data === null) {
                 window.location.href = '/home';
-            } else { // Logged in
+            } else {
                 const account = response.data;
+                console.log(account); // Kiểm tra dữ liệu account
+
+                $('#username1').val(account.username || '');
+                $('#email1').val(account.email || '');
+                $('#dob1').val(account.dob || '');
+                $('#fullName').val(account.fullName || '');
+                $('#phoneNumber').val(account.phoneNumber || '');
+                $('#address').val(account.address || '');
                 if (account.image !== null) {
                     $('#preview-img').attr('src', account.image);
                 }

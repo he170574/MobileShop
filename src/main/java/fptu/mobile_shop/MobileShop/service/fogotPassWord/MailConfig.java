@@ -8,6 +8,6 @@ public class MailConfig {
 
     public static final String APP_EMAIL = "mobileshopsystem1@gmail.com"; // your email
 
-        public static final String APP_PASSWORD = "ksql zfzw ftju mgnx"; // your password
+        public static final String APP_PASSWORD = "rbdc absb yyzu btzn"; // your password
 
 }
