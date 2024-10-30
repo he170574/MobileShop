@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ShipperController {
     @GetMapping("/shipper")
     public String getShipperDashboard() {
-        return "dashboard";
+        return "statistic";
     }
 
     @GetMapping("/shipper/trackingOrder")

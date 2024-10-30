@@ -222,4 +222,9 @@ public class ProductController {
             return "404"; // Hoặc trang lỗi nếu không tìm thấy sản phẩm
         }
     }
+
+    @GetMapping("/top-selling")
+    public List<ProductDTO> getTopSellingProducts() {
+        return productService.getTopSellingProducts();
+    }
 }

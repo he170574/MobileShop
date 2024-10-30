@@ -108,4 +108,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByProductNameContaining(searchTerm, pageable);
     }
 
+    public List<ProductDTO> getTopSellingProducts() {
+        return productRepository.findTopSellingProducts(PageRequest.of(0, 4));
+    }
+
 }

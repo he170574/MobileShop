@@ -9,6 +9,8 @@ $(document).ready(function () {
     });
 });
 
+let lsdRing = $('.lsd-ring-container');
+
 function checkNotEmpty(fieldIds) {
     let allFilled = true;
     fieldIds.forEach(function (fieldId) {
