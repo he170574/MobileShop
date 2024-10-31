@@ -1,16 +1,18 @@
 package fptu.mobile_shop.MobileShop.service;
 
+import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Cart;
 
 public interface CartService {
 
-    Cart addToCart(Integer productId, int quantity);
+    int addToCart(Account account,Integer productId, int quantity);
 
-    Cart removeFromCart(Long cartItemId);
+    Cart removeFromCart(Account account, Long cartItemId);
 
-    Cart updateQuantity(Long cartItemId, int quantity);
+    boolean updateQuantity(Account account, Integer cartItemId, int quantity);
 
-    Cart getCart();
+    Cart getCart(Account account);
 
-    double getCartTotalPrice();
+    double getCartTotalPrice(Account account);
+    int getCartTotal(Account account);
 }
