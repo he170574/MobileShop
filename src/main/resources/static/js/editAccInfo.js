@@ -22,21 +22,12 @@ function loadData() {
                 const account = response.data;
                 console.log(account); // Kiểm tra dữ liệu account
 
-                $('#username1').val(account.username || '');
-                $('#email1').val(account.email || '');
-                $('#dob1').val(account.dob || '');
-                $('#fullName').val(account.fullName || '');
-                $('#phoneNumber').val(account.phoneNumber || '');
-                $('#address').val(account.address || '');
-                if (account.image !== null) {
-                    $('#preview-img').attr('src', account.image);
-                }
                 $('#username1').val(account.username);
-                $('#fullName').val(account.fullName);
+                $('#fullName1').val(account.fullName);
                 $('#email1').val(account.email);
-                $('#phoneNumber').val(account.phoneNumber);
+                $('#phoneNumber1').val(account.phoneNumber);
                 $('#dob1').val(account.dateOfBirth);
-                $('#address').val(account.address);
+                $('#address1').val(account.address);
             }
         },
         complete: function () {

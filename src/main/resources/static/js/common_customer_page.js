@@ -40,7 +40,6 @@ function register() {
             username: $('#username-register').val(),
             password: $('#password-register').val(),
             fullName: $('#full-name').val(),
-            gender: $('input[name="gender"]:checked').val(),
             dateOfBirth: $('#dob').val(),
             email: $('#email').val(),
             phoneNumber: $('#phone-number').val()

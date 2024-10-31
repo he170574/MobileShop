@@ -18,10 +18,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findAllByDeletedIsFalse();
     Page<Product> findByProductNameContaining(String productName, Pageable pageable);
 
-    @Query("SELECT new fptu.mobile_shop.MobileShop.dto.ProductDTO(p.productID, p.productName, p.productImage, p.price, SUM(oi.stockQuantity)) " +
-            "FROM Product p JOIN OrderItems oi ON p.ProductID = oi.ProductID " +
-            "GROUP BY p.ProductID, p.ProductName, p.ProductImage, p.price " +
-            "ORDER BY SUM(oi.Quantity) DESC")
-    List<ProductDTO> findTopSellingProducts(Pageable pageable);
 
 }

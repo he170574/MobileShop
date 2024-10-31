@@ -54,8 +54,8 @@ public class ProductServiceImpl implements ProductService {
                 .productName(productDTO.getProductName())
                 .productDetails(productDTO.getProductDetails())
                 .productImage(productDTO.getProductImageUrl()) // Lưu đường dẫn hình ảnh
-                .price(productDTO.getPrice())
                 .cost(productDTO.getCost())
+                .price(productDTO.getPrice())
                 .categoryName(productDTO.getCategoryName())
                 .stockQuantity(productDTO.getStockQuantity())
                 .build();
@@ -106,10 +106,6 @@ public class ProductServiceImpl implements ProductService {
         }
         Pageable pageable = PageRequest.of(page, size);
         return productRepository.findByProductNameContaining(searchTerm, pageable);
-    }
-
-    public List<ProductDTO> getTopSellingProducts() {
-        return productRepository.findTopSellingProducts(PageRequest.of(0, 4));
     }
 
 }

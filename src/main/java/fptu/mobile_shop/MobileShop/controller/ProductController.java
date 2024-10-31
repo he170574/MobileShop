@@ -77,6 +77,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> saveProduct(
             @RequestParam("productName") String productName,
             @RequestParam("productDescription") String productDescription,
+            @RequestParam("productCost") Double cost,
             @RequestParam("productPrice") Double price,
             @RequestParam("categoryName") String categoryName,
             @RequestParam("productStock") Integer stockQuantity,
@@ -85,6 +86,7 @@ public class ProductController {
         ProductDTO productDTO = ProductDTO.builder()
                 .productName(productName)
                 .productDetails(productDescription)
+                .cost(cost)
                 .price(price)
                 .categoryName(categoryName)
                 .stockQuantity(stockQuantity)
@@ -223,8 +225,4 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/top-selling")
-    public List<ProductDTO> getTopSellingProducts() {
-        return productService.getTopSellingProducts();
-    }
 }

@@ -28,5 +28,4 @@ public interface ProductService {
 
     Page<Product> searchProducts(String searchTerm, int page, int size);
 
-    List<ProductDTO> getTopSellingProducts();
 }
