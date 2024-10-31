@@ -190,8 +190,10 @@ function loadAccountData() {
                 $('#accountBtn').css('display', 'none');
                 register();
                 login();
-            } else {                          //Logged
-
+            } else {
+                //Logged
+                $('#countItemCartHeder').empty(); // Xóa nội dung cũ
+                $('#countItemCartHeder').append(`(${response.data.cartTotal})`);
                 // $('#account-img').attr('src', account.image);
                 $('#logout-btn').css('display', 'block');
                 $('#login-btn').css('display', 'none');
