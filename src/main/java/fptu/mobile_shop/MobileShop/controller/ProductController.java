@@ -38,10 +38,14 @@ public class ProductController {
     @GetMapping("/get-product")
     public ResponseEntity<ResponseDTO> getAllProducts(
             @RequestParam(defaultValue = "") String search,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
 
-        Page<Product> productPage = productService.searchProducts(search, page, size);
+        Page<Product> productPage = productService.searchProducts(search, minPrice, maxPrice, sort, category, page, size);
 
         List<ProductDTO> productDTOs = productPage.getContent().stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
