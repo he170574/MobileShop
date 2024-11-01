@@ -23,6 +23,7 @@ public class AccountDTO {
     private Boolean deleted;
     private String password;
     private MultipartFile imgFile;
+    private int cartTotal;
 
     public AccountDTO(Integer accountId, String address, LocalDate dateOfBirth, String email, String fullName, String phoneNumber, String username, String role) {
         this.accountId = accountId;

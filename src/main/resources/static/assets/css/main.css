@@ -2542,7 +2542,7 @@ h2.title {
 }
 
 .card-img-top {
-  height: 150px; /* Điều chỉnh chiều cao hình ảnh */
+  height: 115px; /* Điều chỉnh chiều cao hình ảnh */
   object-fit: contain; /* Giữ tỷ lệ hình ảnh */
   margin-bottom: 10px; /* Khoảng cách giữa hình ảnh và tên sản phẩm */
   margin-top: 10px;

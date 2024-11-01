@@ -19,6 +19,9 @@ public class Cart {
     @Column(name = "CartID")
     private Long id;
 
+    @Column(name = "AccountID")
+    private int accountID;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> items;
 }

@@ -7,7 +7,9 @@ import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.final_attribute.ROLE;
 import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.AccountService;
+import fptu.mobile_shop.MobileShop.service.CartService;
 import fptu.mobile_shop.MobileShop.service.RoleService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +25,12 @@ import java.util.List;
 
 @RestController
 public class AccountController {
+    @Resource
     AccountService accountService;
-
+    @Resource
     RoleService roleService;
+    @Resource
+    CartService cartService;
 
     @Autowired
     public AccountController(AccountService accountService, RoleService roleService) {
@@ -107,6 +112,7 @@ public class AccountController {
                 responseDTO.setMessage("Success");
                 CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
                 Account account = accountService.getByUsername(customAccount.getUsername());
+
                 AccountDTO accountDTO = new AccountDTO(
                         account.getAccountId(),
                         account.getAddress(),
@@ -116,6 +122,9 @@ public class AccountController {
                         account.getPhoneNumber(),
                         account.getUsername(),
                         account.getRole().getRoleName());
+
+                accountDTO.setCartTotal(cartService.getCartTotal(account));
+
                 responseDTO.setData(accountDTO);
             }
             return ResponseEntity.ok().body(responseDTO);

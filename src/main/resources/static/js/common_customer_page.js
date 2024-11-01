@@ -40,7 +40,6 @@ function register() {
             username: $('#username-register').val(),
             password: $('#password-register').val(),
             fullName: $('#full-name').val(),
-            gender: $('input[name="gender"]:checked').val(),
             dateOfBirth: $('#dob').val(),
             email: $('#email').val(),
             phoneNumber: $('#phone-number').val()
@@ -191,8 +190,10 @@ function loadAccountData() {
                 $('#accountBtn').css('display', 'none');
                 register();
                 login();
-            } else {                          //Logged
-
+            } else {
+                //Logged
+                $('#countItemCartHeder').empty(); // Xóa nội dung cũ
+                $('#countItemCartHeder').append(`(${response.data.cartTotal})`);
                 // $('#account-img').attr('src', account.image);
                 $('#logout-btn').css('display', 'block');
                 $('#login-btn').css('display', 'none');

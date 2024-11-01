@@ -100,7 +100,6 @@ function renderProductTable(products) {
 }
 
 // Paging
-// Hàm renderPagination để hiển thị các nút phân trang
 function renderPagination(totalPages, currentPage) {
     const paginationContainer = $('#pagination');
     paginationContainer.empty(); // Xóa các nút phân trang cũ
@@ -138,7 +137,6 @@ function renderPagination(totalPages, currentPage) {
         loadProducts(selectedPage);
     });
 }
-
 
 // Modal Add
 function showAddProductModal() {
