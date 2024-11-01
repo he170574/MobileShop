@@ -1,29 +1,26 @@
 $(document).ready(function() {
-    function loadAllProducts() {
+    function loadAllProducts(filters = {}) {
         $.ajax({
-            url: '/get-product', // Đường dẫn đến endpoint
+            url: '/get-product',
             method: 'GET',
+            data: filters,
             success: function(response) {
-                if (response && response.data && Array.isArray(response.data)) {
-                    $('#product-list').empty(); // Xóa nội dung cũ
-
-                    // Duyệt qua từng sản phẩm và thêm vào danh sách
+                if (response && response.data) {
+                    $('#product-list').empty();
                     response.data.forEach(function(product) {
                         $('#product-list').append(`
-                            <div class="col-6 col-md-4 col-lg-2 mb-4 product-item" data-product-id="${product.productId}">
-                                <div class="card text-center h-100 d-flex flex-column justify-content-between">
+                            <div class="col-6 col-md-4 col-lg-3 mb-4 product-item" data-product-id="${product.productId}">
+                                <div class="card text-center h-100">
                                     <img onclick="viewProductDetail(${product.productId})" src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
-                                    <div class="card-body d-flex flex-column justify-content-between">
-                                        <h5 onclick="viewProductDetail(${product.productId})" class="card-title mb-2 text-truncate" style="height: 3em; line-height: 1.5em;">${product.productName}</h5>
-                                        <p onclick="viewProductDetail(${product.productId})" class="card-text text-danger mb-2">${product.price} đ</p>
-                                        <button class="btn btn-primary w-100 mt-auto" onclick="addToCart(${product.productId})">Add to Cart</button>
+                                    <div class="card-body">
+                                        <h5 class="card-title text-truncate">${product.productName}</h5>
+                                        <p class="card-text text-danger">${product.price} đ</p>
+                                        <button class="btn btn-primary" onclick="addToCart(${product.productId})">Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
                         `);
                     });
-
-
                 } else {
                     console.error("Unexpected data format received:", response);
                     alert('Unexpected data format received.');
@@ -36,13 +33,58 @@ $(document).ready(function() {
         });
     }
 
+    // Initial load of all products
     loadAllProducts();
 
-    // $(document).on('click', '.card', function() {
-    //     const productId = $(this).closest('.product-item').data('product-id');
-    //     window.location.href = `/productDetail?id=${productId}`;
-    // });
+    // Category Filter
+    $('.category').on('click', function() {
+        const category = $(this).data('category'); // Get the selected category (apple, samsung, or xiaomi)
+        loadAllProducts({ category: category });
+    });
+
+    // Price Range Filter
+    const priceSlider = document.getElementById('price-slider');
+    noUiSlider.create(priceSlider, {
+        start: [0, 1000000],
+        connect: true,
+        range: { 'min': 0, 'max': 1000000 },
+        tooltips: true,
+        format: wNumb({ decimals: 0, thousand: ',', suffix: ' đ' })
+    });
+
+    // Toggle price dropdown
+    $('#toggle-price').on('click', function() {
+        $('#price-dropdown').toggle();
+    });
+
+    // Apply price filter
+    $('#apply-price-filter').on('click', function() {
+        const [minPrice, maxPrice] = priceSlider.noUiSlider.get();
+        $('#price-dropdown').hide();
+        loadAllProducts({
+            minPrice: parseFloat(minPrice.replace(/ đ/g, '').replace(/,/g, '')),
+            maxPrice: parseFloat(maxPrice.replace(/ đ/g, '').replace(/,/g, ''))
+        });
+    });
+
+    // Search by product name
+    $('#search-button').on('click', function() {
+        const productName = $('#search-input').val();
+        loadAllProducts({ search: productName });
+    });
+
+    // Sorting by price: high to low and low to high
+    $('#sort-high-to-low').on('click', function() {
+        loadAllProducts({ sort: 'desc' });
+    });
+
+    $('#sort-low-to-high').on('click', function() {
+        loadAllProducts({ sort: 'asc' });
+    });
 });
+
+
+
 function viewProductDetail(id){
     window.location.href = `/productDetail?id=${id}`;
 }

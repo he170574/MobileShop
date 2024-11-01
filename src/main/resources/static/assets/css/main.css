@@ -2609,5 +2609,13 @@ h2.title {
 
 #toggle-price{
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
+#sort-high-to-low{
+  margin-bottom: 10px;
+}
+
+#sort-low-to-high{
+  margin-bottom: 10px;
+}

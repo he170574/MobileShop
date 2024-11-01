@@ -99,13 +99,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> searchProducts(String searchTerm, int page, int size) {
-        // Đảm bảo chỉ số trang không nhỏ hơn 0
-        if (page < 0) {
-            page = 0;
-        }
-        Pageable pageable = PageRequest.of(page, size);
-        return productRepository.findByProductNameContaining(searchTerm, pageable);
+    public Page<Product> searchProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size) {
+        Sort sortOrder = "desc".equalsIgnoreCase(sort) ? Sort.by("price").descending() : Sort.by("price").ascending();
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+
+        return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, pageable);
     }
+
+
 
 }
