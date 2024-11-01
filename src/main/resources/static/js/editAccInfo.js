@@ -20,6 +20,7 @@ function loadData() {
                 window.location.href = '/home';
             } else {
                 const account = response.data;
+                account.cartTotal = 0;
                 console.log(account); // Kiểm tra dữ liệu account
 
                 $('#username1').val(account.username);
@@ -28,6 +29,8 @@ function loadData() {
                 $('#phoneNumber1').val(account.phoneNumber);
                 $('#dob1').val(account.dateOfBirth);
                 $('#address1').val(account.address);
+                $('#countItemCartHeder').empty(); // Xóa nội dung cũ
+                $('#countItemCartHeder').append(`(${account.cartTotal})`);
             }
         },
         complete: function () {

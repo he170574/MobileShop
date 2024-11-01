@@ -41,6 +41,10 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(account);
     }
 
+    public static void main(String[] args) {
+        System.out.println(new BCryptPasswordEncoder().encode("Viet123@"));
+    }
+
     public void updateNewPassWord(String email) {
         String newPass = generateRandomPassword();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
