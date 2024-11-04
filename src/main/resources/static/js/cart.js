@@ -30,31 +30,28 @@ function renderCartItems() {
         var cartItemsHTML = cartItems.map(function (item) {
             totlePriceCart += item?.productPrice * item?.quantity;
             return `
-        <div class="cart-item row align-items-center">
-            <div class="col-md-3 item-image">
-                <img src="${item.image}" alt="${item.productName}">
-            </div>
-            <div class="col-md-3 item-details">
-                <h5>${item.productName}</h5>
-            </div>
-            <div class="col-md-2 item-price">
-                <span>${item.productPrice.toLocaleString()}₫</span>
-            </div>
-            <div class="col-md-2 item-quantity">
-                <div class="input-group">
-                    <button class="btn btn-outline-secondary btn-minus" type="button" onclick="updateItem('${item.productId}', '${item.quantity - 1}')" >-</button>
-                    <input type="text" style="width: 50px; max-height: 100px; margin: 0px 9px; border: 0.5px silver dashed" value="${item.quantity}">
-                    <button class="btn btn-outline-secondary btn-plus" type="button" onclick="updateItem('${item.productId}', '${item.quantity + 1}')" >+</button>
-                </div>
-            </div>
-            <div class="col-md-1 item-total">
-                <span>${(item.productPrice * item.quantity).toLocaleString()}₫</span>
-            </div>
-            <div class="col-md-1 item-remove">
-                <button onclick="updateItem('${item.productId}', '0')" class="btn btn-danger btn-remove">Xóa</button>
-            </div>
-        </div>
-        `;
+                    <div class="cart-item">
+<!--                        <input type="checkbox" checked onchange="toggleSelect(${item.id})">-->
+                        <div class="cart-item-image">
+                            <img src="${item.image}" alt="${item.productName}">
+                        </div>
+                        <div class="cart-item-details">
+                            <h4>${item.productName}</h4>
+                            <p>
+                                <span class="price">${item.productPrice.toLocaleString()}₫</span>
+                            </p>
+                             
+                        </div>
+                        <div class="quantity">
+                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity - 1}')">-</button>
+                            <input type="number" value="${item.quantity}" min="1" id="quantity-${item.id}" readonly>
+                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
+                        </div>
+                        <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                `;
         }).join('');
         console.log('totlePriceCart', totlePriceCart)
         document.getElementById('priceCart').innerText = totlePriceCart.toLocaleString() + ' ₫'
