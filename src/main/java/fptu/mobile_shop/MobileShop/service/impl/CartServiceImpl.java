@@ -94,9 +94,7 @@ public class CartServiceImpl implements CartService {
                     cartItem.setQuantity(quantity);
                     cartItemRepository.save(cartItem);
                 }else {
-                    if(cart.getItems().stream()
-                            .filter( item -> item.getProduct().getProductID().equals(productId)).collect(Collectors.toCollection(ArrayList::new))
-                            .size() < 2){
+                    if(cart.getItems().size() < 2){
                         cartRepository.deleteById(cart.getId());
                     };
                     cartItemRepository.deleteById(cartItem.getId());
