@@ -3,6 +3,7 @@ package fptu.mobile_shop.MobileShop.repository;
 import fptu.mobile_shop.MobileShop.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,11 +23,23 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             + "(:category IS NULL OR p.categoryName = :category) AND "
             + "(:minPrice IS NULL OR p.price >= :minPrice) AND "
             + "(:maxPrice IS NULL OR p.price <= :maxPrice)")
+    List<Product> findByFilters(
+            @Param("searchTerm") String searchTerm,
+            @Param("category") String category,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice,
+            Sort sort);
+
+    // Paginated version for filtering products
+    @Query("SELECT p FROM Product p WHERE "
+            + "(LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
+            + "(:category IS NULL OR p.categoryName = :category) AND "
+            + "(:minPrice IS NULL OR p.price >= :minPrice) AND "
+            + "(:maxPrice IS NULL OR p.price <= :maxPrice)")
     Page<Product> findByFilters(
             @Param("searchTerm") String searchTerm,
             @Param("category") String category,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             Pageable pageable);
-
 }

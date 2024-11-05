@@ -28,7 +28,7 @@ function loadProducts(page = 1) {
     const pageSize = 6;
 
     $.ajax({
-        url: `/get-product`,
+        url: `/get-all-product`,
         type: 'GET',
         data: {
             search: searchTerm,
@@ -36,6 +36,8 @@ function loadProducts(page = 1) {
             size: pageSize
         },
         success: function (response) {
+            response.data.sort((a, b) => b.productId - a.productId);
+
             renderProductTable(response.data);
             renderPagination(response.totalPages, page);
 
@@ -104,7 +106,7 @@ function renderPagination(totalPages, currentPage) {
     const paginationContainer = $('#pagination');
     paginationContainer.empty(); // Xóa các nút phân trang cũ
 
-    if (totalPages > 1) { // Chỉ hiển thị phân trang khi có nhiều hơn 1 trang
+    if (totalPages > 1) {
         // Nút Previous nếu không ở trang đầu tiên
         if (currentPage > 1) {
             paginationContainer.append(`<li class="page-item"><button class="page-link page-btn" data-page="${currentPage - 1}">Previous</button></li>`);

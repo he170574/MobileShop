@@ -26,6 +26,7 @@ public interface ProductService {
 
     Product getProductByProductName(String name);
 
-    Page<Product> searchProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size);
+    List<Product> filterProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category);
 
+    Page<Product> filterProductsWithPagination(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size);
 }

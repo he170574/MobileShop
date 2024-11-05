@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class ProductServiceImpl implements ProductService {
+ public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
 
@@ -99,13 +99,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> searchProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size) {
+    public List<Product> filterProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category) {
         Sort sortOrder = "desc".equalsIgnoreCase(sort) ? Sort.by("price").descending() : Sort.by("price").ascending();
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
-
-        return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, pageable);
+        return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, sortOrder);
     }
 
-
-
+    @Override
+    public Page<Product> filterProductsWithPagination(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size) {
+        Sort sortOrder = "desc".equalsIgnoreCase(sort) ? Sort.by("price").descending() : Sort.by("price").ascending();
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+        return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, pageable);
+    }
 }
