@@ -83,10 +83,8 @@ $(document).ready(function() {
     });
 });
 
-
-
-function viewProductDetail(id){
-    window.location.href = `/productDetail?id=${id}`;
+function viewProductDetail(id) {
+    window.location.href = `/product-view/productDetail?id=${id}`;
 }
 
 function addToCart(id) {
