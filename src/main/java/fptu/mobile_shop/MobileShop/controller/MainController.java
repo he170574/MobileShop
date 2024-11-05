@@ -53,5 +53,10 @@ public class MainController {
         return "member";
     }
 
+    @GetMapping("/admin/feedback")
+    public String showFeedback() {
+        return "feedback-admin";
+    }
+
 
 }
