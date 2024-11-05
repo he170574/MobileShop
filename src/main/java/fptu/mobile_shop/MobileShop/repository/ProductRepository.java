@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findAllByDeletedIsFalse();
 
     @Query("SELECT p FROM Product p WHERE "
-            + "(LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
+            + "(:searchTerm IS NULL OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
             + "(:category IS NULL OR p.categoryName = :category) AND "
             + "(:minPrice IS NULL OR p.price >= :minPrice) AND "
             + "(:maxPrice IS NULL OR p.price <= :maxPrice)")

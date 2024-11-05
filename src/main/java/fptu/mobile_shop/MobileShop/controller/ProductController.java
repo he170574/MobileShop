@@ -43,8 +43,10 @@ public class ProductController {
             @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(required = false) String category) {
 
+        // Gọi service để lấy danh sách sản phẩm đã lọc
         List<Product> products = productService.filterProducts(search, minPrice, maxPrice, sort, category);
 
+        // Chuyển đổi sang DTO
         List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
                 .productName(item.getProductName())
@@ -59,11 +61,12 @@ public class ProductController {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage("Get success");
         responseDTO.setData(productDTOs);
-        responseDTO.setTotalPages(1); // Only one page since there’s no pagination
-        responseDTO.setCurrentPage(1); // Set to 1 as default
+        responseDTO.setTotalPages(1); // Mặc định là 1 trang, có thể thêm phân trang sau
+        responseDTO.setCurrentPage(1);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
 
     @GetMapping("/get-all-product")
     public ResponseEntity<ResponseDTO> getAllProducts(

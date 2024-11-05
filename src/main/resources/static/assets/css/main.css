@@ -2619,3 +2619,7 @@ h2.title {
 #sort-low-to-high{
   margin-bottom: 10px;
 }
+#price-dropdown{
+  margin-right: 100vh;
+  margin-left: 42vh;
+}
