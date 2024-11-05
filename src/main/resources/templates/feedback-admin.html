@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mobile Shop - Admin Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/images/logos/logo.png"/>
+    <link rel="stylesheet" href="/assets/css/styles.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .pagination {
+            display: flex; /* Sử dụng Flexbox */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            margin: 20px 0; /* Thêm khoảng cách phía trên và dưới nếu cần */
+        }
+
+        .pagination .page-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            background-color: #f8f9fa; /* Màu nền mặc định */
+            border: 1px solid #ced4da; /* Đường viền mặc định */
+            border-radius: 4px; /* Bo góc */
+            display: flex; /* Sử dụng flex để căn chỉnh biểu tượng */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+        .pagination .page-btn:hover {
+            background-color: #e9ecef; /* Màu nền khi hover */
+        }
+
+        .pagination .page-btn.active {
+            background-color: #007bff; /* Màu nền của trang hiện tại */
+            color: white; /* Màu chữ của trang hiện tại */
+            font-weight: bold; /* In đậm chữ */
+        }
+
+        .pagination .page-btn i {
+            font-size: 1.2em; /* Kích thước biểu tượng */
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+
+    <th:block th:replace="common/sidebar.html"></th:block>
+
+    <div class="body-wrapper">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-4">Feedback List</h5>
+                    <table id="userTable" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Orders Code</th>
+                            <th>User Name</th>
+                            <th>Comment Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Data will be dynamically added here -->
+                        </tbody>
+                    </table>
+                    <div id="pagination" class="pagination">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Category Modal -->
+    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" aria-labelledby="viewFeedbackModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Feedback</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Orders Code</label>
+                        <input type="text" class="form-control" id="ordersCode" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" id="userName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" id="productName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Comment Date</label>
+                        <input type="text" class="form-control" id="commentDate" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Comment Text</label>
+                        <textarea class="form-control" id="commentText" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/sidebarmenu.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<script src="/assets/libs/simplebar/dist/simplebar.js"></script>
+<script src="/js/feedback-user.js"></script>
+</body>
+</html>

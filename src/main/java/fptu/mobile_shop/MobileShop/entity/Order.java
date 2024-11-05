@@ -30,6 +30,9 @@ public class Order {
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus;
 
+    @Column(name = "OrderCode", length = 50)
+    private String orderCode;
+
     @Column(name = "TotalAmount")
     private double totalAmount;
 
