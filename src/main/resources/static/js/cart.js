@@ -26,38 +26,35 @@ function calculateTotal() {
 // Hàm để render các sản phẩm trong giỏ hàng
 function renderCartItems() {
     if(cartItems){
-        let  totlePriceCart = 0;
+        totalAmount = 0;
         var cartItemsHTML = cartItems.map(function (item) {
-            totlePriceCart += item?.productPrice * item?.quantity;
+            totalAmount += item?.productPrice * item?.quantity;
             return `
-        <div class="cart-item row align-items-center">
-            <div class="col-md-3 item-image">
-                <img src="${item.image}" alt="${item.productName}">
-            </div>
-            <div class="col-md-3 item-details">
-                <h5>${item.productName}</h5>
-            </div>
-            <div class="col-md-2 item-price">
-                <span>${item.productPrice.toLocaleString()}₫</span>
-            </div>
-            <div class="col-md-2 item-quantity">
-                <div class="input-group">
-                    <button class="btn btn-outline-secondary btn-minus" type="button" onclick="updateItem('${item.productId}', '${item.quantity - 1}')" >-</button>
-                    <input type="text" style="width: 50px; max-height: 100px; margin: 0px 9px; border: 0.5px silver dashed" value="${item.quantity}">
-                    <button class="btn btn-outline-secondary btn-plus" type="button" onclick="updateItem('${item.productId}', '${item.quantity + 1}')" >+</button>
-                </div>
-            </div>
-            <div class="col-md-1 item-total">
-                <span>${(item.productPrice * item.quantity).toLocaleString()}₫</span>
-            </div>
-            <div class="col-md-1 item-remove">
-                <button onclick="updateItem('${item.productId}', '0')" class="btn btn-danger btn-remove">Xóa</button>
-            </div>
-        </div>
-        `;
+                    <div class="cart-item">
+<!--                        <input type="checkbox" checked onchange="toggleSelect(${item.id})">-->
+                        <div class="cart-item-image">
+                            <img src="${item.image}" alt="${item.productName}">
+                        </div>
+                        <div class="cart-item-details">
+                            <h4>${item.productName}</h4>
+                            <p>
+                                <span class="price">${item.productPrice.toLocaleString()}₫</span>
+                            </p>
+                             
+                        </div>
+                        <div class="quantity">
+                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity - 1}')">-</button>
+                            <input type="number" value="${item.quantity}" 
+                            onchange="handleQuantityChange(event, '${item.productId}')" min="1" id="quantity-${item.id}">
+                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
+                        </div>
+                        <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')"> Xoá
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                `;
         }).join('');
-        console.log('totlePriceCart', totlePriceCart)
-        document.getElementById('priceCart').innerText = totlePriceCart.toLocaleString() + ' ₫'
+        document.getElementById('priceCart').innerText = totalAmount.toLocaleString() + ' ₫'
         // $('#totlePriceCart').empty(); // Xóa nội dung cũ
         // $('#totlePriceCart').append(`${totlePriceCart.toLocaleString()} ₫`);
 
@@ -67,27 +64,9 @@ function renderCartItems() {
     }
 }
 
-// Hàm tăng số lượng sản phẩm
-function increaseQuantity(itemId) {
-    var item = cartItems.find(function (item) {
-        return item.productId === itemId;
-    });
-
-    if (item) {
-        item.productStock++;
-        renderCartItems();
-    }
-}
-
-// Hàm giảm số lượng sản phẩm
-function decreaseQuantity(itemId) {
-    var item = cartItems.find(function (item) {
-        return item.productId === itemId;
-    });
-
-    if (item && item.quantity > 1) {
-        item.productStock--;
-        renderCartItems();
+function  handleQuantityChange(event, productId){
+    if(event && event.target.value){
+        updateItem(productId, event.target.value)
     }
 }
 
@@ -101,27 +80,31 @@ function updateItem(productId, quantity) {
         },
         success: function(response) {
             if (response && response.message === 'Success') {
+                console.log('1')
+                fetchCartItems();
                 Swal.fire({
-                    title: "Đã xóa sản phẩm khỏi giỏ hàng",
+                    title: "Cập nhật giỏ hàng thành công",
                     icon: "success",
-                    text: "Sản phẩm đã được xóa thành công khỏi giỏ hàng của bạn.",
+                    text: "Sản phẩm đã được cập nhật thành công",
                     confirmButtonText: "OK",
                 });
                 // Xóa sản phẩm khỏi giao diện
-                fetchCartItems();
+
             } else {
                 Swal.fire({
-                    title: "Không thể xóa sản phẩm",
+                    title: "Cập nhật giỏ hàng thất bại",
                     icon: "warning",
-                    text: "Đã xảy ra lỗi khi xóa sản phẩm. Vui lòng thử lại.",
+                    text: "Đã xảy ra lỗi khi cập nhật sản phẩm. Vui lòng thử lại.",
                     confirmButtonText: "OK",
                 });
+                console.log('2')
             }
+            console.log('3', response)
         },
         error: function(error) {
             console.error("Error removing item from cart:", error);
             Swal.fire({
-                title: "Lỗi khi xóa sản phẩm",
+                title: "Lỗi khi cập nhật giỏ hàng",
                 icon: "error",
                 text: "Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại sau.",
                 confirmButtonText: "OK",
@@ -129,20 +112,65 @@ function updateItem(productId, quantity) {
         }
     });
 }
+var orderId = "";
+var totalAmount = 0;
 
-
-
-// Hàm bật/tắt chọn sản phẩm
-function toggleSelect(itemId) {
-    var item = cartItems.find(function (item) {
-        return item.productId === itemId;
-    });
-
-    if (item) {
-        item.selected = !item.selected; // Đảo trạng thái của selected
-        calculateTotal(); // Tính tổng tiền lại
+function payment() {
+    // Sample data for demonstration purposes
+    if(totalAmount === 0){
+        return;
     }
+
+    // Clear the container
+    document.getElementById('containerCart').innerHTML = '';
+    const bankId = '970415';
+    const soTaiKhoan = '113366668888';
+    const noiDung = 'Thanh toan don hang mobile shop';
+    const accountName = 'nhinnhin';
+
+    // Generate the payment section HTML
+    const paymentHTML = `
+        <div class="card text-center mx-auto" style="max-width: 400px;">
+            <div class="card-header">
+                Thanh toán
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Quét mã QR để thanh toán</h5>
+                <p class="card-text text-danger">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR bên dưới.</p>
+
+                <!-- Order Details Section -->
+                <div class="order-details mb-3 text-start">
+                    <p><strong>Mã đơn hàng:</strong> ${orderId}</p>
+                    <p><strong>Tổng số tiền:</strong> ${totalAmount}</p>
+                </div>
+
+                <!-- QR Code Placeholder -->
+                <div class="d-flex justify-content-center mb-3">
+                    <img src="https://img.vietqr.io/image/${bankId}-${soTaiKhoan}-compact2.jpg?amount=${totalAmount}&addInfo=${noiDung}&accountName=${accountName}" alt="QR Code" class="img-fluid" style="max-width: 150px;">
+                </div>
+
+                <button class="btn btn-success w-100" onclick="confirmOrder()">Xác nhận đơn hàng</button>
+            </div>
+            <div class="card-footer text-muted">
+                Cảm ơn bạn đã mua sắm cùng chúng tôi!
+            </div>
+        </div>
+    `;
+    //https://vietqr.io/danh-sach-api/link-tao-ma-nhanh/
+    // Insert the payment HTML into the containerCart
+    document.getElementById('containerCart').innerHTML = paymentHTML;
 }
+
+function confirmOrder() {
+    Swal.fire({
+        title: "Đơn hàng đã được xác nhận",
+        icon: "success",
+        text: "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.",
+        confirmButtonText: "OK",
+    });
+}
+
+
 
 // Khởi tạo giỏ hàng
 renderCartItems();
