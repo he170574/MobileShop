@@ -96,17 +96,27 @@
         </div>
     </section>
 
-    <!-- Price Filter Dropdown -->
-    <section id="price-filter" class="container mt-3">
-        <button id="toggle-price" class="btn btn-outline-primary">
+    <!-- Button to Toggle Price Filter Dropdown -->
+    <div class="container mt-3">
+        <h4>Price</h4>
+        <button id="toggle-price" class="btn btn-outline-primary w-100">
             <i class="fa fa-money"></i> Price
         </button>
-        <div id="price-dropdown" class="dropdown-menu p-3" style="display: none;">
-            <h5>Select Price Range</h5>
-            <div id="price-slider"></div>
-            <button id="apply-price-filter" class="btn btn-primary mt-3">Apply</button>
+    </div>
+
+    <!-- Price Filter Dropdown -->
+    <div id="price-dropdown" class="list-filter-child active" style="display: none;">
+        <div class="price-filter-range">
+            <div class="range-header">
+                <p id="min-price">0đ</p>
+                <p id="max-price">50.000.000đ</p>
+            </div>
+            <div id="price-slider" style="padding: 9px 0; width: auto; height: 8px;"></div>
         </div>
-    </section>
+        <div class="show btn-filter-group">
+            <button id="apply-price-filter" class="button button__filter-children-submit is-small is-danger submit">Xem kết quả</button>
+        </div>
+    </div>
 
     <!-- Sorting and Search -->
     <section class="container mt-3">
@@ -142,7 +152,9 @@
 
 <th:block th:replace="common/footer.html"></th:block>
 
-<script src="https://cdn.jsdelivr.net/npm/wnumb@1.1.0/wNumb.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.1/nouislider.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.1/nouislider.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.1.0/wNumb.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
@@ -150,6 +162,5 @@
 <script src="/assets/js/jquery.prettyPhoto.js"></script>
 <script src="/js/common_customer_page.js"></script>
 <script src="/js/home.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
 </body>
 </html>
