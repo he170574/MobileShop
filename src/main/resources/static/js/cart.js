@@ -32,7 +32,7 @@ function renderCartItems() {
             return `
         <div class="cart-item row align-items-center">
             <div class="col-md-3 item-image">
-                <img src="${item.image}" alt="${item.productName}">
+                <img style="width: 50px; height: 80px" src="${item.image}" alt="${item.productName}">
             </div>
             <div class="col-md-3 item-details">
                 <h5>${item.productName}</h5>
@@ -61,6 +61,7 @@ function renderCartItems() {
         // $('#totlePriceCart').empty(); // Xóa nội dung cũ
         // $('#totlePriceCart').append(`${totlePriceCart.toLocaleString()} ₫`);
 
+        document.getElementById('cart-items').innerHTML = '';
         document.getElementById('cart-items').innerHTML = cartItemsHTML;
 
         // calculateTotal();
@@ -108,7 +109,7 @@ function updateItem(productId, quantity) {
                     confirmButtonText: "OK",
                 });
                 // Xóa sản phẩm khỏi giao diện
-                fetchCartItems();
+
             } else {
                 Swal.fire({
                     title: "Không thể xóa sản phẩm",
@@ -117,6 +118,7 @@ function updateItem(productId, quantity) {
                     confirmButtonText: "OK",
                 });
             }
+            fetchCartItems();
         },
         error: function(error) {
             console.error("Error removing item from cart:", error);
