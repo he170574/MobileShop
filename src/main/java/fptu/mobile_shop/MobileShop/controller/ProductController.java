@@ -36,6 +36,36 @@ public class ProductController {
     }
 
     @GetMapping("/get-product")
+    public ResponseEntity<ResponseDTO> getProducts(
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(required = false) String category) {
+
+        List<Product> products = productService.filterProducts(search, minPrice, maxPrice, sort, category);
+
+        List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
+                .productId(item.getProductID())
+                .productName(item.getProductName())
+                .productDetails(item.getProductDetails())
+                .productImageUrl(item.getProductImage())
+                .price(item.getPrice())
+                .cost(item.getCost())
+                .categoryName(item.getCategoryName())
+                .stockQuantity(item.getStockQuantity())
+                .build()).toList();
+
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setMessage("Get success");
+        responseDTO.setData(productDTOs);
+        responseDTO.setTotalPages(1); // Only one page since there’s no pagination
+        responseDTO.setCurrentPage(1); // Set to 1 as default
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    @GetMapping("/get-all-product")
     public ResponseEntity<ResponseDTO> getAllProducts(
             @RequestParam(defaultValue = "") String search,
             @RequestParam(required = false) Double minPrice,
@@ -45,7 +75,7 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
 
-        Page<Product> productPage = productService.searchProducts(search, minPrice, maxPrice, sort, category, page, size);
+        Page<Product> productPage = productService.filterProductsWithPagination(search, minPrice, maxPrice, sort, category, page, size);
 
         List<ProductDTO> productDTOs = productPage.getContent().stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())

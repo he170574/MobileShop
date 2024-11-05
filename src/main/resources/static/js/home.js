@@ -6,21 +6,7 @@ $(document).ready(function() {
             data: filters,
             success: function(response) {
                 if (response && response.data) {
-                    $('#product-list').empty();
-                    response.data.forEach(function(product) {
-                        $('#product-list').append(`
-                            <div class="col-6 col-md-4 col-lg-3 mb-4 product-item" data-product-id="${product.productId}">
-                                <div class="card text-center h-100">
-                                    <img onclick="viewProductDetail(${product.productId})" src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-truncate">${product.productName}</h5>
-                                        <p class="card-text text-danger">${product.price} đ</p>
-                                        <button class="btn btn-primary" onclick="addToCart(${product.productId})">Add to Cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `);
-                    });
+                    renderProductList(response.data);
                 } else {
                     console.error("Unexpected data format received:", response);
                     alert('Unexpected data format received.');
@@ -83,7 +69,30 @@ $(document).ready(function() {
     });
 });
 
+function renderProductList(products) {
+    $('#product-list').empty();
+    let row;
 
+    products.forEach((product, index) => {
+        if (index % 5 === 0) {
+            row = $('<div class="row mb-4"></div>');
+            $('#product-list').append(row);
+        }
+
+        row.append(`
+            <div class="col-6 col-md-4 col-lg-2 mb-4 product-item" data-product-id="${product.productId}">
+                <div class="card text-center h-100">
+                    <img onclick="viewProductDetail(${product.productId})" src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title text-truncate">${product.productName}</h5>
+                        <p class="card-text text-danger">${product.price} đ</p>
+                        <button class="btn btn-primary" onclick="addToCart(${product.productId})">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+}
 
 function viewProductDetail(id){
     window.location.href = `/productDetail?id=${id}`;
