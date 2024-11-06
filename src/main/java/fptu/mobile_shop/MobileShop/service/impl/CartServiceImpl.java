@@ -4,17 +4,20 @@ import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Cart;
 import fptu.mobile_shop.MobileShop.entity.CartItem;
 import fptu.mobile_shop.MobileShop.entity.Product;
+import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.CartItemRepository;
 import fptu.mobile_shop.MobileShop.repository.CartRepository;
 import fptu.mobile_shop.MobileShop.repository.ProductRepository;
+import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -28,13 +31,16 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @Override
     public int addToCart(Account account, Integer productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Cart cart = cartRepository.getCartByAccountID(account.getAccountId());
-        if(Objects.isNull(cart)){
+        if (Objects.isNull(cart)) {
             cart = new Cart();
             cart.setId(0L);
             cart.setAccountID(account.getAccountId());
@@ -61,11 +67,11 @@ public class CartServiceImpl implements CartService {
         }
         cartItemRepository.save(itemCart.get());
         AtomicInteger totalCart = new AtomicInteger();
-        cart.getItems().forEach( cartItem -> {
+        cart.getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
         });
         return totalCart.get();
-    }   
+    }
 
     @Override
     public Cart removeFromCart(Account account, Long cartItemId) {
@@ -79,7 +85,7 @@ public class CartServiceImpl implements CartService {
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
         try {
             Cart cart = getCart(account);
-            if(Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())){
+            if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
                 return false;
             }
             // Xóa sản phẩm khỏi giỏ hàng khi số lượng bằng 0
@@ -87,24 +93,33 @@ public class CartServiceImpl implements CartService {
                     .filter(item -> item.getProduct().getProductID() == productId)
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException("No CartItem found with the specified product ID"));
-            if(Objects.isNull(cartItem)){
+            if (Objects.isNull(cartItem)) {
                 return false;
-            }else {
-                if(quantity > 0){
+            } else {
+                if (quantity > 0) {
                     cartItem.setQuantity(quantity);
                     cartItemRepository.save(cartItem);
-                }else {
-
+                } else {
                     cartItemRepository.deleteById(cartItem.getId());
-                    if(cart.getItems().size() < 1){
+                    if (cart.getItems().size() < 1) {
                         cartRepository.deleteById(cart.getId());
-                    };
+                    }
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    @Override
+    public boolean deleteCart(Cart cart) {
+        if (!Objects.isNull(cart)) {
+            cartItemRepository.deleteAll(cart.getItems());
+            cartRepository.deleteById(cart.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -123,9 +138,39 @@ public class CartServiceImpl implements CartService {
     @Override
     public int getCartTotal(Account account) {
         AtomicInteger totalCart = new AtomicInteger();
-        getCart(account).getItems().forEach( cartItem -> {
+        getCart(account).getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
         });
         return totalCart.get();
     }
+
+    @Override
+    @Transactional
+    public Cart findByAccountId() {
+        // Get current account login
+        String login = CustomAccount.getCurrentUsername();
+        Optional<Account> account = accountRepository.findByUsername(login);
+        Optional<Cart> optional = cartRepository.findByAccountId(account.orElseThrow().getAccountId());
+        // If customer doesn't have cart -> create new cart for user
+        Cart userCart;
+        if (!optional.isPresent()) {
+            Cart newCart = new Cart(null, account.hashCode(), null);
+            userCart = cartRepository.save(newCart);
+        } else {
+            userCart = optional.get();
+//            Collections.sort(userCart.getItems());
+        }
+        return userCart;
+    }
+
+    @Override
+    public double calculateTotalAmount(Cart cart) {
+        AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
+        cart.getItems().forEach(item -> {
+            totalAmount.updateAndGet(v -> v + (item.getQuantity() * item.getProduct().getPrice()));
+        });
+        return totalAmount.get();
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package fptu.mobile_shop.MobileShop.controller;
 
-import fptu.mobile_shop.MobileShop.dto.AccountDTO;
 import fptu.mobile_shop.MobileShop.dto.CartItemDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.entity.Account;
@@ -147,6 +146,6 @@ public class CartController {
             return ResponseEntity.internalServerError().body(responseDTO);
         }
     }
-    //sjfhjksdbkjsn
+
 }
 
