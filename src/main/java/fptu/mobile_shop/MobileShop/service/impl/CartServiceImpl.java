@@ -77,32 +77,33 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
-        Cart cart = getCart(account);
-        if(Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())){
-            return false;
-        }
-        // Xóa sản phẩm khỏi giỏ hàng khi số lượng bằng 0
-        CartItem cartItem = cart.getItems().stream()
-                .filter(item -> item.getProduct().getProductID() == productId)
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No CartItem found with the specified product ID"));
-        if(Objects.isNull(cartItem)){
-            return false;
-        }else {
-            if(quantity > 0){
-                cartItem.setQuantity(quantity);
-                cartItemRepository.save(cartItem);
-            }else {
-                cartItemRepository.deleteById(cartItem.getId());
-                if(cart.getItems().stream()
-                        .filter( item -> item.getProduct().getProductID().equals(productId)).collect(Collectors.toCollection(ArrayList::new))
-                        .size() < 1){
-                    cartRepository.deleteById(cart.getId());
-                };
+        try {
+            Cart cart = getCart(account);
+            if(Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())){
+                return false;
             }
+            // Xóa sản phẩm khỏi giỏ hàng khi số lượng bằng 0
+            CartItem cartItem = cart.getItems().stream()
+                    .filter(item -> item.getProduct().getProductID() == productId)
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchElementException("No CartItem found with the specified product ID"));
+            if(Objects.isNull(cartItem)){
+                return false;
+            }else {
+                if(quantity > 0){
+                    cartItem.setQuantity(quantity);
+                    cartItemRepository.save(cartItem);
+                }else {
+
+                    cartItemRepository.deleteById(cartItem.getId());
+                    if(cart.getItems().size() < 1){
+                        cartRepository.deleteById(cart.getId());
+                    };
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-
         return true;
     }
 

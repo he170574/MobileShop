@@ -101,8 +101,14 @@ import java.util.Optional;
     @Override
     public List<Product> filterProducts(String searchTerm, Double minPrice, Double maxPrice, String sort, String category) {
         Sort sortOrder = "desc".equalsIgnoreCase(sort) ? Sort.by("price").descending() : Sort.by("price").ascending();
+
+        if (searchTerm != null && searchTerm.isEmpty()) {
+            searchTerm = null;
+        }
+
         return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, sortOrder);
     }
+
 
     @Override
     public Page<Product> filterProductsWithPagination(String searchTerm, Double minPrice, Double maxPrice, String sort, String category, int page, int size) {

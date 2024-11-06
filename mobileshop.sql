@@ -141,9 +141,13 @@ DROP TABLE IF EXISTS `orderhistory`;
 CREATE TABLE `orderhistory` (
   `OrderHistoryID` int NOT NULL AUTO_INCREMENT,
   `OrderID` int DEFAULT NULL,
-  `ACCOUNT_ID` int NOT NULL,
-  `Status` varchar(50) DEFAULT NULL,
-  `UpdatedDate` datetime DEFAULT NULL,
+  `quantity` decimal(10,2) DEFAULT 0,
+  `product_id` int,
+  `productName` varchar(255) DEFAULT NULL,
+  `color` varchar(255) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL,
+  `productAmount` decimal(10,2) DEFAULT 0,
+  `cost` decimal(10,2) DEFAULT 0,
   `Notes` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`OrderHistoryID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -170,7 +174,8 @@ CREATE TABLE `orders` (
   `ACCOUNT_ID` int NOT NULL,
   `OrderDate` datetime DEFAULT NULL,
   `OrderStatus` varchar(50) DEFAULT NULL,
-  `TotalAmount` decimal(10,2) DEFAULT NULL,
+  `TotalAmount` decimal(10,2) DEFAULT 0,
+  
   PRIMARY KEY (`OrderID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
