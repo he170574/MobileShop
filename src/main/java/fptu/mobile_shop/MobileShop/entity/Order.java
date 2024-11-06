@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +33,9 @@ public class Order {
 
     @Column(name = "OrderCode", length = 50)
     private String orderCode;
+
+    @Column(name = "ShippingFee")
+    private BigDecimal shippingFee;
 
     @Column(name = "TotalAmount")
     private double totalAmount;

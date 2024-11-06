@@ -4,14 +4,18 @@ import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Cart;
 import fptu.mobile_shop.MobileShop.entity.CartItem;
 import fptu.mobile_shop.MobileShop.entity.Product;
+import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.CartItemRepository;
 import fptu.mobile_shop.MobileShop.repository.CartRepository;
 import fptu.mobile_shop.MobileShop.repository.ProductRepository;
+import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -27,6 +31,9 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Override
     public int addToCart(Account account, Integer productId, int quantity) {
@@ -65,7 +72,7 @@ public class CartServiceImpl implements CartService {
             totalCart.addAndGet(cartItem.getQuantity());
         });
         return totalCart.get();
-    }   
+    }
 
     @Override
     public Cart removeFromCart(Account account, Long cartItemId) {
@@ -128,4 +135,29 @@ public class CartServiceImpl implements CartService {
         });
         return totalCart.get();
     }
+
+    @Override
+    @Transactional
+    public Cart findByAccountId() {
+        // Get current account login
+        String login = CustomAccount.getCurrentUsername();
+        Optional<Account> account = accountRepository.findByUsername(login);
+        Optional<Cart> optional = cartRepository.findByAccountId(account.orElseThrow().getAccountId());
+        // If customer doesn't have cart -> create new cart for user
+        Cart userCart;
+        if (!optional.isPresent()) {
+            Cart newCart = new Cart(null, account.hashCode(), null);
+            userCart = cartRepository.save(newCart);
+        } else {
+            userCart = optional.get();
+//            Collections.sort(userCart.getItems());
+        }
+        return userCart;
+    }
+
+    @Override
+    public double calculateTotalAmount(Cart cart) {
+        return 0;
+    }
+
 }

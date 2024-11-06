@@ -28,7 +28,13 @@
 
         <div class="cart-summary">
             <h4>Tạm tính: <span class="cart-total" id="priceCart">0₫</span></h4>
-            <button onclick="payment()" class="btn btn-success checkout-btn">Mua ngay</button>
+<!--            <button onclick="payment()" class="btn btn-success checkout-btn">Mua ngay</button>-->
+            <a type="button" class="btn btn-checkout"
+               style="background-color: #ff6d00; color: white"
+               th:href="@{/checkout}">
+                <span>Tiến hành thanh toán</span>
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 </main>

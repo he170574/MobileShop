@@ -33,7 +33,7 @@ function renderCartItems() {
                     <div class="cart-item">
 <!--                        <input type="checkbox" checked onchange="toggleSelect(${item.id})">-->
                         <div class="cart-item-image">
-                            <img src="${item.image}" alt="${item.productName}">
+                            <img style="width: 50px; height:  80px" src="${item.image}" alt="${item.productName}">
                         </div>
                         <div class="cart-item-details">
                             <h4>${item.productName}</h4>

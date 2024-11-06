@@ -175,7 +175,7 @@ CREATE TABLE `orders` (
   `OrderDate` datetime DEFAULT NULL,
   `OrderStatus` varchar(50) DEFAULT NULL,
   `TotalAmount` decimal(10,2) DEFAULT 0,
-  
+  `ShippingFee` decimal(10,2) DEFAULT 0,
   PRIMARY KEY (`OrderID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
