@@ -15,10 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -41,7 +40,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Cart cart = cartRepository.getCartByAccountID(account.getAccountId());
-        if(Objects.isNull(cart)){
+        if (Objects.isNull(cart)) {
             cart = new Cart();
             cart.setId(0L);
             cart.setAccountID(account.getAccountId());
@@ -68,7 +67,7 @@ public class CartServiceImpl implements CartService {
         }
         cartItemRepository.save(itemCart.get());
         AtomicInteger totalCart = new AtomicInteger();
-        cart.getItems().forEach( cartItem -> {
+        cart.getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
         });
         return totalCart.get();
@@ -86,7 +85,7 @@ public class CartServiceImpl implements CartService {
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
         try {
             Cart cart = getCart(account);
-            if(Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())){
+            if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
                 return false;
             }
             // Xóa sản phẩm khỏi giỏ hàng khi số lượng bằng 0
@@ -94,24 +93,33 @@ public class CartServiceImpl implements CartService {
                     .filter(item -> item.getProduct().getProductID() == productId)
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException("No CartItem found with the specified product ID"));
-            if(Objects.isNull(cartItem)){
+            if (Objects.isNull(cartItem)) {
                 return false;
-            }else {
-                if(quantity > 0){
+            } else {
+                if (quantity > 0) {
                     cartItem.setQuantity(quantity);
                     cartItemRepository.save(cartItem);
-                }else {
-
+                } else {
                     cartItemRepository.deleteById(cartItem.getId());
-                    if(cart.getItems().size() < 1){
+                    if (cart.getItems().size() < 1) {
                         cartRepository.deleteById(cart.getId());
-                    };
+                    }
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    @Override
+    public boolean deleteCart(Cart cart) {
+        if (!Objects.isNull(cart)) {
+            cartItemRepository.deleteAll(cart.getItems());
+            cartRepository.deleteById(cart.getId());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -130,7 +138,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public int getCartTotal(Account account) {
         AtomicInteger totalCart = new AtomicInteger();
-        getCart(account).getItems().forEach( cartItem -> {
+        getCart(account).getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
         });
         return totalCart.get();
@@ -157,7 +165,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public double calculateTotalAmount(Cart cart) {
-        return 0;
+        AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
+        cart.getItems().forEach(item -> {
+            totalAmount.updateAndGet(v -> v + (item.getQuantity() * item.getProduct().getPrice()));
+        });
+        return totalAmount.get();
     }
+
 
 }

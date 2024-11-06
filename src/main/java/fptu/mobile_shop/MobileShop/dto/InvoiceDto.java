@@ -19,4 +19,5 @@ public class InvoiceDto {
     private String shortName;
     private String serviceTypeId;
     private String note;
+    private String phoneNumber;
 }

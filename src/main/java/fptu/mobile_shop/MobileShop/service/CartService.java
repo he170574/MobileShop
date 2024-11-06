@@ -21,4 +21,6 @@ public interface CartService {
     Cart findByAccountId();
 
     double calculateTotalAmount(Cart cart);
+
+    boolean deleteCart(Cart cart);
 }

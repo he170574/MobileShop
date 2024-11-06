@@ -47,11 +47,12 @@
 <!--                            </div>-->
 <!--                        </div>-->
                         <div class="row mt-2 mb-2">
-<!--                            <div class="col-6">-->
-<!--                                <label for="phoneNumber" class="required">Số điện thoại</label>-->
-<!--                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Nhập số điện thoại" th:field="*{invoice.phoneNumber}" />-->
-<!--                                <span class="error" id="phoneNumberError"></span>-->
-<!--                            </div>-->
+                            <div class="col-6">
+                                <label for="phoneNumber" class="required">Số điện thoại</label>
+                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
+                                       placeholder="Nhập số điện thoại" th:field="*{invoice.phoneNumber}" />
+                                <span class="error" id="phoneNumberError"></span>
+                            </div>
                             <div class="col-6">
                                 <label for="email" class="required">Địa chỉ Email</label>
                                 <input type="text" class="form-control" name="email" id="email" placeholder="Nhập Email" th:field="*{invoice.email}" />
@@ -143,11 +144,11 @@
 
                                     </td>
                                     <td class="text-center" th:text="${'x' + item.getQuantity()}"></td>
-                                    <td class="text-right subtotal" th:text="${item.product.price * item.quantity}"></td>
+                                    <td class="text-right subtotal" th:text="${checkoutDTO.formatToVND(item.product.price * item.quantity)}"></td>
                                 </tr>
                                 <tr>
                                     <th class="text-left" colspan="2">Tổng tiền được tính:</th>
-                                    <td class="text-right subtotal" th:text="${checkoutDTO.totalAmount}"></td>
+                                    <td class="text-right subtotal" th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                                 </tr>
                                 <tr>
                                     <th class="text-left" colspan="2">Phí vận chuyển:</th>
@@ -157,7 +158,7 @@
                                 </tr>
                                 <tr>
                                     <th class="text-left" colspan="2">Tổng tiền phải thanh toán:</th>
-                                    <td class="text-right finalTotal subtotal" id="finalTotal" th:text="${checkoutDTO.totalAmount}"></td>
+                                    <td class="text-right finalTotal subtotal" id="finalTotal" th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                                 </tr>
                                 <tr>
                                     <td class="text-left" colspan="3">
@@ -196,10 +197,10 @@
 <!--                <input type="text" th:field="*{subTotal}" hidden>-->
 <!--                <input type="text" id="total-cal" th:field="*{total}" hidden>-->
                 <input type="text" id="oShippingFee" th:field="*{shippingFee}" hidden="hidden">
-<!--                <input type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}" th:field="*{totalWeight}">-->
-<!--                <input type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">-->
-<!--                <input type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">-->
-<!--                <input type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">-->
+                <input type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}">
+                <input type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">
+                <input type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">
+                <input type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">
 <!--                <input type="hidden" id="discountId" th:value="${checkoutDTO.getDiscountId()}" th:field="*{discountId}">-->
                 <!-- hidden value -->
             </form>
@@ -364,8 +365,6 @@
                     },
                     success: function (data) {
                         console.log("Available services data: ", data);
-                        var weightInGrams = parseFloat($('#totalWeight').val()); // Get the weight value in grams
-                        var weightInKg = weightInGrams / 1000; // Convert grams to kilograms
                         var displayText = '';
 
                         // Define replacements
@@ -376,11 +375,7 @@
 
                         var defaultOptionValue = "";
 
-                        if (weightInKg < 20) {
-                            defaultOptionValue = "Giao hàng tiết kiệm"; // Default for < 20kg
-                        } else {
-                            defaultOptionValue = "Giao hàng chuẩn"; // Default for >= 20kg
-                        }
+                        defaultOptionValue = "Giao hàng tiết kiệm"; // Default for < 20kg
 
                         if (data && data.data && data.data.length > 0) {
                             var found = false;
