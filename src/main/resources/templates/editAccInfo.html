@@ -1,65 +1,191 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Edit Account Information">
+    <meta name="author" content="Your Name">
     <title>Edit Account Information</title>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
+    <style>
+        /* Styling for loading spinner */
+        .lsd-ring-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lsd-ring-container .loader {
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid #ffffff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
+
 <body>
-<th:block th:replace="common/header.html"></th:block>
+<!-- Loading spinner -->
+<div class="lsd-ring-container" id="loadingSpinner">
+    <div class="loader"></div>
+</div>
 
-<form id="editAccountForm" enctype="multipart/form-data" class="container mt-4">
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="username1" class="form-label">Username:</label>
-            <input type="text" id="username1" name="username" class="form-control" readonly />
+<div class="container mt-5">
+    <h2>Edit Account Information</h2>
+
+    <!-- Alert Message -->
+    <div id="alertMessage" class="alert d-none" role="alert"></div>
+
+    <form id="editAccountForm">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" name="username" class="form-control" readonly />
+            </div>
+            <div class="col-md-6">
+                <label for="fullName" class="form-label">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" class="form-control" />
+            </div>
         </div>
-        <div class="col-md-6">
-            <label for="fullName1" class="form-label">Full Name:</label>
-            <input type="text" id="fullName1" name="fullName" class="form-control" />
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label for="phoneNumber" class="form-label">Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" />
+            </div>
         </div>
-    </div>
 
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="email1" class="form-label">Email:</label>
-            <input type="email" id="email1" name="email" class="form-control" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="dob" class="form-label">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label for="address" class="form-label">Address:</label>
+                <input type="text" id="address" name="address" class="form-control" />
+            </div>
         </div>
-        <div class="col-md-6">
-            <label for="phoneNumber1" class="form-label">Phone Number:</label>
-            <input type="text" id="phoneNumber1" name="phoneNumber" class="form-control" />
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Update Account</button>
         </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="dob1" class="form-label">Date of Birth:</label>
-            <input type="date" id="dob1" name="dob" class="form-control" />
-        </div>
-        <div class="col-md-6">
-            <label for="address1" class="form-label">Address:</label>
-            <input type="text" id="address1" name="address" class="form-control" />
-        </div>
-    </div>
-
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">Update Account</button>
-    </div>
-</form>
-
-
-
+    </form>
+</div>
 <th:block th:replace="common/footer.html"></th:block>
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="/js/common_customer_page.js"></script>
-<script src="/js/editAccInfo.js"></script>
+
+<script>
+    $(document).ready(function () {
+        console.log("Document is ready");
+
+        // Load account data
+        loadData();
+
+        // Handle form submission
+        handleFormSubmit();
+    });
+
+    let loadingSpinner = $('#loadingSpinner');
+    let alertMessage = $('#alertMessage');
+
+    // Load account data
+    function loadData() {
+        $.ajax({
+            url: '/get-account-using',
+            type: 'GET',
+            beforeSend: function () {
+                loadingSpinner.show(); // Show loading spinner
+            },
+            success: function (response) {
+                if (response && response.data) {
+                    const account = response.data;
+                    $('#username').val(account.username || '');
+                    $('#fullName').val(account.fullName || '');
+                    $('#email').val(account.email || '');
+                    $('#phoneNumber').val(account.phoneNumber || '');
+                    $('#dob').val(account.dateOfBirth || '');
+                    $('#address').val(account.address || '');
+                } else {
+                    displayAlert('danger', 'Unable to load account data');
+                }
+            },
+            complete: function () {
+                loadingSpinner.hide(); // Hide loading spinner
+            },
+            error: function () {
+                displayAlert('danger', 'Error loading account data');
+                loadingSpinner.hide();
+            }
+        });
+    }
+
+    // Handle form submission
+   function handleFormSubmit() {
+    $('#editAccountForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = {
+            username: $('#username').val(),
+            fullName: $('#fullName').val(),
+            email: $('#email').val(),
+            phoneNumber: $('#phoneNumber').val(),
+            dob: $('#dob').val(), // Đảm bảo ngày được lấy đúng
+            address: $('#address').val()
+        };
+
+        console.log(formData); // Kiểm tra giá trị ngày trong formData
+
+        $.ajax({
+            url: '/update-account',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            beforeSend: function () {
+                loadingSpinner.show(); // Show loading spinner
+            },
+            success: function (response) {
+                if (response.success) {
+                    displayAlert('success', 'Account updated successfully');
+                } else {
+                    displayAlert('danger', 'Failed to update account: ' + response.message);
+                }
+            },
+            complete: function () {
+                loadingSpinner.hide(); // Hide loading spinner
+            },
+            error: function () {
+                displayAlert('danger', 'Error updating account');
+                loadingSpinner.hide();
+            }
+        });
+    });
+}
+
+
+    // Display alert message
+    function displayAlert(type, message) {
+        alertMessage.removeClass('d-none').addClass('alert-' + type).text(message);
+    }
+</script>
 </body>
 </html>

@@ -106,57 +106,65 @@ public class AccountController {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             if (authentication == null) {
-                responseDTO.setMessage("No Login");
-            } else {
-
-                responseDTO.setMessage("Success");
-                CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
-                Account account = accountService.getByUsername(customAccount.getUsername());
-
-                AccountDTO accountDTO = new AccountDTO(
-                        account.getAccountId(),
-                        account.getAddress(),
-                        account.getDateOfBirth(),
-                        account.getEmail(),
-                        account.getFullName(),
-                        account.getPhoneNumber(),
-                        account.getUsername(),
-                        account.getRole().getRoleName());
-
-                accountDTO.setCartTotal(cartService.getCartTotal(account));
-
-                responseDTO.setData(accountDTO);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ResponseDTO.builder().message("No Login").build());
             }
-            return ResponseEntity.ok().body(responseDTO);
-        } catch (Exception e) {
-            responseDTO.setMessage("Internal Server Error");
-            return ResponseEntity.internalServerError().body(responseDTO);
-        }
 
+            CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
+            Account account = accountService.getByUsername(customAccount.getUsername());
+
+            if (account == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ResponseDTO.builder().message("Account not found").build());
+            }
+
+            AccountDTO accountDTO = new AccountDTO(
+                    account.getAccountId(),
+                    account.getAddress(),
+                    account.getDateOfBirth(),
+                    account.getEmail(),
+                    account.getFullName(),
+                    account.getPhoneNumber(),
+                    account.getUsername(),
+                    account.getRole().getRoleName());
+
+           // accountDTO.setCartTotal(cartService.getCartTotal(account));
+
+            responseDTO.setMessage("Success");
+            responseDTO.setData(accountDTO);
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log chi tiết để dễ debug hơn
+            return ResponseEntity.internalServerError()
+                    .body(ResponseDTO.builder().message("Internal Server Error: " + e.getMessage()).build());
+        }
     }
+
 
     @PostMapping("/update-account")
     public ResponseEntity<ResponseDTO> updateAccount(@RequestBody AccountDTO accountDTO,
                                                      Authentication authentication) {
         try {
             if (authentication == null) {
-                // Check Login
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(ResponseDTO.builder().message("Please Login!").build());
             }
+
             CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
             Account account = accountService.getByUsername(accountDTO.getUsername());
 
-            if ((!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
+            if (account == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ResponseDTO.builder().message("Account not found").build());
+            }
 
-                    accountDTO.getRole() != null)) {
-                // If update important filed, need to check
+            if (!accountDTO.getUsername().equalsIgnoreCase(customAccount.getUsername()) ||
+                    accountDTO.getRole() != null) {
                 if (customAccount.getRole().equals(ROLE.ADMIN)) {
-                    // Is Admin
                     account.setRole(roleService.getRoleByRoleName(accountDTO.getRole()));
                     account.setUsername(accountDTO.getUsername());
                 } else {
-                    // Not Admin
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body(ResponseDTO.builder().message("No permission to update").build());
                 }
@@ -171,9 +179,11 @@ public class AccountController {
             accountService.updateAccount(account);
             return ResponseEntity.ok().body(ResponseDTO.builder().message("Update Success").build());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(ResponseDTO.builder().message(e.getMessage()).build());
+            e.printStackTrace(); // Log lỗi chi tiết để debug
+            return ResponseEntity.internalServerError().body(ResponseDTO.builder().message("Internal Server Error: " + e.getMessage()).build());
         }
     }
+
 
     @PostMapping("/forgot-pass")
     public ResponseEntity<ResponseDTO> getNewPassWord(@RequestBody String email) {
