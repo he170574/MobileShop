@@ -16,4 +16,6 @@ public interface OrderService {
     public void deleteOrder(Long id);
 
     Page<OrderListManageResponse> getListOrdersManage(OrderListManageFilterRequest request);
+
+    Order saveOrder(Order order);
 }

@@ -82,12 +82,6 @@ function updateItem(productId, quantity) {
             if (response && response.message === 'Success') {
                 console.log('1')
                 fetchCartItems();
-                Swal.fire({
-                    title: "Cập nhật giỏ hàng thành công",
-                    icon: "success",
-                    text: "Sản phẩm đã được cập nhật thành công",
-                    confirmButtonText: "OK",
-                });
                 // Xóa sản phẩm khỏi giao diện
 
             } else {

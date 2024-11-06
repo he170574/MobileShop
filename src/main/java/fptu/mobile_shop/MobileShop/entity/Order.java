@@ -37,6 +37,9 @@ public class Order {
     @Column(name = "ShippingFee")
     private BigDecimal shippingFee;
 
+    @Column(name = "ShippingCode", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    private String shippingCode;
+
     @Column(name = "TotalAmount")
     private double totalAmount;
 

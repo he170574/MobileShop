@@ -21,36 +21,68 @@
     <!-- Start Main -->
     <main class="mt-3 mb-3">
         <div class="container">
-            <form id="paymentForm" th:object="${checkoutDTO}" th:action="@{/checkout}" method="post" onsubmit="validateForm(event, this)">
+<!--            <form id="paymentForm" th:object="${checkoutDTO}" th:action="@{/checkout}" method="post" onsubmit="validateForm(event, this)">-->
+            <form id="paymentForm" th:object="${checkoutDTO}"
+                  th:action="@{/ghn/create-order(order_id=${orderDTO})}" method="post" onsubmit="createOrder(event)">
                 <div class="row">
+<!--                    Hidden value-->
+                    <div hidden="hidden">
+                        <div class="col-md-6">
+                            <label>Thanh toán khi nhận (VND): </label>
+                            <input type="text" class="form-control" name="cod_amount" value="0" hidden="hidden">
+                            <div style="font-weight: bolder; font-size: larger" class="total">0</div>
+                        </div>
+                        <input type="hidden" name="payment_type_id" value="1">
+                        <input type="hidden" name="service_id" id="serviceId" class="form-control" value="53321">
+                        <input type="hidden" name="service_type_id" id="serviceTypeId" value="2">
+                        <input name="required_note" class="form-control" id="requiredNote" value="CHOXEMHANGKHONGTHU">
+                        <input name="items[0].name"
+                               th:each="productName, index : ${productNames}"
+                               style="margin-bottom: 5px" type="text"
+                               class="form-control" th:value="${productNames}" hidden="hidden">
+                        <input name="items[0].quantity"
+                               th:each="productName, index : ${productNames}"
+                               style="margin-bottom: 5px" type="text"
+                               class="form-control"
+                               th:value="${quantities[__${index.index}__]}" hidden="hidden">
+                        <input type="hidden" name="items[0].weight" value="10">
+                        <input type="hidden" name="order_id" th:value="${invoiceDTO.id}">
+                        <input type="hidden" name="token" value="3b87f02d-415f-11ef-8e53-0a00184fe694">
+                        <input type="hidden" name="shop_id" value="192829">
+                        <input name="from_name" class="form-control"
+                               th:value="'MobileShop'"
+                               hidden="hidden">
+                        <input name="from_phone" class="form-control"
+                               th:value="'0911267084'"
+                               hidden="hidden">
+                        <input name="from_province_name" class="form-control"
+                               th:value="'Hà Nội'"
+                               hidden="hidden">
+                        <input name="from_district_name" class="form-control"
+                               th:value="'Quận Nam Từ Liêm'"
+                               hidden="hidden">
+                        <input name="from_ward_name" class="form-control"
+                               th:value="'Phường Mỹ Đình 2'"
+                               hidden="hidden">
+                        <input name="from_address" class="form-control"
+                               th:value="'MobileShop'"
+                               hidden="hidden">
+                    </div>
                     <!-- Start Left Column -->
                     <div class="col-7">
                         <h2 style="text-align: left">THÔNG TIN LIÊN HỆ</h2>
                         <hr>
                         <div class="row mt-2 mb-2">
-<!--                            <div class="col-6">-->
-<!--                                <label for="firstName" class="required">Họ</label>-->
-<!--                                <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập Họ" th:field="*{invoice.firstName}" />-->
-<!--                                <span class="error" id="firstNameError"></span>-->
-<!--                            </div>-->
-<!--                            <div class="col-6">-->
-<!--                                <label for="lastName" class="required">Tên</label>-->
-<!--                                <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Nhập Tên" th:field="*{invoice.lastName}" />-->
-<!--                                <span class="error" id="lastNameError"></span>-->
-<!--                            </div>-->
+                            <div class="col-6">
+                                <label>Họ và tên</label>
+                                <input name="to_name" class="form-control" placeholder="Nhập họ và tên"
+                                       th:value="${customer.fullName}">
+                            </div>
                         </div>
-<!--                        <div class="row mt-2 mb-2">-->
-<!--                            <div class="col-12">-->
-<!--                                <label for="companyName" >Tên Công ty</label>-->
-<!--                                <input type="text" class="form-control" name="companyName" id="companyName" placeholder="Nhập tên công ty" th:field="*{invoice.companyName}" />-->
-<!--                                <span class="error" id="companyNameError"></span>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="row mt-2 mb-2">
                             <div class="col-6">
-                                <label for="phoneNumber" class="required">Số điện thoại</label>
-                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
-                                       placeholder="Nhập số điện thoại" th:field="*{invoice.phoneNumber}" />
+                                <label class="required">Số điện thoại</label>
+                                <input type="text" class="form-control" id="to_phone" name="to_phone" placeholder="Nhập số điện thoại" required>
                                 <span class="error" id="phoneNumberError"></span>
                             </div>
                             <div class="col-6">
@@ -78,8 +110,8 @@
                         <div class="row mt-2 mb-2">
                             <div class="col-12">
                                 <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="districtName" name="districtName" th:field="*{invoice.districtName}">
-                                <input type="hidden" name="districtId" id="to_district_id" th:field="*{invoice.districtId}" />
+                                <input type="hidden" id="districtName" name="to_district_name" th:field="*{invoice.districtName}">
+                                <input type="hidden" name="to_district_id" id="to_district_id"/>
                                 <select name="districtName" class="form-control" id="toDistrictSelect">
                                     <option value="">Chọn Quận Huyện</option>
                                 </select>
@@ -90,8 +122,8 @@
                         <div class="row mt-2 mb-2">
                             <div class="col-12">
                                 <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="wardName" name="wardName" th:field="*{invoice.wardName}">
-                                <input type="hidden" name="wardCode" id="to_ward_code" th:field="*{invoice.wardCode}" />
+                                <input type="hidden" id="wardName" name="to_ward_name" th:field="*{invoice.wardName}">
+                                <input type="hidden" name="to_ward_code" id="to_ward_code"/>
                                 <select name="wardName" class="form-control" id="toWardSelect">
                                     <option value="">Chọn Phường Xã</option>
                                 </select>
@@ -102,8 +134,7 @@
                         <div class="row mt-2 mb-2">
                             <div class="col-12">
                                 <label for="address1" class="required">Địa chỉ</label>
-                                <input type="text" class="form-control" name="address1" id="address1" placeholder="Nhập địa chỉ"
-                                       th:field="*{invoice.address}" />
+                                <input type="text" class="form-control" name="to_address" id="address1" placeholder="Nhập địa chỉ" required>
                                 <span class="error" id="address1Error"></span>
                             </div>
                         </div>
@@ -152,6 +183,7 @@
                                 </tr>
                                 <tr>
                                     <th class="text-left" colspan="2">Phí vận chuyển:</th>
+                                    <input type="hidden" name="ghn_shipping_fee" id="ghnShippingFee">
                                     <td class="text-right" id="shippingFeeDisplay">
                                         <span></span>
                                     </td>
@@ -179,9 +211,9 @@
                                 <tr>
                                     <td colspan="3">
                                         <div class="row">
-                                            <button type="submit" class="btn" style="background-color: #007bff; color: whitesmoke; width: 100%" id="proceedToPayment">
-                                                Tiến hành thanh toán
-                                            </button>
+                                            <div class="alert alert-danger d-none" id="errorMessage"></div>
+                                            <div id="createOrderResult"></div>
+                                            <button type="submit" class="btn btn-primary" style="text-align: center">Tạo đơn</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -197,10 +229,10 @@
 <!--                <input type="text" th:field="*{subTotal}" hidden>-->
 <!--                <input type="text" id="total-cal" th:field="*{total}" hidden>-->
                 <input type="text" id="oShippingFee" th:field="*{shippingFee}" hidden="hidden">
-                <input type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}">
-                <input type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">
-                <input type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">
-                <input type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">
+                <input name="weight" type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}">
+                <input name="height" type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">
+                <input name="width" type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">
+                <input name="length" type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">
 <!--                <input type="hidden" id="discountId" th:value="${checkoutDTO.getDiscountId()}" th:field="*{discountId}">-->
                 <!-- hidden value -->
             </form>
@@ -555,5 +587,78 @@
             });
         });
     </script>
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const height = document.getElementById('totalHeight').value;
+            const length = document.getElementById('totalLength').value;
+            const width = document.getElementById('totalWidth').value;
+            const weight = document.getElementById('totalWeight').value;
+            const requiredNote = document.getElementById('requiredNote').value;
+
+            const errorMessageElement = document.getElementById('errorMessage');
+            let errorMessages = [];
+
+            function isValidNumber(value) {
+                return !isNaN(value) && value > 0;
+            }
+
+            if (!isValidNumber(height)) errorMessages.push('Vui lòng điền đúng chiều cao!');
+            if (!isValidNumber(length)) errorMessages.push('Vui lòng điền đúng chiều dài!');
+            if (!isValidNumber(width)) errorMessages.push('Vui lòng điền đúng chiều rộng!');
+            if (!isValidNumber(weight)) errorMessages.push('Vui lòng điền đúng cân nặng!');
+            if (!requiredNote) errorMessages.push('Vui lòng chọn lưu ý cho đơn hàng!');
+
+            if (errorMessages.length > 0) {
+                errorMessageElement.classList.remove('d-none');
+                errorMessageElement.innerHTML = errorMessages.join('<br>');
+            } else {
+                errorMessageElement.classList.add('d-none');
+                document.getElementById('createOrderResult').innerText = 'Đang tạo vận đơn...';
+                this.submit();
+            }
+        });
+</script>
+    <script>
+        function createOrder(event) {
+            event.preventDefault();
+
+            // Get the form element
+            var form = $('#paymentForm');
+
+            // Validate the ghnShippingFee field
+            var shippingFee = $('#ghnShippingFee').val();
+
+            // Get user input values for to_phone and to_address
+            var toPhone = $('#to_phone').val();
+            var toAddress = $('#to_address').val();
+
+            // Ensure that all required values are present before submitting
+            if (!shippingFee || !toPhone || !toAddress) {
+                console.error('All required fields must be filled');
+                return;
+            }
+
+            // Make the API call with the required parameters
+            $.ajax({
+                url: '/ghn/create-order',
+                type: 'POST',
+                data: {
+                    ghnShippingFee: shippingFee,
+                    to_phone: toPhone,
+                    to_address: toAddress,
+                    // Add other necessary parameters here as well
+                },
+                success: function(response) {
+                    console.log('Order created successfully', response);
+                    $('#createOrderResult').text('Order created successfully');
+                },
+                error: function() {
+                    console.error('Failed to create order');
+                }
+            });
+        }
+</script>
 </body>
 </html>

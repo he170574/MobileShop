@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class InvoiceDto {
+    private String fullName;
     private String email;
     private String province;
     private String districtName;
