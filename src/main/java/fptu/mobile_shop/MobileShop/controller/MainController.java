@@ -45,7 +45,7 @@ public class MainController {
 
     @GetMapping("/admin/orders")
     public String showOrder() {
-        return "orders";
+        return "orders-admin";
     }
 
     @GetMapping("/admin/members")
