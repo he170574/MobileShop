@@ -107,7 +107,7 @@ public class CheckoutController {
         AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
         Order order = new Order();
         order.setOrderDate(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault()));
-        order.setAccountId(account.getAccountId());
+        order.setAccount(account);
         order.setTotalAmount(totalAmount.get() + checkoutDTO.getShippingFee());
         order.setShippingFee(new BigDecimal(checkoutDTO.getShippingFee()));
         order.setOrderStatus(STATUS.INIT);

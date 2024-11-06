@@ -21,6 +21,9 @@ public class Order {
     @Column(name = "OrderID")
     private Long id;
 
+    @Column(name = "OrderCode")
+    private String orderCode;
+
     @Column(name = "OrderDate")
     private LocalDateTime orderDate;
 
