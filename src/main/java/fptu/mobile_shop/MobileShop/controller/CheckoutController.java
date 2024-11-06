@@ -31,6 +31,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -69,6 +70,9 @@ public class CheckoutController {
         }
 
         Cart cart = cartService.findByAccountId();
+        if(Objects.isNull(cart)){
+            return "redirect:/home";
+        }
         double totalAmount = cartService.calculateTotalAmount(cart);
         AtomicInteger soLuong = new AtomicInteger();
         cart.getItems().forEach(cartItem -> {

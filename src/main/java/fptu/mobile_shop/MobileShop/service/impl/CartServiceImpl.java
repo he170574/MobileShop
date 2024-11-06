@@ -154,8 +154,8 @@ public class CartServiceImpl implements CartService {
         // If customer doesn't have cart -> create new cart for user
         Cart userCart;
         if (!optional.isPresent()) {
-            Cart newCart = new Cart(null, account.hashCode(), null);
-            userCart = cartRepository.save(newCart);
+//            Cart newCart = new Cart(null, account.hashCode(), null);
+            return null;
         } else {
             userCart = optional.get();
 //            Collections.sort(userCart.getItems());

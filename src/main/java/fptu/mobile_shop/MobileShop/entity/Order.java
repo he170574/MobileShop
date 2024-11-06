@@ -2,7 +2,6 @@ package fptu.mobile_shop.MobileShop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,8 +24,9 @@ public class Order {
     @Column(name = "OrderDate")
     private LocalDateTime orderDate;
 
-    @Column(name = "ACCOUNT_ID")
-    private Integer accountId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
 
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus;
