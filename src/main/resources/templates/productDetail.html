@@ -13,22 +13,144 @@
     <link href="/assets/css/animate.css" rel="stylesheet">
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Container của phần đánh giá */
+        #comment-product {
+            margin-top: 20px;
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 8px;
+            border: 1px solid #d1d9e6;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tiêu đề của phần đánh giá */
+        #comment-product h4 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* Container của từng bình luận */
+        #comment-user {
+            margin-top: 15px;
+        }
+
+        /* Mỗi bình luận */
+        #comment-user > div {
+            padding: 12px 18px;
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: 1px solid #e0e6ed;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Tên người dùng và ngày bình luận */
+        #comment-user div p:first-of-type {
+            font-weight: bold;
+            font-size: 16px;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        /* Nội dung bình luận */
+        #comment-user div p:last-of-type {
+            margin-top: 6px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        /* Phân trang */
+        #pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 8px;
+        }
+
+        /* Các trang phân trang */
+        #pagination .page-item {
+            padding: 8px 12px;
+            background-color: #d1d9e6;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            transition: background-color 0.3s;
+        }
+
+        /* Trang đang chọn */
+        #pagination .page-item.active {
+            background-color: #1a73e8 !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+
+        /* Hiệu ứng khi hover vào trang */
+        #pagination .page-item:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+
+        .pagination .page-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            background-color: #f8f9fa; /* Màu nền mặc định */
+            border: 1px solid #ced4da; /* Đường viền mặc định */
+            border-radius: 4px; /* Bo góc */
+            display: flex; /* Sử dụng flex để căn chỉnh biểu tượng */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+        .pagination .page-btn:hover {
+            background-color: #e9ecef; /* Màu nền khi hover */
+        }
+
+        .pagination .page-btn.active {
+            background-color: #007bff; /* Màu nền của trang hiện tại */
+            color: white; /* Màu chữ của trang hiện tại */
+            font-weight: bold; /* In đậm chữ */
+        }
+
+        .pagination .page-btn i {
+            font-size: 1.2em; /* Kích thước biểu tượng */
+        }
+    </style>
 </head>
 
 <body>
 
 <th:block th:replace="common/header.html"></th:block>
-<th:block th:replace="common/sidebar.html"></th:block>
 
 <div class="container">
     <h1 th:text="${product.productName}"></h1>
-    <img th:src="${product.productImageUrl}" alt="Product Image" style="width: 300px;">
+    <img th:src="${product.productImage}" alt="Product Image" style="width: 300px;">
     <h3 th:text="${product.price} + ' đ'"></h3>
     <p th:text="${product.productDetails}"></p>
+    <div id="comment-product">
+        <h4>Đánh giá Điện thoại <span id="name-comment-product"></span></h4>
+        <div id="comment-user">
+            <div><p>User name - commentDate</p>
+                <p>commentText</p>
+            </div>
+        </div>
+        <div id="pagination" class="pagination">
+        </div>
+    </div>
 </div>
 
 <th:block th:replace="common/footer.html"></th:block>
-
 
 <script src="/assets/js/jquery.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
