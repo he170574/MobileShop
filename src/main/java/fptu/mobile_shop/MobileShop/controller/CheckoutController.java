@@ -20,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -69,7 +70,7 @@ public class CheckoutController {
         }
 
         Cart cart = cartService.findByAccountId();
-        if (Objects.isNull(cart)) {
+        if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
             return "redirect:/home";
         }
 
@@ -121,7 +122,7 @@ public class CheckoutController {
         Account account = accountRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         Cart cart = cartService.findByAccountId();
-        if(cart == null) {
+        if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
             return "redirect:/home";
         }
         AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);

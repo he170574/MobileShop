@@ -28,7 +28,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             countQuery = "SELECT COUNT(o.id) FROM Order o")
     Page<Order> getListAllOrder(Pageable pageable);
 
-    @Query(value = "select distinct i from Order i where i.orderStatus = 'WAITING_DELIVERY' and i.shippingCode is not null and i.account.accountId = :userId ")
+    @Query(value = "SELECT o FROM Order o where o.account.accountId = :accountId",
+            countQuery = "SELECT COUNT(o.id) FROM Order o where o.account.accountId = :accountId")
+    Page<Order> getListAllOrderUser(Pageable pageable, Integer accountId);
+
+    @Query(value = "select distinct i from Order i where i.orderStatus = 'WAITING_DELIVERY' " +
+            "and i.shippingCode is not null and i.account.accountId = :userId ")
     List<Order> getAllOrderByUserId(Long userId);
 
     @Query(value = "select distinct i from Order i where i.orderStatus = 'WAITING_DELIVERY' and i.shippingCode is not null")

@@ -85,7 +85,7 @@ public class GHNController {
 
         Cart cart = cartService.findByAccountId();
         Order order = new Order();
-
+//        if()
         ResponseEntity<ShippingOrderResponse> response = ghnService.createShippingOrder(request);
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             ShippingOrderResponse responseData = response.getBody();

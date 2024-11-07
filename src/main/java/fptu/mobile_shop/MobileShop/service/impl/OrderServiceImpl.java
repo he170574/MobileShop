@@ -2,6 +2,7 @@ package fptu.mobile_shop.MobileShop.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.util.StringUtils;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderListManageFilterRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderListManageResponse;
 import fptu.mobile_shop.MobileShop.entity.Account;
@@ -10,8 +11,10 @@ import fptu.mobile_shop.MobileShop.entity.Role;
 import fptu.mobile_shop.MobileShop.final_attribute.STATUS;
 import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.OrderRepository;
+import fptu.mobile_shop.MobileShop.repository.RoleRepository;
 import fptu.mobile_shop.MobileShop.security.CustomAccount;
 import fptu.mobile_shop.MobileShop.service.OrderService;
+import fptu.mobile_shop.MobileShop.service.RoleService;
 import fptu.mobile_shop.MobileShop.util.CommonPage;
 import fptu.mobile_shop.MobileShop.util.CommonUtil;
 import jakarta.annotation.Resource;
@@ -44,30 +47,34 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private AccountRepository accountRepository;
 
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private RoleRepository roleRepository;
+
     @Override
     public Page<Order> getListOrder(String keyword, String status, int page, int size) {
         // Get current user login
         String login = CustomAccount.getCurrentUsername();
-        Optional<Account> accountOpl = accountRepository.findByEmail(login);
+        Optional<Account> accountOpl = accountRepository.findByUsername(login);
         if (accountOpl.isPresent()) {
             this.changeStatusOrder(accountOpl.get());
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        return orderRepository.getListAllOrder(pageable);
+        if(StringUtils.endsWithIgnoreCase(accountOpl.get().getRole().getRoleName(), "ROLE_ADMIN") || StringUtils.endsWithIgnoreCase(accountOpl.get().getRole().getRoleName(), "ROLE_STAFF")){
+            return orderRepository.getListAllOrder(pageable);
+        }
+        return orderRepository.getListAllOrderUser(pageable, accountOpl.get().getAccountId());
     }
 
     @Transactional
     public void changeStatusOrder(Account account) {
         if (CommonUtil.isEmpty(account)) return;
         Long userId = null;
-        if (CommonUtil.isNotEmpty(account.getRole())) {
-            Role role = account.getRole();
-            userId = Long.valueOf(Objects.equals(role.getRoleName(), "ROLE_MEMBER") ? account.getAccountId() : null);
-        }
+        userId = Long.valueOf(account.getAccountId());
         List<Order> listOrder = new ArrayList<>();
-        listOrder = CommonUtil.isNotEmpty(userId)
-                ? orderRepository.getAllOrderByUserId(userId)
-                : orderRepository.getAllOrderShipping();
+        listOrder = orderRepository.getAllOrderByUserId(userId);
         for (Order order : listOrder) {
             String code = order.getShippingCode();
             String url = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
@@ -88,11 +95,6 @@ public class OrderServiceImpl implements OrderService {
                         order.setOrderStatus(STATUS.CANCEL);
                     } else if (Objects.equals(statusGhn, "delivered")) {
                         order.setOrderStatus(STATUS.DELIVERY_SUCCESS);
-                        // Reduce product quantity when the order is delivered
-//                        List<InvoiceDetail> invoiceDetails = invoice.getInvoiceDetails();
-//                        for (InvoiceDetail invoiceDetail : invoiceDetails) {
-//                            productService.updateProductQuantity(invoiceDetail.getProduct().getProductId(), invoiceDetail.getQuantity());
-//                        }
                     }
                 }
             } catch (Exception e) {

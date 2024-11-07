@@ -110,7 +110,7 @@
                         <div class="row mt-2 mb-2">
                             <div class="col-12">
                                 <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="districtName" name="to_district_name" th:field="*{invoice.districtName}">
+                                <input type="hidden" id="districtName" name="to_district_name">
                                 <input type="hidden" name="to_district_id" id="to_district_id"/>
                                 <select name="districtName" class="form-control" id="toDistrictSelect" required>
                                     <option value="">Chọn Quận Huyện</option>
@@ -122,7 +122,7 @@
                         <div class="row mt-2 mb-2">
                             <div class="col-12">
                                 <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="wardName" name="to_ward_name" th:field="*{invoice.wardName}">
+                                <input type="hidden" id="wardName" name="to_ward_name">
                                 <input type="hidden" name="to_ward_code" id="to_ward_code"/>
                                 <select name="wardName" class="form-control" id="toWardSelect" required>
                                     <option value="">Chọn Phường Xã</option>
