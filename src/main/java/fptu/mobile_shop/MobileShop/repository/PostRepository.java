@@ -9,4 +9,5 @@ import org.springframework.data.repository.query.Param;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByCategoryPost_CategoryID(Long categoryId, Pageable pageable);
     Page<Post> findByTitleContaining(String title, Pageable pageable);
+    Page<Post> findByCategoryPost_CategoryIDAndTitleContainingIgnoreCase(Long categoryId, String title, Pageable pageable);
 }

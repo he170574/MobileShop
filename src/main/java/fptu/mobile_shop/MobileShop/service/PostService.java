@@ -42,6 +42,9 @@ public class PostService {
 
         return postRepository.save(post);
     }
+    public Page<Post> searchByCategoryAndTitle(Long categoryId, String query, Pageable pageable) {
+        return postRepository.findByCategoryPost_CategoryIDAndTitleContainingIgnoreCase(categoryId, query, pageable);
+    }
 
     public Post updatePost(Long postId, Post postDetails) {
         return postRepository.findById(postId)
