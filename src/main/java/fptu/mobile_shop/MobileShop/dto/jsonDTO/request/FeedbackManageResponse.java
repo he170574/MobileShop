@@ -1,4 +1,4 @@
-package fptu.mobile_shop.MobileShop.dto;
+package fptu.mobile_shop.MobileShop.dto.jsonDTO.request;
 
 import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Order;
@@ -65,7 +65,7 @@ public class FeedbackManageResponse {
 
         public OrdersResponse(Order order) {
             this.ordersId = Math.toIntExact(order.getId());
-            this.ordersCode = order.getOrderCode();
+//            this.ordersCode = order.getOrderCode();
         }
     }
 }

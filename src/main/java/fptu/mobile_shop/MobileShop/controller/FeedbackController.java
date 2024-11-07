@@ -1,6 +1,6 @@
 package fptu.mobile_shop.MobileShop.controller;
 
-import fptu.mobile_shop.MobileShop.dto.FeedbackFilterRequest;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackFilterRequest;
 import fptu.mobile_shop.MobileShop.dto.ProductCommentDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.service.FeedbackService;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/feedback")
+@RequestMapping("/api/feedback")
 public class FeedbackController {
     private final FeedbackService feedbackService;
 

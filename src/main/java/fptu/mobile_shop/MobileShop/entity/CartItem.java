@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "CART_ITEM", schema = "MobileShop")
-public class CartItem {
+public class CartItem implements Comparable<CartItem>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +27,10 @@ public class CartItem {
 
     @Column(name = "Quantity")
     private int quantity;
+
+    @Override
+    public int compareTo(CartItem other) {
+        // Compare by product name, quantity, or other criteria as needed
+        return this.product.getProductName().compareTo(other.getProduct().getProductName());
+    }
 }

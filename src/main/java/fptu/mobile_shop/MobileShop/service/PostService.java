@@ -1,5 +1,6 @@
 package fptu.mobile_shop.MobileShop.service;
 
+import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Post;
 import fptu.mobile_shop.MobileShop.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class PostService {
 
     public Post createPost(Post post) {
         post.setCreatedDate(LocalDateTime.now());
+        post.setStatusPost(true);
         return postRepository.save(post);
     }
 
@@ -41,7 +43,7 @@ public class PostService {
                     post.setCounts(postDetails.getCounts());
                     post.setAuthor(postDetails.getAuthor()); // Cập nhật đối tượng Account (tác giả)
                     post.setCategoryPost(postDetails.getCategoryPost());
-                    post.setStatusPost(postDetails.getStatusPost());
+                    post.setStatusPost(postDetails.isStatusPost());
                     return postRepository.save(post);
                 })
                 .orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
@@ -64,6 +66,17 @@ public class PostService {
 
     public Page<Post> searchByTitle(String title, Pageable pageable) {
         return postRepository.findByTitleContaining(title, pageable);
+    }
+    public void blockPost(Long postId) {
+        Post post = getPostById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setStatusPost(true); // Giả sử bạn có thuộc tính `blocked` trong Post entity
+        postRepository.save(post);
+    }
+
+    public void unblockPost(Long postId) {
+        Post post = getPostById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setStatusPost(false); // Đặt lại `blocked` thành false
+        postRepository.save(post);
     }
 }
 

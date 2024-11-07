@@ -1,85 +1,84 @@
-$(document).ready(function () {
-    loadProvinces();
+function validateForm(event, element) {
+    let isValid = true;
 
-    // Initialize Select2 on the dropdowns
-    $('#province, #district, #ward').select2({
-        placeholder: 'Chọn...',
-        allowClear: true,
-        width: '100%' // Ensures the dropdown matches the input width
-    });
+    // Clear previous errors
+    $(".error").text("");
+    $(".text-danger").text("");
 
-    // Load provinces
-    function loadProvinces() {
-        $.getJSON('/provinces', function (data) {
-            const provinceSelect = $('#province');
-            provinceSelect.empty().append(new Option('Tỉnh/Thành phố (*)', ''));
-            data.forEach(function (province) {
-                provinceSelect.append(new Option(province.name, province.id));
-            });
-        }).fail(function () {
-            console.error('Error loading provinces');
-        });
+    // Validate first name
+    let firstName = $('#firstName').val().trim();
+    if (firstName === "") {
+        $("#firstNameError").text("Tên là bắt buộc.");
+        isValid = false;
     }
 
-    // Load districts based on selected province
-    $('#province').on('change', function () {
-        const provinceId = $(this).val();
-        if (provinceId) {
-            loadDistricts(provinceId);
-        } else {
-            $('#district').empty().append(new Option('Quận/Huyện (*)', ''));
-            $('#ward').empty().append(new Option('Phường/Xã (*)', ''));
-        }
-    });
-
-    function loadDistricts(provinceId) {
-        $.getJSON(`/provinces/${provinceId}/districts`, function (data) {
-            const districtSelect = $('#district');
-            districtSelect.empty().append(new Option('Quận/Huyện (*)', ''));
-            data.forEach(function (district) {
-                districtSelect.append(new Option(district.name, district.id));
-            });
-        }).fail(function () {
-            console.error('Error loading districts');
-        });
+    // Validate last name
+    let lastName = $('#lastName').val().trim();
+    if (lastName === "") {
+        $("#lastNameError").text("Họ là bắt buộc.");
+        isValid = false;
     }
 
-    // Load wards based on selected district
-    $('#district').on('change', function () {
-        const districtId = $(this).val();
-        if (districtId) {
-            loadWards(districtId);
-        } else {
-            $('#ward').empty().append(new Option('Phường/Xã (*)', ''));
-        }
-    });
-
-    function loadWards(districtId) {
-        $.getJSON(`/districts/${districtId}/wards`, function (data) {
-            const wardSelect = $('#ward');
-            wardSelect.empty().append(new Option('Phường/Xã (*)', ''));
-            data.forEach(function (ward) {
-                wardSelect.append(new Option(ward.name, ward.id));
-            });
-        }).fail(function () {
-            console.error('Error loading wards');
-        });
+    // Validate phone number
+    let phoneNumber = $('#phoneNumber').val().trim();
+    let phonePattern = /^0\d{9}$/;
+    if (phoneNumber === "") {
+        $("#phoneNumberError").text("Số điện thoại là bắt buộc.");
+        isValid = false;
+    } else if (!phonePattern.test(phoneNumber)) {
+        $("#phoneNumberError").text("Số điện thoại phải dài 10 chữ số và bắt đầu bằng số 0.");
+        isValid = false;
     }
 
-    // Toggle delivery details based on selection
-    $('input[name="delivery"]').on('change', function () {
-        if ($('#homeDelivery').is(':checked')) {
-            $('#homeDeliveryDetails').show();
-        } else {
-            $('#homeDeliveryDetails').hide();
-        }
-    });
+    // Validate email
+    let email = $('#email').val().trim();
+    let emailPattern = /^[a-zA-Z0-9._-]+@gmail\.com$/;
+    if (email === "") {
+        $("#emailError").text("Địa chỉ email là bắt buộc.");
+        isValid = false;
+    } else if (!emailPattern.test(email)) {
+        $("#emailError").text("Email phải là địa chỉ Gmail hợp lệ (example@gmail.com).");
+        isValid = false;
+    }
 
-    // Initialize the delivery details visibility
-    if ($('#homeDelivery').is(':checked')) {
-        $('#homeDeliveryDetails').show();
+    // Validate address
+    let address1 = $('#address1').val().trim();
+    if (address1 === "") {
+        $("#address1Error").text("Địa chỉ là bắt buộc.");
+        isValid = false;
+    }
+
+    // Validate province
+    let province = $('#toProvinceSelect').val();
+    if (province === "") {
+        $("#toProvinceSelect-error").text("Tỉnh thành là bắt buộc.");
+        isValid = false;
+    }
+
+    // Validate district
+    let district = $('#toDistrictSelect').val();
+    if (district === "") {
+        $("#toDistrictSelect-error").text("Quận/huyện là bắt buộc.");
+        isValid = false;
+    }
+
+    // Validate ward
+    let ward = $('#toWardSelect').val();
+    if (ward === "") {
+        $("#toWardSelect-error").text("Phường là bắt buộc.");
+        isValid = false;
+    }
+
+    // Prevent form submission if validation failed
+    if (!isValid) {
+        console.log('Biểu mẫu không hợp lệ, không thể nộp.'); // Debugging statement
+        event.preventDefault();
+        // Re-enable the submit button in case of validation failure
+        $("#proceedToPayment").prop('disabled', false);
     } else {
-        $('#homeDeliveryDetails').hide();
+        console.log('Biểu mẫu hợp lệ, đang nộp...'); // Debugging statement
+        // Disable the submit button only when the form is valid and is being submitted
+        $("#proceedToPayment").prop('disabled', true);
+        element.submit();
     }
-
-});
+}

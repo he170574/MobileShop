@@ -2,8 +2,8 @@ package fptu.mobile_shop.MobileShop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,25 +17,26 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OrderID")
     private Long id;
 
     @Column(name = "OrderDate")
     private LocalDateTime orderDate;
 
-    @Column(name = "ACCOUNT_ID")
-    private Integer accountId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
 
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus;
 
-    @Column(name = "OrderCode", length = 50)
-    private String orderCode;
+    @Column(name = "ShippingFee")
+    private BigDecimal shippingFee;
 
     @Column(name = "TotalAmount")
     private double totalAmount;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
 }
