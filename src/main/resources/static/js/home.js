@@ -1,5 +1,11 @@
 $(document).ready(function() {
     let priceSliderInitialized = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const showLogin = urlParams.get('showLogin');
+
+    if (showLogin === 'true') {
+        $('#loginModal').modal('show');
+    }
 
     // Hàm để tải tất cả sản phẩm với bộ lọc
     function loadAllProducts(filters = {}) {

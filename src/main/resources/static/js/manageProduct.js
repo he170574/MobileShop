@@ -150,49 +150,111 @@ function showAddProductModal() {
 $('#addProductForm').on('submit', function (event) {
     event.preventDefault();
 
-    var formData = new FormData(this);
+    var isValid = true;
+    var productName = $('#productName').val().trim();
+    var productDescription = $('#productDescription').val().trim();
+    var productPrice = $('#productPrice').val();
+    var productStock = $('#productStock').val();
 
-    $.ajax({
-        url: '/save-new-product',
-        type: 'POST',
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function (response) {
-            alert("Add Success");
-            loadProducts();
-            $('#addProductModal').modal('hide');
-            $('#addProductForm')[0].reset();
-        },
-        error: function (xhr) {
-            if (xhr.status == 409) {
-                var existingProduct = xhr.responseJSON.data;
-                var newStockQuantity = existingProduct.stockQuantity + parseInt($('#productStock').val());
+    var namePattern = /^[^\s]+(\s+[^\s]+)*$/; // Chuỗi không chứa khoảng trắng ở đầu hoặc cuối, và không có khoảng trắng kép
+    if (!namePattern.test(productName)) {
+        alert("Product name should not contain extra spaces.");
+        isValid = false;
+    }
 
-                if (confirm("Product already exists, do you want to update quantity?")) {
+    // // Kiểm tra tên sản phẩm có độ dài tối thiểu là 3
+    // if (productName.length < 3) {
+    //     alert("Product name must be at least 3 characters long.");
+    //     isValid = false;
+    // }
+
+    var desPattern = /^[^\s]+(\s+[^\s]+)*$/;
+    if(!desPattern.test(productDescription)){
+        alert("Product description should not contain extra spaces.");
+        isValid = false;
+    }
+
+    // // Kiểm tra tên sản phẩm có độ dài tối thiểu là 3
+    // if (productDescription.length < 3) {
+    //     alert("Product description must be at least 3 characters long.");
+    //     isValid = false;
+    // }
+
+    // Kiểm tra giá sản phẩm
+    if (!productPrice || isNaN(productPrice) || parseFloat(productPrice) <= 0) {
+        alert("Please enter a valid price greater than 0.");
+        isValid = false;
+    }
+
+    // Kiểm tra số lượng trong kho
+    if (!productStock || isNaN(productStock) || parseInt(productStock) < 1) {
+        alert("Please enter a valid stock quantity (integer greater than or equal to 1).");
+        isValid = false;
+    }
+
+    if (isValid) {
+        // Kiểm tra xem sản phẩm có tồn tại dựa trên tên sản phẩm hay không
+        $.ajax({
+            url: '/check-product-exists',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ productName: productName }),
+            success: function (response) {
+                if (response.exists) {
+                    // Nếu sản phẩm đã tồn tại, thông báo cho người dùng và hỏi có muốn cập nhật không
+                    var existingProduct = response.data;
+                    var newStockQuantity = existingProduct.stockQuantity + productStock;
+
+                    if (confirm("Product already exists. Do you want to update the quantity?")) {
+                        $.ajax({
+                            url: '/save-edit-product',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                productId: existingProduct.productId,
+                                stockQuantity: newStockQuantity
+                            }),
+                            success: function (updateResponse) {
+                                alert("Product quantity updated successfully");
+                                loadProducts();
+                                $('#addProductModal').modal('hide');
+                                $('#addProductForm')[0].reset();
+                            },
+                            error: function (updateError) {
+                                console.error("Error updating quantity:", updateError);
+                                alert("Error updating quantity");
+                            }
+                        });
+                    }
+                } else {
+                    // Nếu sản phẩm không tồn tại, tiến hành thêm sản phẩm mới
+                    var formData = new FormData($('#addProductForm')[0]);
+
                     $.ajax({
-                        url: '/save-edit-product',
+                        url: '/save-new-product',
                         type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            productId: existingProduct.productId,
-                            stockQuantity: newStockQuantity
-                        }),
-                        success: function (updateResponse) {
-                            alert("Update quantity success");
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function (response) {
+                            alert("Product added successfully");
                             loadProducts();
+                            $('#addProductModal').modal('hide');
+                            $('#addProductForm')[0].reset();
                         },
-                        error: function (updateError) {
-                            console.error("Error updating quantity:", updateError);
-                            alert("Error updating quantity");
+                        error: function (error) {
+                            console.error("Error adding product:", error);
+                            alert("Error adding product");
                         }
                     });
                 }
-            } else {
-                alert('Error adding product');
+            },
+            error: function (xhr) {
+                console.error("Error checking product existence:", xhr);
+                alert("Error checking product existence");
             }
-        }
-    });
+        });
+    }
 });
 
 
