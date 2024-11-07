@@ -5,6 +5,7 @@ let accountId = null;
 $(document).ready(function () {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
+    console.log("productId ad " + productId)
     if (productId) {
         productIdValue = productId;
         $.ajax({
@@ -18,17 +19,16 @@ $(document).ready(function () {
                 $('#product-description').text(product.productDetails);
                 $('#name-comment-product').text(product.productName);
             },
-            error: function(error) {
+            error: function (error) {
                 console.error("Error fetching product details:", error);
                 alert('Unable to fetch product details. Please try again later.');
             }
         });
+        getDataFeedbackManage(currentPage)
     } else {
         alert('Product ID is missing.');
     }
 });
-
-getDataFeedbackManage(currentPage)
 
 function getDataFeedbackManage(page) {
     currentPage = page;
@@ -40,7 +40,7 @@ function getDataFeedbackManage(page) {
         data.accountId = accountId;
     }
     if (productIdValue !== null) {
-        data.productIdValue = productIdValue;
+        data.productId = productIdValue;
     }
     $.ajax({
         url: '/api/feedback/feedback-manage',
