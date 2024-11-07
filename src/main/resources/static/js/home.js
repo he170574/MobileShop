@@ -137,7 +137,7 @@ function renderProductList(products) {
 }
 
 function viewProductDetail(id){
-    window.location.href = `/productDetail?id=${id}`;
+    window.location.href = `/product-view/productDetail?id=${id}`;
 }
 
 function addToCart(id) {

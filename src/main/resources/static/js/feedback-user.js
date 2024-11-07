@@ -1,5 +1,5 @@
 let currentPage = 1;
-let pageSize = 5;
+let pageSize = 10;
 let productId = null;
 let accountId = null;
 getDataFeedbackManage(currentPage)
