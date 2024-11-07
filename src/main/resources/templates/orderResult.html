@@ -20,25 +20,25 @@
 <th:block th:replace="common/header.html"></th:block>
 
 <main>
-    <section id="slider"><!--slider-->
-        <div class="container">
-            <div class="row">
-                <div th:if="${response != null and response.data != null}" class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Đã tạo đơn hàng vận chuyển thành công!</strong>
-                    <br>
-                    Order Code:<b th:text="' '+${response.data.order_code}"></b>
-                    <br>
-                    Delivery Time:<b th:text="' '+${response.data.getFormattedExpectedDeliveryTime()}"></b>
-                    <br>
-                </div>
-                <div th:if="${response != null and response.error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Không thể tạo đơn hàng vận chuyển!</strong>
-                    <b th:text="' '+${response.error}"></b>
-                </div>
+    <div class="content-wrapper">
+        <div class="row">
+            <div th:if="${response != null and response.data != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Đã tạo đơn hàng vận chuyển thành công!</strong>
+                <br>
+                Order Code:<b th:text="' '+${response.data.order_code}"></b>
+                <br>
+                Delivery Time:<b th:text="' '+${response.data.getFormattedExpectedDeliveryTime()}"></b>
+                <br>
+            </div>
+            <div th:if="${response != null and response.error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Không thể tạo đơn hàng vận chuyển!</strong>
+                <b th:text="' '+${response.error}"></b>
             </div>
         </div>
-    </section><!--/slider-->
-
+    </div>
+    <a th:href="@{/ghn/list-order}" class="current-page">
+        <span class="menu-text">Order History</span>
+    </a>
 </main>
 
 <th:block th:replace="common/footer.html"></th:block>

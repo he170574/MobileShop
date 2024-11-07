@@ -113,13 +113,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public boolean deleteCart(Cart cart) {
+    public void deleteCart(Cart cart) {
         if (!Objects.isNull(cart)) {
             cartItemRepository.deleteAll(cart.getItems());
             cartRepository.deleteById(cart.getId());
-            return true;
         }
-        return false;
     }
 
     @Override

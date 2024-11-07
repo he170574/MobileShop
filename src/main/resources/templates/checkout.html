@@ -37,7 +37,7 @@
                         <input type="hidden" name="service_type_id" id="serviceTypeId" value="2">
                         <input name="required_note" class="form-control" id="requiredNote" value="CHOXEMHANGKHONGTHU">
                         <input name="items[0].name"
-                               th:each="productName, index : ${productNames}"
+                               th:each="productName, index : ${productNames + 'x' + quantities}"
                                style="margin-bottom: 5px" type="text"
                                class="form-control" th:value="${productNames}" hidden="hidden">
                         <input name="items[0].quantity"
@@ -76,18 +76,18 @@
                             <div class="col-6">
                                 <label>Họ và tên</label>
                                 <input name="to_name" class="form-control" placeholder="Nhập họ và tên"
-                                       th:value="${customer.fullName}">
+                                       th:value="${customer.fullName}" required>
                             </div>
                         </div>
                         <div class="row mt-2 mb-2">
                             <div class="col-6">
                                 <label class="required">Số điện thoại</label>
-                                <input type="text" class="form-control" id="to_phone" name="to_phone" placeholder="Nhập số điện thoại" required>
+                                <input type="number" class="form-control" id="to_phone" name="to_phone" placeholder="Nhập số điện thoại" required>
                                 <span class="error" id="phoneNumberError"></span>
                             </div>
                             <div class="col-6">
                                 <label for="email" class="required">Địa chỉ Email</label>
-                                <input type="text" class="form-control" name="email" id="email" placeholder="Nhập Email" th:field="*{invoice.email}" />
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Nhập Email" th:field="*{invoice.email}" required>
                                 <span class="error" id="emailError"></span>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                             <div class="col-12">
                                 <label>Tỉnh/Thành phố: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                                 <input type="hidden" name="provinceName" id="provinceName" th:field="*{invoice.province}"/>
-                                <select name="toProvinceSelect" class="form-control" id="toProvinceSelect">
+                                <select name="toProvinceSelect" class="form-control" id="toProvinceSelect" required>
                                     <option value="">Chọn Thành phố</option>
                                     <option th:each="province : ${provinces}" th:value="${province.provinceId}" th:text="${province.provinceName}" data-province-id="${province.provinceId}"></option>
                                 </select>
@@ -112,7 +112,7 @@
                                 <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                                 <input type="hidden" id="districtName" name="to_district_name" th:field="*{invoice.districtName}">
                                 <input type="hidden" name="to_district_id" id="to_district_id"/>
-                                <select name="districtName" class="form-control" id="toDistrictSelect">
+                                <select name="districtName" class="form-control" id="toDistrictSelect" required>
                                     <option value="">Chọn Quận Huyện</option>
                                 </select>
                                 <div id="toDistrictSelect-error" class="text-danger small"></div>
@@ -124,7 +124,7 @@
                                 <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                                 <input type="hidden" id="wardName" name="to_ward_name" th:field="*{invoice.wardName}">
                                 <input type="hidden" name="to_ward_code" id="to_ward_code"/>
-                                <select name="wardName" class="form-control" id="toWardSelect">
+                                <select name="wardName" class="form-control" id="toWardSelect" required>
                                     <option value="">Chọn Phường Xã</option>
                                 </select>
                                 <div id="toWardSelect-error" class="text-danger small"></div>
@@ -211,9 +211,11 @@
                                 <tr>
                                     <td colspan="3">
                                         <div class="row">
-                                            <div class="alert alert-danger d-none" id="errorMessage"></div>
+                                            <div class="d-none" id="errorMessage"></div>
                                             <div id="createOrderResult"></div>
-                                            <button type="submit" class="btn btn-primary" style="text-align: center">Tạo đơn</button>
+                                            <button type="submit" class="btn" style="background-color: #ff6d00; color: whitesmoke; width: 100%">
+                                                Tiến hành thanh toán
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -603,12 +605,6 @@
             function isValidNumber(value) {
                 return !isNaN(value) && value > 0;
             }
-
-            if (!isValidNumber(height)) errorMessages.push('Vui lòng điền đúng chiều cao!');
-            if (!isValidNumber(length)) errorMessages.push('Vui lòng điền đúng chiều dài!');
-            if (!isValidNumber(width)) errorMessages.push('Vui lòng điền đúng chiều rộng!');
-            if (!isValidNumber(weight)) errorMessages.push('Vui lòng điền đúng cân nặng!');
-            if (!requiredNote) errorMessages.push('Vui lòng chọn lưu ý cho đơn hàng!');
 
             if (errorMessages.length > 0) {
                 errorMessageElement.classList.remove('d-none');

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MobileShop</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/assets/css/price-range.css" rel="stylesheet">
+    <link href="/assets/css/animate.css" rel="stylesheet">
+    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
+</head>
+
+<body>
+<th:block th:replace="common/header.html"></th:block>
+<main>
+    <div>
+        <div>
+            <table class="table v-middle m-0">
+                <thead>
+                <tr style="text-align: center">
+                    <th>No</th>
+                    <th>Order Code</th>
+                    <th>Shipping Cde</th>
+                    <th>Order Date</th>
+                    <th>Shipping Fee</th>
+                    <th>Total Amount</th>
+                    <th>Expected Delivery Time</th>
+                    <th>Order Status</th>
+                    <th>Order Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order,index : ${orders}">
+                    <td th:text="${index.index + (10 * currentPage) + 1}"></td>
+                    <td th:text="${order.orderCode}"></td>
+                    <td th:text="${order.shippingCode}"></td>
+                    <td th:text="${order.orderDate}"></td>
+                    <td th:text="${order.shippingFee}"></td>
+                    <td th:text="${order.totalAmount}"></td>
+                    <td th:text="${order.expectedDeliveryTime}"></td>
+                    <td th:text="${order.orderStatus}"></td>
+                    <td>
+                        <a th:href="@{}"
+                           class="btn btn-primary btn-sm">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation" th:if="${totalPages > 0}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/ghn/list-order(page=${currentPage - 1},keyword=${keyword},status=${status})}" tabindex="-1">&laquo;</a>
+                </li>
+                <li class="page-item" th:if="${currentPage > 4}">
+                    <a class="page-link" th:href="@{/ghn/list-order(page=1,keyword=${keyword},status=${status})}">1</a>
+                </li>
+                <li class="page-item disabled" th:if="${currentPage > 5}">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(currentPage > 3 ? currentPage - 2 : 1,
+                                            currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}"
+                    th:classappend="${currentPage == (i - 1)} ? 'active'">
+                    <a class="page-link" th:href="@{/ghn/list-order(page=${i - 1},keyword=${keyword},status=${status})}" th:text="${i}"></a>
+                </li>
+                <li class="page-item disabled" th:if="${currentPage < totalPages - 4}">
+                    <span class="page-link">...</span>
+                </li>
+                <li class="page-item" th:if="${currentPage < totalPages - 3}">
+                    <a class="page-link" th:href="@{/ghn/list-order(page=${totalPages - 1},keyword=${keyword},status=${status})}" th:text="${totalPages}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage - totalPages == -1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/ghn/list-order(page=${currentPage + 1},keyword=${keyword},status=${status})}">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+<th:block th:replace="common/footer.html"></th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/wnumb@1.1.0/wNumb.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.scrollUp.min.js"></script>
+<script src="/assets/js/jquery.prettyPhoto.js"></script>
+<script src="/js/common_customer_page.js"></script>
+<script src="/js/home.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+</body>
+</html>

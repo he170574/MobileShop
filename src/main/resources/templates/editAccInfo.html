@@ -49,9 +49,11 @@
 
     <div class="d-grid gap-2">
         <button type="submit" class="btn btn-primary">Update Account</button>
+        <a th:href="@{/ghn/list-order}" class="current-page">
+            <span class="menu-text">Order History</span>
+        </a>
     </div>
 </form>
-
 
 
 <th:block th:replace="common/footer.html"></th:block>

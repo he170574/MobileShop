@@ -34,6 +34,9 @@ public class Order {
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus;
 
+    @Column(name = "ExpectedDeliveryTime")
+    private String expectedDeliveryTime;
+
     @Column(name = "ShippingFee")
     private BigDecimal shippingFee;
 
