@@ -26,15 +26,15 @@ public class Post {
 
     private String thumbnail;
 
-    private int counts = 0;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorID", referencedColumnName = "ACCOUNT_ID", nullable = false)
     private Account author; // Liên kết với tài khoản
 
     private LocalDateTime createdDate;
 
-    private String categoryPost;
+    @ManyToOne
+    @JoinColumn(name = "categoryPost", referencedColumnName = "categoryID")
+    private BlogCategory categoryPost;
 
     private boolean statusPost;
 }

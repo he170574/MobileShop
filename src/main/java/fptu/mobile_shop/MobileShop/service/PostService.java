@@ -1,6 +1,6 @@
 package fptu.mobile_shop.MobileShop.service;
 
-import fptu.mobile_shop.MobileShop.entity.Account;
+import fptu.mobile_shop.MobileShop.entity.BlogCategory;
 import fptu.mobile_shop.MobileShop.entity.Post;
 import fptu.mobile_shop.MobileShop.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,9 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private BlogCategoryService blogCategoryService; // Inject BlogCategoryService để xử lý danh mục
+
     public Page<Post> getAllPosts(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
@@ -29,7 +32,14 @@ public class PostService {
 
     public Post createPost(Post post) {
         post.setCreatedDate(LocalDateTime.now());
-        post.setStatusPost(true);
+        post.setStatusPost(true); // Bài viết mặc định là hoạt động (not blocked)
+
+        // Kiểm tra và gán categoryPost nếu cần thiết
+        if (post.getCategoryPost() != null) {
+            BlogCategory category = blogCategoryService.getCategoryById(post.getCategoryPost().getCategoryID());
+            post.setCategoryPost(category);
+        }
+
         return postRepository.save(post);
     }
 
@@ -40,9 +50,14 @@ public class PostService {
                     post.setContent(postDetails.getContent());
                     post.setBriefInfo(postDetails.getBriefInfo());
                     post.setThumbnail(postDetails.getThumbnail());
-                    post.setCounts(postDetails.getCounts());
                     post.setAuthor(postDetails.getAuthor()); // Cập nhật đối tượng Account (tác giả)
-                    post.setCategoryPost(postDetails.getCategoryPost());
+
+                    // Cập nhật danh mục nếu có
+                    if (postDetails.getCategoryPost() != null) {
+                        BlogCategory category = blogCategoryService.getCategoryById(postDetails.getCategoryPost().getCategoryID());
+                        post.setCategoryPost(category);
+                    }
+
                     post.setStatusPost(postDetails.isStatusPost());
                     return postRepository.save(post);
                 })
@@ -53,31 +68,29 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    public Page<Post> getPostsByCategory(String category, Pageable pageable) {
-        return postRepository.findByCategoryPost(category, pageable);
+    public Page<Post> getPostsByCategoryId(Long categoryId, Pageable pageable) {
+        return postRepository.findByCategoryPost_CategoryID(categoryId, pageable); // Truy vấn bài viết theo categoryId
     }
-
     public List<String> getAllCategories() {
-        return postRepository.findAll().stream()
-                .map(Post::getCategoryPost)
-                .distinct() // Lấy các danh mục duy nhất
+        return blogCategoryService.getAllActiveCategories().stream()
+                .map(BlogCategory::getCategoryName)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     public Page<Post> searchByTitle(String title, Pageable pageable) {
         return postRepository.findByTitleContaining(title, pageable);
     }
+
     public void blockPost(Long postId) {
         Post post = getPostById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setStatusPost(true); // Giả sử bạn có thuộc tính `blocked` trong Post entity
+        post.setStatusPost(false); // Đặt bài viết thành trạng thái không hoạt động (bị block)
         postRepository.save(post);
     }
 
     public void unblockPost(Long postId) {
         Post post = getPostById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setStatusPost(false); // Đặt lại `blocked` thành false
+        post.setStatusPost(true); // Đặt bài viết lại thành trạng thái hoạt động
         postRepository.save(post);
     }
 }
-
-

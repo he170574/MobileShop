@@ -35,17 +35,20 @@
 				<div class="left-sidebar">
 					<h2>Category</h2>
 					<div class="panel-group category-products" id="accordian">
+						<!-- All Categories Link -->
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
-									<a th:href="@{/blog/category/All}" th:text="'All'">All</a>
+									<a th:href="@{/blog}" th:text="'All'">All</a> <!-- Sửa đường dẫn để hiển thị tất cả bài viết -->
 								</h4>
 							</div>
 						</div>
+						<!-- Dynamically Render Categories -->
 						<div th:each="category : ${categories}" class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
-									<a th:href="@{'/blog/category/' + ${category}}" th:text="${category}">Category Name</a>
+									<!-- Link bài viết theo categoryId -->
+									<a th:href="@{'/blog/category/' + ${category.categoryID}}" th:text="${category.categoryName}">Category Name</a>
 								</h4>
 							</div>
 						</div>
@@ -110,18 +113,6 @@
 		</div>
 	</div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <footer id="footer"><!--Footer-->
 	<div class="footer-bottom">
