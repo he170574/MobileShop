@@ -14,7 +14,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
 <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.css">
-
+    <style>
+        .nice-select ul{
+            height: 180px;
+            overflow-x: auto; /* Thêm thanh cuộn dọc */
+        }
+    </style>
 </head>
 <body>
 <th:block th:replace="common/header.html"></th:block>

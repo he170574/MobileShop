@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -61,11 +62,15 @@ public class GHNController {
     AccountRepository accountRepository;
 
     @GetMapping("/list-order")
-    public String listOrder(Model model,
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size,
-                            @RequestParam(required = false) String keyword,
-                            @RequestParam(required = false) String status) {
+    public String listOrder(
+            Authentication authentication, Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status) {
+        if (authentication == null) {
+            return "redirect:/home";
+        }
         Page<Order> orderPage = orderService.getListOrder(keyword, status, page, size);
         model.addAttribute("orders", orderPage);
         model.addAttribute("currentPage", orderPage.getNumber());
@@ -77,12 +82,15 @@ public class GHNController {
     }
 
     @PostMapping("/create-order")
-    public String createShippingOrder(@ModelAttribute("checkoutDTO") CheckoutDTO checkoutDTO,
+    public String createShippingOrder(Authentication authentication,
+                                      @ModelAttribute("checkoutDTO") CheckoutDTO checkoutDTO,
                                       @ModelAttribute ShippingOrderRequest request,
                                       @RequestParam("ghn_shipping_fee") BigDecimal ghnShippingFee,
                                       RedirectAttributes redirectAttrs, Model model,
                                       @AuthenticationPrincipal UserDetails userDetails) {
-
+        if (authentication == null) {
+            return "redirect:/home";
+        }
         Cart cart = cartService.findByAccountId();
         Order order = new Order();
 //        if()

@@ -47,26 +47,34 @@ public class CartServiceImpl implements CartService {
             cart.setAccountID(account.getAccountId());
             cart.setItems(new ArrayList<>());
             cart = cartRepository.save(cart);
-        }
 
+            CartItem newItem = CartItem.builder()
+                    .product(product)
+                    .quantity(quantity)
+                    .cart(cart)
+                    .build();
+            cartItemRepository.save(newItem);
+            return newItem.getQuantity();
+        }
         Optional<CartItem> itemCart = cart.getItems().stream()
                 .filter(item -> item.getProduct().getProductID().equals(productId))
                 .findFirst();
-
         if (itemCart.isPresent()) {
             itemCart.get().setQuantity(itemCart.get().getQuantity() + quantity);
+            cartItemRepository.save(itemCart.get());
         } else {
             CartItem newItem = CartItem.builder()
                     .product(product)
                     .quantity(quantity)
                     .cart(cart)
                     .build();
+            newItem =  cartItemRepository.save(newItem);
+            if(CollectionUtils.isEmpty(cart.getItems())){
+                return 1;
+            }
             cart.getItems().add(newItem);
-            itemCart = cart.getItems().stream()
-                    .filter(item -> item.getProduct().getProductID().equals(productId))
-                    .findFirst();
         }
-        cartItemRepository.save(itemCart.get());
+
         AtomicInteger totalCart = new AtomicInteger();
         cart.getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
