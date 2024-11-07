@@ -19,10 +19,11 @@ public class WebSecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
                     authorizationManagerRequestMatcherRegistry
-                            .requestMatchers("/admin/dashboard").hasAnyRole("STAFF","ADMIN")
+                            .requestMatchers("/admin/dashboard").hasAnyRole("ADMIN")
                             .requestMatchers("/admin/product").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/members").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/orders").hasAnyRole("STAFF","ADMIN")
+                            .requestMatchers("/admin/blogs").hasAnyRole("STAFF", "ADMIN")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .anyRequest().permitAll();
                 })
