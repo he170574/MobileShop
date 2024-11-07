@@ -9,8 +9,6 @@ $(document).ready(function () {
     });
 });
 
-let lsdRing = $('.lsd-ring-container');
-
 function checkNotEmpty(fieldIds) {
     let allFilled = true;
     fieldIds.forEach(function (fieldId) {
@@ -35,7 +33,6 @@ function isValidEmail(email) {
 
 function register() {
     $('#submit-form-register').on('click', function (e) {
-
         const formData = {
             username: $('#username-register').val(),
             password: $('#password-register').val(),
@@ -44,10 +41,10 @@ function register() {
             email: $('#email').val(),
             phoneNumber: $('#phone-number').val()
         };
-        const fieldIds = ['username-register', 'password-register', 'confirm-password', 'full-name', 'dob', 'email', 'phone-number']; // Add all your input field IDs here
+        const fieldIds = ['username-register', 'password-register', 'confirm-password', 'full-name', 'dob', 'email', 'phone-number'];
         const confirmPasswordTag = $('#confirm-password');
 
-
+        // Check if all fields are filled out
         if (!checkNotEmpty(fieldIds)) {
             Swal.fire({
                 title: "Register Fail",
@@ -57,22 +54,24 @@ function register() {
             });
             return;
         }
-        //Check Password
+
+        // Check password match
         if (confirmPasswordTag.val() !== formData.password) {
-            confirmPasswordTag.addClass('border-danger')
-            confirmPasswordTag.removeClass('border-dark-subtle')
+            confirmPasswordTag.addClass('border-danger');
+            confirmPasswordTag.removeClass('border-dark-subtle');
             Swal.fire({
                 title: "Register Fail",
                 icon: "warning",
-                text: "Passwords do not match. Please try again",
+                text: "Passwords do not match. Please try again.",
                 confirmButtonText: "OK",
             });
             return;
         } else {
-            confirmPasswordTag.removeClass('border-danger')
-            confirmPasswordTag.addClass('border-dark-subtle')
+            confirmPasswordTag.removeClass('border-danger');
+            confirmPasswordTag.addClass('border-dark-subtle');
         }
-        //Check Email
+
+        // Check email format
         if (!isValidEmail(formData.email)) {
             Swal.fire({
                 title: "Register Fail",
@@ -80,15 +79,34 @@ function register() {
                 text: "Invalid email address. Please enter a properly formatted email.",
                 confirmButtonText: "OK",
             });
-            $('#email').addClass('border-danger')
-            $('#email').removeClass('border-dark-subtle')
+            $('#email').addClass('border-danger');
+            $('#email').removeClass('border-dark-subtle');
             return;
         } else {
-            $('#email').removeClass('border-danger')
-            $('#email').addClass('border-dark-subtle')
+            $('#email').removeClass('border-danger');
+            $('#email').addClass('border-dark-subtle');
         }
 
-        //Check Done => Send data
+        // Check DOB is before today
+        const dob = new Date(formData.dateOfBirth);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (dob >= today) {
+            Swal.fire({
+                title: "Register Fail",
+                icon: "warning",
+                text: "Date of Birth must be a date before today.",
+                confirmButtonText: "OK",
+            });
+            $('#dob').addClass('border-danger');
+            $('#dob').removeClass('border-dark-subtle');
+            return;
+        } else {
+            $('#dob').removeClass('border-danger');
+            $('#dob').addClass('border-dark-subtle');
+        }
+
+        // Send data via AJAX
         let lsdRing = $('.lsd-ring-container');
         $.ajax({
             url: '/register',
@@ -96,11 +114,10 @@ function register() {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             beforeSend: function () {
-                console.log(JSON.stringify(formData))
+                console.log(JSON.stringify(formData));
                 lsdRing.removeClass('d-none');
             },
             success: function (response) {
-                // Code to run on successful response
                 Swal.fire({
                     title: "Register Success",
                     icon: "success",
@@ -108,7 +125,7 @@ function register() {
                     confirmButtonText: "Let's Go",
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.reload();
+                        window.location.href = '/home?showLogin=true';
                     }
                 });
             },
@@ -116,21 +133,18 @@ function register() {
                 Swal.fire({
                     title: "Register Fail",
                     icon: "warning",
-                    text: "MB sr u",
-                    confirmButtonText: "Let's Go",
+                    text: "There was an issue with your registration. Please try again.",
+                    confirmButtonText: "OK",
                 });
-                // Code to run if the request fails
                 console.log('Error:', error);
             },
             complete: function () {
                 lsdRing.addClass('d-none');
             }
         });
-
-
     });
-
 }
+
 
 function login() {
     // Submit form

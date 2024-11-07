@@ -116,4 +116,10 @@ import java.util.Optional;
         Pageable pageable = PageRequest.of(page, size, sortOrder);
         return productRepository.findByFilters(searchTerm, category, minPrice, maxPrice, pageable);
     }
+
+    @Override
+    public Product findByName(String productName) {
+        return productRepository.findProductByProductName(productName);
+    }
+
 }

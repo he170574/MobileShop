@@ -45,7 +45,7 @@ public class MainController {
 
     @GetMapping("/admin/orders")
     public String showOrder() {
-        return "orders";
+        return "orders-admin";
     }
 
     @GetMapping("/admin/members")
@@ -58,5 +58,6 @@ public class MainController {
         return "feedback-admin";
     }
 
-
+    @GetMapping("/admin/blogs")
+    public String showBlog() { return "blogs";}
 }

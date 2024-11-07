@@ -1,7 +1,7 @@
 package fptu.mobile_shop.MobileShop.service.impl;
 
-import fptu.mobile_shop.MobileShop.dto.FeedbackFilterRequest;
-import fptu.mobile_shop.MobileShop.dto.FeedbackManageResponse;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackFilterRequest;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackManageResponse;
 import fptu.mobile_shop.MobileShop.dto.ProductCommentDTO;
 import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Product;
@@ -10,6 +10,7 @@ import fptu.mobile_shop.MobileShop.repository.ProductCommentRepository;
 import fptu.mobile_shop.MobileShop.service.AccountService;
 import fptu.mobile_shop.MobileShop.service.FeedbackService;
 import fptu.mobile_shop.MobileShop.service.ProductService;
+import fptu.mobile_shop.MobileShop.util.CommonPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Transactional
     public Page<ProductCommentDTO> getPageFeedback(FeedbackFilterRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "commentDate");
-        Pageable pageable = this.pageWithSort(request.getPageNum(), request.getPageSize(), sort);
+        Pageable pageable = CommonPage.pageWithSort(request.getPageNum(), request.getPageSize(), sort);
         Page<ProductComment> pageFeedback = productCommentRepository.getListFeedbackPage(request, pageable);
         if (pageFeedback.getContent() == null || pageFeedback.getContent().size() == 0) return Page.empty(pageable);
         return pageFeedback.map(ProductCommentDTO::new);
@@ -49,7 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Transactional
     public Page<FeedbackManageResponse> getListFeedbackManage(FeedbackFilterRequest request) {
         Sort sort = Sort.by(Sort.Direction.DESC, "commentDate");
-        Pageable pageable = this.pageWithSort(request.getPageNum(), request.getPageSize(), sort);
+        Pageable pageable = CommonPage.pageWithSort(request.getPageNum(), request.getPageSize(), sort);
         Page<ProductComment> pageFeedback = productCommentRepository.getListFeedbackPage(request, pageable);
         if (pageFeedback.getContent() == null || pageFeedback.getContent().size() == 0) return Page.empty(pageable);
         return pageFeedback.map(FeedbackManageResponse::new);
@@ -99,11 +100,4 @@ public class FeedbackServiceImpl implements FeedbackService {
         return new FeedbackManageResponse(entity);
     }
 
-    public Pageable pageWithSort(Integer pageNum, Integer pageSize, Sort sort) {
-        int offset = Optional.of(pageNum).map(p -> {
-            if (p > 0) return p - 1;
-            else return 0;
-        }).orElse(0);
-        return PageRequest.of(offset, pageSize, sort);
-    }
 }

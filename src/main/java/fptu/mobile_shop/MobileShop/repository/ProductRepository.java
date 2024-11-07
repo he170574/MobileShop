@@ -31,15 +31,16 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             Sort sort);
 
     // Paginated version for filtering products
-    @Query("SELECT p FROM Product p WHERE "
-            + "(LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
-            + "(:category IS NULL OR p.categoryName = :category) AND "
-            + "(:minPrice IS NULL OR p.price >= :minPrice) AND "
-            + "(:maxPrice IS NULL OR p.price <= :maxPrice)")
+    @Query("SELECT p FROM Product p WHERE p.deleted = false AND " +
+            "(LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND " +
+            "(:category IS NULL OR p.categoryName = :category) AND " +
+            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
+            "(:maxPrice IS NULL OR p.price <= :maxPrice)")
     Page<Product> findByFilters(
             @Param("searchTerm") String searchTerm,
             @Param("category") String category,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             Pageable pageable);
+
 }
