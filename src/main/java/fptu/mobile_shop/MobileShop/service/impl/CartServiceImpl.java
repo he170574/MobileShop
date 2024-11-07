@@ -123,9 +123,19 @@ public class CartServiceImpl implements CartService {
     @Override
     public int getCartTotal(Account account) {
         AtomicInteger totalCart = new AtomicInteger();
-        getCart(account).getItems().forEach( cartItem -> {
+        Cart cart = getCart(account);
+        if (cart == null) {
+            return 0;
+        }
+
+        cart.getItems().forEach(cartItem -> {
             totalCart.addAndGet(cartItem.getQuantity());
         });
+
         return totalCart.get();
+        /*getCart(account).getItems().forEach( cartItem -> {
+            totalCart.addAndGet(cartItem.getQuantity());
+        });
+        return totalCart.get();*/
     }
 }
