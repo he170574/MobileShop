@@ -14,13 +14,20 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    @Query("""
+    @Query(value = """
             select x1 from Order x1
-            join x1.account x2
-            where true 
+            left join x1.account x2
+            where true
             and (:#{#request.keyword} is null or CONCAT(coalesce(x1.orderCode,''), x2.fullName) like CONCAT('%',:#{#request.keyword},'%'))
             and ( :#{#request.accountId} is null or x2.accountId = :#{#request.accountId})
             and ( :#{#request.orderStatus} is null or x1.orderStatus = :#{#request.orderStatus})
+            """, countQuery = """
+             select COUNT(x1.id) from Order x1
+                        left join x1.account x2
+                        where true
+                        and (:#{#request.keyword} is null or CONCAT(coalesce(x1.orderCode,''), x2.fullName) like CONCAT('%',:#{#request.keyword},'%'))
+                        and ( :#{#request.accountId} is null or x2.accountId = :#{#request.accountId})
+                        and ( :#{#request.orderStatus} is null or x1.orderStatus = :#{#request.orderStatus})
             """)
     Page<Order> getListOrdersManage(OrderListManageFilterRequest request, Pageable pageable);
 

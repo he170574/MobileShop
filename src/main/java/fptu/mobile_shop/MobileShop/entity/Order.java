@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,4 +49,8 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
+
+    public List<OrderDetail> getOrderDetails() {
+        return (orderDetails != null || orderDetails.size() <= 0) ? orderDetails : new ArrayList<>();
+    }
 }

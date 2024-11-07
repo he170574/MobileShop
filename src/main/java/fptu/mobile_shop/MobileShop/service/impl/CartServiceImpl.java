@@ -34,6 +34,7 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Transactional
     @Override
     public int addToCart(Account account, Integer productId, int quantity) {
         Product product = productRepository.findById(productId)
@@ -122,8 +123,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCart(Account account) {
-
-        return cartRepository.getCartByAccountID(account.getAccountId());
+        Cart cart = cartRepository.getCartByAccountID(account.getAccountId());
+        if (Objects.isNull(cart)) return new Cart();
+        if (CollectionUtils.isEmpty(cart.getItems())) {
+            cart.setItems(new ArrayList<>());
+        }
+        return cart;
     }
 
     @Override

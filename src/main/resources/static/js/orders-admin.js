@@ -176,8 +176,6 @@ function sortOrderTable(column) {
 }
 
 function updateArrowIcons() {
-    console.log("updateArrowIcons");
-
     // Loại bỏ mũi tên trước đó
     $('#order-table th i').removeClass('fa-chevron-up fa-chevron-down');
 
@@ -230,11 +228,45 @@ function viewOrder(orderId) {
         success: function (response) {
             // Xử lý dữ liệu khi API trả về thành công
             if (response.message === "Success") {
-                console.log(response.data);  // Xử lý dữ liệu trong response
+                updateModalWithOrderData(response.data);
             }
         },
         error: function (xhr, status, error) {
-            alert("Không Tìm Thấy Order")
+            console.log("Không Tìm Thấy Order")
         }
     });
+}
+
+// Function to update modal with order data
+function updateModalWithOrderData(orderData) {
+    // Cập nhật thông tin vào các input fields
+    document.getElementById("ordersCode").value = orderData.orderCode || "N/A"; // Nếu orderCode null thì hiển thị "N/A"
+    document.getElementById("userName").value = orderData.account.fullName;
+    document.getElementById("orderStatus").value = orderData.orderStatus || "N/A";
+    document.getElementById("totalAmount").value = orderData.totalAmount.toLocaleString() + " ₫"; // Định dạng số theo kiểu VNĐ
+
+    // Hiển thị danh sách sản phẩm
+    const productDetailsDiv = document.getElementById("productDetails");
+    productDetailsDiv.innerHTML = ""; // Clear any previous content
+
+    orderData.orderDetails.forEach(product => {
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product-item");
+
+        // Create HTML structure for each product
+        productDiv.innerHTML = `
+            <div class="product-info">
+                <img src="${product.product.productImage}" alt="${product.product.productName}" width="50" height="50">
+                <span>${product.product.productName}</span> (Quantity: ${product.quantity || 'N/A'}, Price: ${product.cost.toLocaleString()} ₫)
+            </div>
+        `;
+
+        // Append product info to the container
+        productDetailsDiv.appendChild(productDiv);
+    });
+
+    // Comment Date and Text
+    document.getElementById("commentDate").value = orderData.orderDate || "N/A";
+    document.getElementById("commentText").value = "No comments available."; // You can add real comment text if available
+    $('#viewFeedbackModal').modal('show');
 }

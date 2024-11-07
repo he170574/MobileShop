@@ -84,10 +84,14 @@
                         <label>Order Status:</label>
                         <select id="status-selection" class="form-control">
                             <option value="">Order Status</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
-                            <option value="option4">Option 4</option>
+                            <option value="EMPTY">EMPTY</option>
+                            <option value="INIT">INIT</option>
+                            <option value="WATING_PAYMENT">WATING PAYMENT</option>
+                            <option value="PAYMENT_SUCCESS">PAYMENT SUCCESS</option>
+                            <option value="WATING_DELIVERY">WATING DELIVERY</option>
+                            <option value="DELIVERY_SUCCESS">DELIVERY SUCCESS</option>
+                            <option value="CANCEL">CANCEL</option>
+                            <option value="SUCCESS">SUCCESS</option>
                         </select>
                     </div>
 
@@ -114,31 +118,51 @@
     </div>
 
     <!-- Add New Category Modal -->
-    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" aria-labelledby="viewFeedbackModal"
-         aria-hidden="true">
+    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" aria-labelledby="viewFeedbackModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCategoryModalLabel">Feedback</h5>
+                    <h5 class="modal-title" id="addCategoryModalLabel">Order Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Order Code -->
                     <div class="form-group">
-                        <label>Orders Code</label>
+                        <label>Order Code</label>
                         <input type="text" class="form-control" id="ordersCode" readonly>
                     </div>
+
+                    <!-- User Name -->
                     <div class="form-group">
                         <label>User Name</label>
                         <input type="text" class="form-control" id="userName" readonly>
                     </div>
+
+                    <!-- Order Status -->
                     <div class="form-group">
-                        <label>Product Name</label>
-                        <input type="text" class="form-control" id="productName" readonly>
+                        <label>Order Status</label>
+                        <input type="text" class="form-control" id="orderStatus" readonly>
                     </div>
+
+                    <!-- Total Amount -->
+                    <div class="form-group">
+                        <label>Total Amount</label>
+                        <input type="text" class="form-control" id="totalAmount" readonly>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="form-group">
+                        <label>Products</label>
+                        <div id="productDetails"></div> <!-- Here we will display products dynamically -->
+                    </div>
+
+                    <!-- Comment Date (Optional) -->
                     <div class="form-group">
                         <label>Comment Date</label>
                         <input type="text" class="form-control" id="commentDate" readonly>
                     </div>
+
+                    <!-- Comment Text (Optional) -->
                     <div class="form-group">
                         <label>Comment Text</label>
                         <textarea class="form-control" id="commentText" readonly></textarea>
@@ -147,6 +171,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
