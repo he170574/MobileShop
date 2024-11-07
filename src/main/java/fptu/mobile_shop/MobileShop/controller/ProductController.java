@@ -43,8 +43,10 @@ public class ProductController {
             @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(required = false) String category) {
 
+        // Gọi service để lấy danh sách sản phẩm đã lọc
         List<Product> products = productService.filterProducts(search, minPrice, maxPrice, sort, category);
 
+        // Chuyển đổi sang DTO
         List<ProductDTO> productDTOs = products.stream().map(item -> ProductDTO.builder()
                 .productId(item.getProductID())
                 .productName(item.getProductName())
@@ -59,11 +61,12 @@ public class ProductController {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage("Get success");
         responseDTO.setData(productDTOs);
-        responseDTO.setTotalPages(1); // Only one page since there’s no pagination
-        responseDTO.setCurrentPage(1); // Set to 1 as default
+        responseDTO.setTotalPages(1); // Mặc định là 1 trang, có thể thêm phân trang sau
+        responseDTO.setCurrentPage(1);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
+
 
     @GetMapping("/get-all-product")
     public ResponseEntity<ResponseDTO> getAllProducts(
@@ -258,5 +261,29 @@ public class ProductController {
             return "404"; // Hoặc trang lỗi nếu không tìm thấy sản phẩm
         }
     }
+
+    @PostMapping("/check-product-exists")
+    public ResponseEntity<Map<String, Object>> checkProductExists(@RequestBody Map<String, String> request) {
+        String productName = request.get("productName");
+
+        Product existingProduct = productService.findByName(productName);
+
+        Map<String, Object> response = new HashMap<>();
+        if (existingProduct != null) {
+            response.put("exists", true);
+
+            // Tạo một instance của ProductDTO chỉ với các thông tin cần thiết
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductId(existingProduct.getProductID());
+            productDTO.setProductName(existingProduct.getProductName());
+            productDTO.setStockQuantity(existingProduct.getStockQuantity());
+
+            response.put("data", productDTO);
+        } else {
+            response.put("exists", false);
+        }
+        return ResponseEntity.ok(response);
+    }
+
 
 }

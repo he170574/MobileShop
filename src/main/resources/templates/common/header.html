@@ -45,13 +45,25 @@
                                 </li>
                                 <!--<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>-->
                                 <li>
+                                    <a href="/blog">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        Blog <span id="" class="text-bg-danger"></span>
+                                    </a>
+                                </li>
+                                <li>
                                       <a href="/cart">
                                            <i class="fa fa-shopping-cart"></i>
                                          Cart <span id="countItemCartHeder" class="text-bg-danger"></span>
                                     </a>
                                 </li>
                                 <li id="manage-btn" style="display: none;">
-                                    <a href="/admin/dashboard">
+                                    <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/dashboard}">
+                                        <i class="fa fa-tachometer" aria-hidden="true"></i>
+                                        Manage
+                                    </a>
+
+                                    <!-- Hiển thị nếu người dùng có quyền STAFF -->
+                                    <a th:if="${#authorization.expression('hasRole(''STAFF'')')}" th:href="@{/admin/product}">
                                         <i class="fa fa-tachometer" aria-hidden="true"></i>
                                         Manage
                                     </a>

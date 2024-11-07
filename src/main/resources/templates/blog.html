@@ -25,85 +25,16 @@
 </head><!--/head-->
 
 <body>
-<div class="header-middle"><!--header-middle-->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-4">
-				<div class="logo pull-left">
-					<a href="index.html"><img src="/assets/images/home/logo.png" alt="" /></a>
-				</div>
-			</div>
-			<div class="col-sm-8">
-				<div class="shop-menu pull-right">
-					<ul class="nav navbar-nav">
-						<li><a href=""><i class="fa fa-user"></i> Account</a></li>
-						<li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
-						<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-						<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-						<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><!--/header-middle-->
-
-<div class="header-bottom"><!--header-bottom-->
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-9">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="mainmenu pull-left">
-					<ul class="nav navbar-nav collapse navbar-collapse">
-						<li><a href="index.html">Home</a></li>
-						<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
-							<ul role="menu" class="sub-menu">
-								<li><a href="shop.html">Products</a></li>
-								<li><a href="product-details.html">Product Details</a></li>
-								<li><a href="checkout.html">Checkout</a></li>
-								<li><a href="cart.html">Cart</a></li>
-								<li><a href="login.html">Login</a></li>
-							</ul>
-						</li>
-						<li class="dropdown"><a href="#" class="active">Blog<i class="fa fa-angle-down"></i></a>
-							<ul role="menu" class="sub-menu">
-								<li><a href="blog.html" class="active">Blog List</a></li>
-								<li><a href="blog-single.html">Blog Single</a></li>
-							</ul>
-						</li>
-						<li><a href="404.html">404</a></li>
-						<li><a href="contact-us.html">Contact</a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="search_box pull-right">
-					<!-- Form tìm kiếm theo tiêu đề -->
-					<form th:action="@{/blog/search}" method="get">
-						<input type="text" name="title" placeholder="Search by title" />
-						<button type="submit" style="display: none;"></button> <!-- Nút này ẩn vì sẽ tự động submit khi người dùng nhấn Enter -->
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><!--/header-bottom-->
+<th:block th:replace="common/header.html"></th:block>
 
 <section>
 	<div class="container">
 		<div class="row">
+			<!-- Category Sidebar -->
 			<div class="col-sm-3">
 				<div class="left-sidebar">
 					<h2>Category</h2>
-					<div class="panel-group category-products" id="accordian"><!--category-products-->
-						<!-- Thêm lựa chọn "All" -->
+					<div class="panel-group category-products" id="accordian">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
@@ -111,7 +42,6 @@
 								</h4>
 							</div>
 						</div>
-						<!-- Hiển thị danh sách các category -->
 						<div th:each="category : ${categories}" class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
@@ -119,33 +49,48 @@
 								</h4>
 							</div>
 						</div>
-					</div><!--/category-products-->
-					<div class="shipping text-center"><!--shipping-->
-						<img src="images/home/shipping.jpg" alt="" />
-					</div><!--/shipping-->
+					</div>
 				</div>
 			</div>
+
+			<!-- Blog Content Area -->
 			<div class="col-sm-9">
 				<div class="blog-post-area">
 					<h2 class="title text-center">Latest From our Blog</h2>
 
-					<!-- Vòng lặp hiển thị bài viết -->
-					<div th:each="post : ${posts}" class="single-blog-post">
-						<h3 th:text="${post.title}">Blog Title</h3>
-						<div class="post-meta">
-							<ul>
-								<li><i class="fa fa-user"></i> <span th:text="${post.author.fullName}">Author Name</span></li>
-								<li><i class="fa fa-calendar"></i> <span th:text="${post.createdDate}">DEC 5, 2013</span></li>
-							</ul>
-						</div>
-						<a th:href="@{'/blog/' + ${post.postID}}">
-							<img th:src="@{${post.thumbnail}}" alt="Blog Thumbnail">
-						</a>
-						<p th:text="${post.briefInfo}">Blog content goes here.</p>
-						<a class="btn btn-primary" th:href="@{'/blog/' + ${post.postID}}">Read More</a>
+					<!-- Search Results -->
+					<div class="search-area">
+						<form th:action="@{/blog/search}" method="get">
+							<input type="text" name="title" placeholder="Tìm kiếm bài viết..." />
+							<button type="submit">Tìm kiếm</button>
+						</form>
 					</div>
 
-					<div class="pagination-area">
+					<!-- Check if there are posts -->
+					<div th:if="${posts.size() > 0}">
+						<div th:each="post : ${posts}" class="single-blog-post">
+							<h3 th:text="${post.title}">Blog Title</h3>
+							<div class="post-meta">
+								<ul>
+									<li><i class="fa fa-user"></i> <span th:text="${post.author.fullName}">Author Name</span></li>
+									<li><i class="fa fa-calendar"></i> <span th:text="${post.createdDate}">DEC 5, 2013</span></li>
+								</ul>
+							</div>
+							<a th:href="@{'/blog/' + ${post.postID}}">
+								<img th:src="@{${post.thumbnail}}" alt="Blog Thumbnail">
+							</a>
+							<p th:text="${post.briefInfo}">Blog content goes here.</p>
+							<a class="btn btn-primary" th:href="@{'/blog/' + ${post.postID}}">Read More</a>
+						</div>
+					</div>
+
+					<!-- No results message -->
+					<div th:if="${posts.size() == 0}">
+						<p class="text-center">Không có blog nào được tìm thấy.</p>
+					</div>
+
+					<!-- Pagination -->
+					<div class="pagination-area" th:if="${posts.size() > 0}">
 						<ul class="pagination">
 							<li th:if="${currentPage > 0}">
 								<a th:href="@{/blog(page=${currentPage - 1})}">«</a>
@@ -165,6 +110,15 @@
 		</div>
 	</div>
 </section>
+
+
+
+
+
+
+
+
+
 
 
 

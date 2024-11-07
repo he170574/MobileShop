@@ -3,12 +3,14 @@ package fptu.mobile_shop.MobileShop.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDTO {
     @NotNull
     private Integer productId;

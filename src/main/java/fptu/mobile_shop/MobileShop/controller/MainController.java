@@ -58,5 +58,6 @@ public class MainController {
         return "feedback-admin";
     }
 
-
+    @GetMapping("/admin/blogs")
+    public String showBlog() { return "blogs";}
 }

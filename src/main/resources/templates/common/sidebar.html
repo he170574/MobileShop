@@ -16,7 +16,7 @@
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <h5 class="sidebar-title" style="font-weight: bold; margin: 15px" >Dashboard</h5>
                     <ul id="sidebarnav">
-                        <li class="sidebar-item">
+                        <li sec:authorize="hasRole('ADMIN')"  class="sidebar-item">
                             <a class="sidebar-link" href="/admin/dashboard" aria-expanded="false">
                                     <span>
                                         <i class="ti ti-layout-dashboard"></i>
@@ -54,6 +54,14 @@
                                         <i class="ti ti-file-description"></i>
                                     </span>
                                 <span class="hide-menu">Feedback</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/admin/blog" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-file-description"></i>
+                                    </span>
+                                <span class="hide-menu">Blog</span>
                             </a>
                         </li>
                     </ul>

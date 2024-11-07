@@ -130,6 +130,7 @@ public class AccountController {
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
             responseDTO.setMessage("Internal Server Error");
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(responseDTO);
         }
 
