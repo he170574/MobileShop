@@ -65,11 +65,7 @@ public class PostController {
         return "create-post"; // Tên template cho form tạo bài viết
     }
 
-    @PostMapping
-    public String createPost(@ModelAttribute Post post) {
-        postService.createPost(post);
-        return "redirect:/blog"; // Chuyển hướng đến danh sách bài viết
-    }
+
 
     @GetMapping("/edit/{postId}")
     public String showUpdatePostForm(@PathVariable Long postId, Model model) {

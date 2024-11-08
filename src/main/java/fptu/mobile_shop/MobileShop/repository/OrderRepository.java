@@ -1,9 +1,23 @@
 package fptu.mobile_shop.MobileShop.repository;
 
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderListManageFilterRequest;
 import fptu.mobile_shop.MobileShop.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface  OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    @Query("""
+            select x1 from Order x1
+            join x1.account x2
+            where true 
+            and (:#{#request.keyword} is null or CONCAT(coalesce(x1.orderCode,''), x2.fullName) like CONCAT('%',:#{#request.keyword},'%'))
+            and ( :#{#request.accountId} is null or x2.accountId = :#{#request.accountId})
+            and ( :#{#request.orderStatus} is null or x1.orderStatus = :#{#request.orderStatus})
+            """)
+    Page<Order> getListOrdersManage(OrderListManageFilterRequest request, Pageable pageable);
 }
