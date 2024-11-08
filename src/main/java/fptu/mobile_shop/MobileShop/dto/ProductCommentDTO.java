@@ -17,7 +17,7 @@ public class ProductCommentDTO {
     private Integer commentId;
     @NotNull()
     private Integer productId;
-    private Integer ordersId;
+    private Long ordersId;
     @NotNull()
     private Integer accountId;
     private String commentText;
