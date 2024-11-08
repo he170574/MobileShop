@@ -42,7 +42,7 @@
                     <td th:text="${order.shippingCode}"></td>
                     <td th:text="${order.orderDate}"></td>
                     <td th:text="${order.shippingFee}"></td>
-                    <td th:text="${order.totalAmount}"></td>
+                    <td th:text="${order.formatToVND()}"></td>
                     <td th:text="${order.expectedDeliveryTime}"></td>
                     <td th:text="${order.orderStatus}"></td>
                     <td>
