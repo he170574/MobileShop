@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -117,6 +118,7 @@ public class GHNController {
         return "order-details";
     }
 
+    @Transactional
     @PostMapping("/create-order")
     public String createShippingOrder(Authentication authentication,
                                       @ModelAttribute("checkoutDTO") CheckoutDTO checkoutDTO,
