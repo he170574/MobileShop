@@ -12,9 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static fptu.mobile_shop.MobileShop.service.fogotPassWord.javamail.SendHtmlEmail.generateRandomPassword;
 import static fptu.mobile_shop.MobileShop.service.fogotPassWord.javamail.SendHtmlEmail.sendNewPassWordToEmail;
@@ -124,6 +126,28 @@ public class AccountServiceImpl implements AccountService {
     public void activeSTAFF(Account account) {
         accountRepository.activeSTAFF(account);
     }
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
+    }
 
+    public List<Account> searchAccountsByName(String name) {
+        return accountRepository.findByFullNameContaining(name);
+    }
+
+    public List<Account> filterAccountsByRole(String role) {
+        return accountRepository.findByRoleRoleName(role);
+    }
+
+    public Optional<Account> getAccountById(Integer id) {
+        return accountRepository.findById(id);
+    }
+
+    public Account saveOrUpdateAccount(Account account) {
+        return accountRepository.save(account);
+    }
+
+    public void deleteAccount(Integer id) {
+        accountRepository.deleteById(id);
+    }
 }
 

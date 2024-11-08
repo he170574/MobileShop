@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,9 +20,11 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Customer List</h5>
-                    <input type="text" id="searchInput" placeholder="Nhập tên người dùng để tìm kiếm...">
-                    <button onclick="searchUsers()">Search</button>
+                    <!-- Thêm input tìm kiếm -->
+                    <input type="text" id="searchInput" placeholder="Nhập tên người dùng để tìm kiếm..." oninput="searchAccounts()">
+                    <button onclick="searchAccounts()">Search</button>
 
+                    <!-- Thêm phần lọc theo vai trò -->
                     <label for="roleFilter">Filter by Role:</label>
                     <select id="roleFilter" onchange="filterByRole()">
                         <option value="">All</option>
@@ -31,6 +33,7 @@
                         <option value="MEMBER">Member</option>
                     </select>
 
+                    <!-- Bảng thông tin người dùng -->
                     <table id="userTable" class="table table-bordered">
                         <thead>
                         <tr>
@@ -44,9 +47,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <!-- Data will be dynamically added here -->
+                        <!-- Dữ liệu sẽ được thêm động tại đây -->
                         </tbody>
                     </table>
+
+                    <!-- Phân trang -->
                     <div id="pagination" class="pagination">
                         <button id="prevBtn" class="btn btn-secondary" onclick="changePage(-1)">Previous</button>
                         <span id="pageInfo"></span>
@@ -58,11 +63,14 @@
     </div>
 </div>
 
+<!-- Các script JS cần thiết -->
 <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
 <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/sidebarmenu.js"></script>
 <script src="/assets/js/app.min.js"></script>
 <script src="/assets/libs/simplebar/dist/simplebar.js"></script>
+
+<!-- Kết nối với file JS cho các chức năng quản lý người dùng -->
 <script src="/js/manageUser.js"></script>
 
 </body>

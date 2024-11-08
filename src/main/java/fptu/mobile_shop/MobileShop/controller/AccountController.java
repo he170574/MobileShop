@@ -242,4 +242,49 @@ public class AccountController {
             return ResponseEntity.internalServerError().body(responseDTO);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accounts = accountService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Account>> searchAccountsByName(@RequestParam String name) {
+        List<Account> accounts = accountService.searchAccountsByName(name);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Account>> filterAccountsByRole(@RequestParam String role) {
+        List<Account> accounts = accountService.filterAccountsByRole(role);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Account> getAccountById(@PathVariable Integer id) {
+        return accountService.getAccountById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable Integer id, @RequestBody Account accountDetails) {
+        return accountService.getAccountById(id)
+                .map(account -> {
+                    account.setFullName(accountDetails.getFullName());
+                    account.setAddress(accountDetails.getAddress());
+                    account.setPhoneNumber(accountDetails.getPhoneNumber());
+                    account.setRole(accountDetails.getRole());
+                    accountService.saveOrUpdateAccount(account);
+                    return ResponseEntity.ok(account);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
+    }
 }

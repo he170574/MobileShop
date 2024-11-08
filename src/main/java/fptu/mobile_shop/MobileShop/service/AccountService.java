@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AccountService {
     Account save(Account account);
@@ -31,6 +32,11 @@ public interface AccountService {
 
     void activeSTAFF(Account account);
 
-
+    List<Account> getAllAccounts();
+    List<Account> searchAccountsByName(String name);
+    List<Account> filterAccountsByRole(String role);
+    Optional<Account> getAccountById(Integer id);
+    Account saveOrUpdateAccount(Account account);
+    void deleteAccount(Integer id);
 }
 
