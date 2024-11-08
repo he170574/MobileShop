@@ -3,8 +3,6 @@ package fptu.mobile_shop.MobileShop.service;
 import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Cart;
 
-import java.math.BigDecimal;
-
 public interface CartService {
 
     int addToCart(Account account,Integer productId, int quantity);
@@ -22,5 +20,5 @@ public interface CartService {
 
     double calculateTotalAmount(Cart cart);
 
-    boolean deleteCart(Cart cart);
+    void deleteCart(Cart cart);
 }

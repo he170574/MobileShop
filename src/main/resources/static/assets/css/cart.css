@@ -19,6 +19,7 @@
     width: 100%; /* Ensures the image fills the container */
     height: auto;
     display: inline;
+    object-fit: cover; /* Điều chỉnh tỷ lệ hình ảnh */
 }
 
 .cart-item-details {

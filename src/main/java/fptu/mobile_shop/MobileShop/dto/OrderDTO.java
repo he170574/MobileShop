@@ -1,6 +1,7 @@
 package fptu.mobile_shop.MobileShop.dto;
 
 public class OrderDTO {
+    public Long id;
     public String email;
     public String province;
     public String districtName;

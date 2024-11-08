@@ -3,12 +3,15 @@ package fptu.mobile_shop.MobileShop.controller;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderListManageFilterRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderListManageResponse;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderResponse;
 import fptu.mobile_shop.MobileShop.entity.Order;
 import fptu.mobile_shop.MobileShop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +42,7 @@ public class OrderController {
         ResponseDTO responseDTO = new ResponseDTO();
         Optional<Order> orderOpt = orderService.getOrderById(id);
         if (orderOpt.isPresent()) {
-            responseDTO.setData(new OrderListManageResponse(orderOpt.get()));
+            responseDTO.setData(new OrderResponse(orderOpt.get()));
             responseDTO.setMessage("Success");
             return ResponseEntity.ok().body(responseDTO);
         } else {

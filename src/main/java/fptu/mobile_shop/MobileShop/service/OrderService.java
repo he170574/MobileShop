@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
+    Page<Order> getListOrder(String keyword, String status, int page, int size);
+
     public List<Order> getAllOrders();
     public Optional<Order> getOrderById(Long id);
     public Order createOrder(Order order);
@@ -16,4 +18,6 @@ public interface OrderService {
     public void deleteOrder(Long id);
 
     Page<OrderListManageResponse> getListOrdersManage(OrderListManageFilterRequest request);
+
+    Order saveOrder(Order order);
 }

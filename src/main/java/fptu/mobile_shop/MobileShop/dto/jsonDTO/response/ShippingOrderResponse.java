@@ -29,6 +29,9 @@ public class ShippingOrderResponse implements Serializable {
         @JsonProperty("expected_delivery_time")
         private String expected_delivery_time;
 
+        @JsonProperty("total_fee")
+        private String total_fee;
+
         // Method to get the formatted date
         public String getFormattedExpectedDeliveryTime() {
             if (expected_delivery_time != null && !expected_delivery_time.isEmpty()) {

@@ -12,548 +12,703 @@
     <link href="/assets/css/responsive.css" rel="stylesheet">
     <link href="/assets/css/cart.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.css">
-
+    <style>
+        .nice-select .list {
+            height: 180px;
+            overflow-y: auto; /* Thêm thanh cuộn dọc */
+        }
+    </style>
 </head>
 <body>
 <th:block th:replace="common/header.html"></th:block>
-    <!-- Start Main -->
-    <main class="mt-3 mb-3">
-        <div class="container">
-            <form id="paymentForm" th:object="${checkoutDTO}" th:action="@{/checkout}" method="post" onsubmit="validateForm(event, this)">
-                <div class="row">
-                    <!-- Start Left Column -->
-                    <div class="col-7">
-                        <h2 style="text-align: left">THÔNG TIN LIÊN HỆ</h2>
-                        <hr>
-                        <div class="row mt-2 mb-2">
-<!--                            <div class="col-6">-->
-<!--                                <label for="firstName" class="required">Họ</label>-->
-<!--                                <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Nhập Họ" th:field="*{invoice.firstName}" />-->
-<!--                                <span class="error" id="firstNameError"></span>-->
-<!--                            </div>-->
-<!--                            <div class="col-6">-->
-<!--                                <label for="lastName" class="required">Tên</label>-->
-<!--                                <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Nhập Tên" th:field="*{invoice.lastName}" />-->
-<!--                                <span class="error" id="lastNameError"></span>-->
-<!--                            </div>-->
+<!-- Start Main -->
+<main class="mt-3 mb-3">
+    <div class="container">
+        <!--            <form id="paymentForm" th:object="${checkoutDTO}" th:action="@{/checkout}" method="post" onsubmit="validateForm(event, this)">-->
+        <form id="paymentForm" th:object="${checkoutDTO}"
+              th:action="@{/ghn/create-order(order_id=${orderDTO})}" method="post" onsubmit="createOrder(event)">
+            <div class="row">
+                <!--                    Hidden value-->
+                <div hidden="hidden">
+                    <div class="col-md-6">
+                        <label>Thanh toán khi nhận (VND): </label>
+                        <input type="text" class="form-control" name="cod_amount" value="0" hidden="hidden">
+                        <div style="font-weight: bolder; font-size: larger" class="total">0</div>
+                    </div>
+                    <input type="hidden" name="payment_type_id" value="1">
+                    <input type="hidden" name="service_id" id="serviceId" class="form-control" value="53321">
+                    <input type="hidden" name="service_type_id" id="serviceTypeId" value="2">
+                    <input name="required_note" class="form-control" id="requiredNote" value="CHOXEMHANGKHONGTHU">
+                    <input name="items[0].name"
+                           th:each="productName, index : ${productNames + 'x' + quantities}"
+                           style="margin-bottom: 5px" type="text"
+                           class="form-control" th:value="${productNames}" hidden="hidden">
+                    <input name="items[0].quantity"
+                           th:each="productName, index : ${productNames}"
+                           style="margin-bottom: 5px" type="text"
+                           class="form-control"
+                           th:value="${quantities[__${index.index}__]}" hidden="hidden">
+                    <input type="hidden" name="items[0].weight" value="10">
+                    <input type="hidden" name="order_id" th:value="${invoiceDTO.id}">
+                    <input type="hidden" name="token" value="3b87f02d-415f-11ef-8e53-0a00184fe694">
+                    <input type="hidden" name="shop_id" value="192829">
+                    <input name="from_name" class="form-control"
+                           th:value="'MobileShop'"
+                           hidden="hidden">
+                    <input name="from_phone" class="form-control"
+                           th:value="'0911267084'"
+                           hidden="hidden">
+                    <input name="from_province_name" class="form-control"
+                           th:value="'Hà Nội'"
+                           hidden="hidden">
+                    <input name="from_district_name" class="form-control"
+                           th:value="'Quận Nam Từ Liêm'"
+                           hidden="hidden">
+                    <input name="from_ward_name" class="form-control"
+                           th:value="'Phường Mỹ Đình 2'"
+                           hidden="hidden">
+                    <input name="from_address" class="form-control"
+                           th:value="'MobileShop'"
+                           hidden="hidden">
+                </div>
+                <!-- Start Left Column -->
+                <div class="col-7">
+                    <h2 style="text-align: left">THÔNG TIN LIÊN HỆ</h2>
+                    <hr>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-6">
+                            <label>Họ và tên</label>
+                            <input name="to_name" class="form-control" placeholder="Nhập họ và tên"
+                                   th:value="${customer.fullName}" required>
                         </div>
-<!--                        <div class="row mt-2 mb-2">-->
-<!--                            <div class="col-12">-->
-<!--                                <label for="companyName" >Tên Công ty</label>-->
-<!--                                <input type="text" class="form-control" name="companyName" id="companyName" placeholder="Nhập tên công ty" th:field="*{invoice.companyName}" />-->
-<!--                                <span class="error" id="companyNameError"></span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-                        <div class="row mt-2 mb-2">
-                            <div class="col-6">
-                                <label for="phoneNumber" class="required">Số điện thoại</label>
-                                <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"
-                                       placeholder="Nhập số điện thoại" th:field="*{invoice.phoneNumber}" />
-                                <span class="error" id="phoneNumberError"></span>
-                            </div>
-                            <div class="col-6">
-                                <label for="email" class="required">Địa chỉ Email</label>
-                                <input type="text" class="form-control" name="email" id="email" placeholder="Nhập Email" th:field="*{invoice.email}" />
-                                <span class="error" id="emailError"></span>
-                            </div>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-6">
+                            <label class="required">Số điện thoại</label>
+                            <input type="number" class="form-control" id="to_phone"
+                                   th:value="${customer.phoneNumber}"
+                                   name="to_phone" placeholder="Nhập số điện thoại" required>
+                            <span class="error" id="phoneNumberError"></span>
                         </div>
-                        <input type="hidden" name="from_province_id" class="form-control" id="fromProvinceSelect" value="201">
-                        <input type="hidden" name="from_district_id" class="form-control" id="fromDistrictSelect" value="3440">
-                        <input type="hidden" name="from_ward_code" class="form-control" id="fromWardSelect" value="13004">
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
-                                <label>Tỉnh/Thành phố: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" name="provinceName" id="provinceName" th:field="*{invoice.province}"/>
-                                <select name="toProvinceSelect" class="form-control" id="toProvinceSelect">
-                                    <option value="">Chọn Thành phố</option>
-                                    <option th:each="province : ${provinces}" th:value="${province.provinceId}" th:text="${province.provinceName}" data-province-id="${province.provinceId}"></option>
-                                </select>
-                                <div id="toProvinceSelect-error" class="text-danger small"></div>
-                                <span class="placeholder"></span>
-                            </div>
-                            <span class="error" id="cityIdError"></span>
+                        <div class="col-6">
+                            <label for="email" class="required">Địa chỉ Email</label>
+                            <input type="text" class="form-control" name="email"
+                                   th:value="${customer.email}"
+                                   id="email" placeholder="Nhập Email" th:field="*{invoice.email}" required>
+                            <span class="error" id="emailError"></span>
                         </div>
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
-                                <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="districtName" name="districtName" th:field="*{invoice.districtName}">
-                                <input type="hidden" name="districtId" id="to_district_id" th:field="*{invoice.districtId}" />
-                                <select name="districtName" class="form-control" id="toDistrictSelect">
-                                    <option value="">Chọn Quận Huyện</option>
-                                </select>
-                                <div id="toDistrictSelect-error" class="text-danger small"></div>
-                                <span class="placeholder"></span>
-                            </div>
+                    </div>
+                    <input type="hidden" name="from_province_id" class="form-control" id="fromProvinceSelect"
+                           value="201">
+                    <input type="hidden" name="from_district_id" class="form-control" id="fromDistrictSelect"
+                           value="3440">
+                    <input type="hidden" name="from_ward_code" class="form-control" id="fromWardSelect" value="13004">
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
+                            <label>Tỉnh/Thành phố: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <input type="hidden" name="provinceName" id="provinceName" th:field="*{invoice.province}"/>
+                            <select name="toProvinceSelect" class="form-control" id="toProvinceSelect" required>
+                                <option value="">Chọn Thành phố</option>
+                                <option th:each="province : ${provinces}" th:value="${province.provinceId}"
+                                        th:text="${province.provinceName}"
+                                        data-province-id="${province.provinceId}"></option>
+                            </select>
+                            <div id="toProvinceSelect-error" class="text-danger small"></div>
+                            <span class="placeholder"></span>
                         </div>
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
-                                <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
-                                <input type="hidden" id="wardName" name="wardName" th:field="*{invoice.wardName}">
-                                <input type="hidden" name="wardCode" id="to_ward_code" th:field="*{invoice.wardCode}" />
-                                <select name="wardName" class="form-control" id="toWardSelect">
-                                    <option value="">Chọn Phường Xã</option>
-                                </select>
-                                <div id="toWardSelect-error" class="text-danger small"></div>
-                                <span class="placeholder"></span>
-                            </div>
+                        <span class="error" id="cityIdError"></span>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
+                            <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <input type="hidden" id="districtName" name="to_district_name">
+                            <input type="hidden" name="to_district_id" id="to_district_id"/>
+                            <select name="districtName" class="form-control" id="toDistrictSelect" required>
+                                <option value="">Chọn Quận Huyện</option>
+                            </select>
+                            <div id="toDistrictSelect-error" class="text-danger small"></div>
+                            <span class="placeholder"></span>
                         </div>
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
-                                <label for="address1" class="required">Địa chỉ</label>
-                                <input type="text" class="form-control" name="address1" id="address1" placeholder="Nhập địa chỉ"
-                                       th:field="*{invoice.address}" />
-                                <span class="error" id="address1Error"></span>
-                            </div>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
+                            <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <input type="hidden" id="wardName" name="to_ward_name">
+                            <input type="hidden" name="to_ward_code" id="to_ward_code"/>
+                            <select name="wardName" class="form-control" id="toWardSelect" required>
+                                <option value="">Chọn Phường Xã</option>
+                            </select>
+                            <div id="toWardSelect-error" class="text-danger small"></div>
+                            <span class="placeholder"></span>
                         </div>
-                        <hr>
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
-                                <!--                            <label for="available-services-display">Dịch vụ vận chuyển: <span style="color: rgb(234, 77, 77);"> *</span></label> (Tự động theo khoảng cách và trọng lượng đơn hàng)-->
-                                <input type="hidden" name="oServiceId" id="oServiceId" th:field="*{invoice.serviceId}">
-                                <input type="hidden" value="oServiceTypeId" id="oServiceTypeId" name="oServiceTypeId"
-                                       th:field="*{invoice.serviceTypeId}">
-                                <input type="hidden" name="oShort_name" id="oShort_name"  th:field="*{invoice.shortName}">
-                                <h5 id="available-services-display"></h5>
-                                <div id="available-services-error" class="text-danger small"></div>
-                            </div>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
+                            <label for="address1" class="required">Địa chỉ</label>
+                            <input type="text" class="form-control" name="to_address" id="address1"
+                                   placeholder="Nhập địa chỉ" required>
+                            <span class="error" id="address1Error"></span>
                         </div>
-                        <div class="row mt-2 mb-2">
-                            <div class="col-12">
+                    </div>
+                    <hr>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
+                            <!--                            <label for="available-services-display">Dịch vụ vận chuyển: <span style="color: rgb(234, 77, 77);"> *</span></label> (Tự động theo khoảng cách và trọng lượng đơn hàng)-->
+                            <input type="hidden" name="oServiceId" id="oServiceId" th:field="*{invoice.serviceId}">
+                            <input type="hidden" value="oServiceTypeId" id="oServiceTypeId" name="oServiceTypeId"
+                                   th:field="*{invoice.serviceTypeId}">
+                            <input type="hidden" name="oShort_name" id="oShort_name" th:field="*{invoice.shortName}">
+                            <h5 id="available-services-display"></h5>
+                            <div id="available-services-error" class="text-danger small"></div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 mb-2">
+                        <div class="col-12">
                                 <textarea type="text" rows="5" class="form-control" name="note" id="note"
                                           placeholder="Nhập ghi chú" th:field="*{invoice.note}"></textarea>
-                            </div>
                         </div>
                     </div>
-                    <!-- Start Left Column -->
-                    <!-- Start Right Column -->
-                    <div class="col-5">
-                        <div class="jumbotron" style="background-color: #e5ecee">
-                            <h2 style="text-align: left">ĐƠN HÀNG</h2>
-                            <hr>
-                            <table class="table">
-                                <tr>
-                                    <th class="text-left">Sản phẩm</th>
-                                    <th class="text-center">Số lượng</th>
-                                    <th class="text-right">Tổng tiền</th>
-                                </tr>
-                                <tr th:each="item : ${checkoutDTO.cart.getItems()}">
-                                    <td class="text-left">
-                                        <div th:text="${item.getProduct().getProductName()}" style="padding-bottom: 10px"></div>
-
-                                    </td>
-                                    <td class="text-center" th:text="${'x' + item.getQuantity()}"></td>
-                                    <td class="text-right subtotal" th:text="${checkoutDTO.formatToVND(item.product.price * item.quantity)}"></td>
-                                </tr>
-                                <tr>
-                                    <th class="text-left" colspan="2">Tổng tiền được tính:</th>
-                                    <td class="text-right subtotal" th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
-                                </tr>
-                                <tr>
-                                    <th class="text-left" colspan="2">Phí vận chuyển:</th>
-                                    <td class="text-right" id="shippingFeeDisplay">
-                                        <span></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="text-left" colspan="2">Tổng tiền phải thanh toán:</th>
-                                    <td class="text-right finalTotal subtotal" id="finalTotal" th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left" colspan="3">
-                                        <!-- Payment type radio buttons -->
-<!--                                        <div class="row" th:each="payment : ${paymentTypeList}">-->
-<!--                                            <div class="form-check">-->
-<!--                                                <input class="form-check-input" th:id="${payment.getId() + '_' + payment.getName()}"-->
-<!--                                                       type="radio" name="checkout-type" th:field="*{paymentType.id}"-->
-<!--                                                       th:value="${payment.getId()}" required/>-->
-<!--                                                <label class="form-check-label" th:for="${payment.getId() + '_' + payment.getName()}">-->
-<!--                                                    <b th:text="${payment.getName()}"></b>-->
-<!--                                                </label>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-                                        <span class="error" id="paymentTypeError"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="3">
-                                        <div class="row">
-                                            <button type="submit" class="btn" style="background-color: #007bff; color: whitesmoke; width: 100%" id="proceedToPayment">
-                                                Tiến hành thanh toán
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- Start Right Column -->
                 </div>
-                <!-- hidden value -->
-<!--                <input type="text" th:field="*{subTotalWithDiscount}" hidden>-->
-                <input type="text" th:field="*{cart.id}" hidden>
-                <input type="text" th:field="*{cart.id}" hidden>
-<!--                <input type="text" th:field="*{subTotal}" hidden>-->
-<!--                <input type="text" id="total-cal" th:field="*{total}" hidden>-->
-                <input type="text" id="oShippingFee" th:field="*{shippingFee}" hidden="hidden">
-                <input type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}">
-                <input type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">
-                <input type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">
-                <input type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">
-<!--                <input type="hidden" id="discountId" th:value="${checkoutDTO.getDiscountId()}" th:field="*{discountId}">-->
-                <!-- hidden value -->
-            </form>
-        </div>
-    </main>
-<th:block th:replace="common/footer.html"></th:block>
-    <!-- Thêm thư viện niceSelect -->
-    <!-- Nội dung trang -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                <!-- Start Left Column -->
+                <!-- Start Right Column -->
+                <div class="col-5">
+                    <div class="jumbotron" style="background-color: #e5ecee">
+                        <h2 style="text-align: left">ĐƠN HÀNG</h2>
+                        <hr>
+                        <table class="table">
+                            <tr>
+                                <th class="text-left">Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-right">Tổng tiền</th>
+                            </tr>
+                            <tr th:each="item : ${checkoutDTO.cart.getItems()}">
+                                <td class="text-left">
+                                    <div th:text="${item.getProduct().getProductName()}"
+                                         style="padding-bottom: 10px"></div>
 
-    <!-- Thêm thư viện niceSelect -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/cart.js"></script>
-    <script src="/js/checkout.js"></script>
+                                </td>
+                                <td class="text-center" th:text="${'x' + item.getQuantity()}"></td>
+                                <td class="text-right subtotal"
+                                    th:text="${checkoutDTO.formatToVND(item.product.price * item.quantity)}"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left" colspan="2">Tổng tiền được tính:</th>
+                                <td class="text-right subtotal"
+                                    th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
+                            </tr>
+                            <tr>
+                                <th class="text-left" colspan="2">Phí vận chuyển:</th>
+                                <input type="hidden" name="ghn_shipping_fee" id="ghnShippingFee">
+                                <td class="text-right" id="shippingFeeDisplay">
+                                    <span></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-left" colspan="2">Tổng tiền phải thanh toán:</th>
+                                <td class="text-right finalTotal subtotal" id="finalTotal"
+                                    th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-left" colspan="3">
+                                    <span class="error" id="paymentTypeError"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="row">
+                                        <div class="d-none" id="errorMessage"></div>
+                                        <div id="createOrderResult"></div>
+                                        <button type="button" onclick="paymentPopUp()" class="btn"
+                                                style="background-color: #ff6d00; color: whitesmoke; width: 100%">
+                                            Tiến hành thanh toán
+                                        </button>
+
+                                        <!-- Modal structure -->
+                                        <div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="qrModalLabel">QR Code Payment</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <!-- QR code image for payment -->
+                                                        <img src="path/to/your/qr-code-image.jpg" alt="QR Code for Payment"
+                                                             style="max-width: 100%; height: auto;">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-success" id="confirmPayment">Confirm Payment</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Not Yet</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+                <!-- Start Right Column -->
+            </div>
+            <!-- Payment QR Code Modal -->
+
+
+            <!-- hidden value -->
+            <!--                <input type="text" th:field="*{subTotalWithDiscount}" hidden>-->
+            <input type="text" th:field="*{cart.id}" hidden>
+            <input type="text" th:field="*{cart.id}" hidden>
+            <!--                <input type="text" th:field="*{subTotal}" hidden>-->
+            <!--                <input type="text" id="total-cal" th:field="*{total}" hidden>-->
+            <input type="text" id="oShippingFee" th:field="*{shippingFee}" hidden="hidden">
+            <input name="weight" type="hidden" id="totalWeight" th:value="${checkoutDTO.getTotalWeight()}">
+            <input name="height" type="hidden" id="totalHeight" th:value="${checkoutDTO.getTotalHeight()}">
+            <input name="width" type="hidden" id="totalWidth" th:value="${checkoutDTO.getTotalWidth()}">
+            <input name="length" type="hidden" id="totalLength" th:value="${checkoutDTO.getTotalLength()}">
+            <!--                <input type="hidden" id="discountId" th:value="${checkoutDTO.getDiscountId()}" th:field="*{discountId}">-->
+            <!-- hidden value -->
+        </form>
+    </div>
+</main>
+<th:block th:replace="common/footer.html"></th:block>
+<!-- Thêm thư viện niceSelect -->
+<!-- Nội dung trang -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Thêm thư viện niceSelect -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/checkout.js"></script>
 
 <!--    <script type="text/javascript" th:src="@{/js/homepage/checkout.js}"></script>-->
 
-    <!-- End Main -->
-    <script>
-        $(document).ready(function () {
-            // Initialize niceSelect
-            $('select:not(#toProvinceSelect, #toDistrictSelect, #toWardSelect)').niceSelect();
+<!-- End Main -->
+<script>
+    // Handle the "Confirm Payment" button click within the modal
+    $('#confirmPayment').click(function () {
+        $('#qrModal').modal('hide');
 
-            // Update Districts for the "To" Section
-            function updateDistrictsTo(select) {
-                var provinceId = select.value;
-                var districtSelect = $('#toDistrictSelect');
+        // Add any actions to perform after confirming payment
+        // For instance, you might want to submit the form or display a confirmation message
+        $('#createOrderResult').text('Payment confirmed! Proceeding with the order.');
 
-                districtSelect.empty();
-                districtSelect.append('<option value="">Chọn quận huyện</option>');
+        // You can uncomment the line below to submit the form if necessary
+        // $('#paymentForm').submit();
+    });
 
-                if (provinceId) {
-                    $.ajax({
-                        url: '/districts/' + provinceId,
-                        type: 'GET',
-                        success: function (data) {
-                            console.log("Districts data: ", data);
-                            districtSelect.empty();
-                            districtSelect.append('<option value="">Chọn quận huyện</option>');
-                            $.each(data, function (index, district) {
-                                districtSelect.append('<option value="' + district.DistrictID + '" data-district-id="' + district.DistrictID + '">' + district.DistrictName + '</option>');
-                            });
-                            districtSelect.niceSelect('update');
-                        },
-                        error: function () {
-                            console.error('Failed to fetch districts.');
-                        }
-                    });
-                }
-                $('#districtName').val($(select).find('option:selected').text());
-            }
+    function paymentPopUp() {
+        // Show the QR code modal for payment
+        // $('#qrModal').modal('show');
+        document.getElementById('paymentForm').submit();
+    }
 
-            // Update Wards for the "To" Section
-            function updateWardsTo(select) {
-                var districtId = select.value;
-                var wardSelect = $('#toWardSelect');
+    $(document).ready(function () {
+        // Initialize niceSelect
+        $('select:not(#toProvinceSelect, #toDistrictSelect, #toWardSelect)').niceSelect();
 
-                wardSelect.empty();
-                wardSelect.append('<option value="">Chọn quận huyện</option>');
+        // Update Districts for the "To" Section
+        function updateDistrictsTo(select) {
+            var provinceId = select.value;
+            var districtSelect = $('#toDistrictSelect');
 
-                if (districtId) {
-                    $.ajax({
-                        url: '/wards/' + districtId,
-                        type: 'GET',
-                        success: function (data) {
-                            console.log("Wards data: ", data);
-                            wardSelect.empty();
-                            wardSelect.append('<option value="">Chọn phường xã</option>');
-                            $.each(data, function (index, ward) {
-                                wardSelect.append('<option value="' + ward.WardCode + '">' + ward.WardName + '</option>');
-                            });
-                            wardSelect.niceSelect('update');
-                        },
-                        error: function () {
-                            console.error('Failed to fetch wards.');
-                        }
-                    });
-                }
-                $('#wardName').val($(select).find('option:selected').text());
-            }
+            districtSelect.empty();
+            districtSelect.append('<option value="">Chọn quận huyện</option>');
 
-            // Event Handlers for "From" Section
-            $('#fromProvinceSelect').change(function () {
-                var provinceId = $(this).val();
-                if (provinceId) {
-                    $.ajax({
-                        url: '/districts/' + provinceId,
-                        type: 'GET',
-                        success: function (data) {
-                            console.log("From Districts data: ", data);
-                            $('#fromDistrictSelect').empty();
-                            $('#fromDistrictSelect').append('<option value="">Chọn tỉnh thành</option>');
-                            $.each(data, function (index, district) {
-                                $('#fromDistrictSelect').append('<option value="' + district.DistrictID + '">' + district.DistrictName + '</option>');
-                            });
-                        },
-                        error: function () {
-                            console.error('Failed to fetch from districts.');
-                        }
-                    });
-                }
-            });
-
-            $('#fromDistrictSelect').change(function () {
-                var districtId = $(this).val();
-                if (districtId) {
-                    $.ajax({
-                        url: '/wards/' + districtId,
-                        type: 'GET',
-                        success: function (data) {
-                            console.log("From Wards data: ", data);
-                            $('#fromWardSelect').empty();
-                            $('#fromWardSelect').append('<option value="">Chọn phường xã</option>');
-                            $.each(data, function (index, ward) {
-                                $('#fromWardSelect').append('<option value="' + ward.WardCode + '">' + ward.WardName + '</option>');
-                            });
-                        },
-                        error: function () {
-                            console.error('Failed to fetch from wards.');
-                        }
-                    });
-                }
-            });
-
-            // Event Handlers for "To" Section
-            $('#toProvinceSelect').change(function () {
-                updateDistrictsTo(this);
-                $('#provinceName').val($(this).find('option:selected').text());
-            });
-
-            $('#toDistrictSelect').change(function () {
-                updateWardsTo(this);
-                var districtId = $(this).val();
-                $('#to_district_id').val(districtId);
-                $('#districtId').val(districtId);
-                $('#districtName').val($(this).find('option:selected').text());
-            });
-
-            $('#toWardSelect').change(function () {
-                var wardCode = $(this).val();
-                $('#to_ward_code').val(wardCode);
-                $('#wardCode').val(wardCode);
-                $('#wardName').val($(this).find('option:selected').text());
-            });
-
-            // Fetch Available Services
-            function fetchAvailableServices(fromDistrict, toDistrict) {
-                if (!fromDistrict || !toDistrict) {
-                    console.error('District information is missing');
-                    $('#available-services-display').text('Select delivery service');
-                    return;
-                }
-
+            if (provinceId) {
                 $.ajax({
-                    url: '/available-services',
+                    url: '/districts/' + provinceId,
                     type: 'GET',
-                    data: {
-                        fromDistrict: fromDistrict,
-                        toDistrict: toDistrict
-                    },
                     success: function (data) {
-                        console.log("Available services data: ", data);
-                        var displayText = '';
-
-                        // Define replacements
-                        var replacements = {
-                            "Hàng nhẹ": "Giao hàng tiết kiệm",
-                            "Hàng nặng": "Giao hàng chuẩn"
-                        };
-
-                        var defaultOptionValue = "";
-
-                        defaultOptionValue = "Giao hàng tiết kiệm"; // Default for < 20kg
-
-                        if (data && data.data && data.data.length > 0) {
-                            var found = false;
-                            $.each(data.data, function (index, service) {
-                                var displayName = replacements[service.short_name] || service.short_name; // Apply replacement if it exists
-
-                                if (displayName === defaultOptionValue && !found) {
-                                    displayText = displayName;
-                                    $('#oServiceId').val(service.service_id);
-                                    $('#oShort_name').val(service.short_name);
-                                    $('#oServiceTypeId').val(service.service_type_id); // Store the service_type_id
-                                    found = true;
-                                }
-                            });
-
-                            if (!found) {
-                                // If default option was not found, set the first available service
-                                var firstService = data.data[0];
-                                displayText = replacements[firstService.short_name] || firstService.short_name;
-                                $('#oServiceId').val(firstService.service_id);
-                                $('#oShort_name').val(firstService.short_name);
-                                $('#oServiceTypeId').val(firstService.service_type_id); // Store the service_type_id
-                            }
-
-                        } else {
-                            console.error('No available services found');
-                            displayText = 'Select delivery service';
-                        }
-
-                        $('#available-services-display').text(displayText);
-
-                        // Disable the dropdown if weight >= 20kg (not applicable anymore as we use div)
+                        console.log("Districts data: ", data);
+                        districtSelect.empty();
+                        districtSelect.append('<option value="">Chọn quận huyện</option>');
+                        $.each(data, function (index, district) {
+                            districtSelect.append('<option value="' + district.DistrictID + '" data-district-id="' + district.DistrictID + '">' + district.DistrictName + '</option>');
+                        });
+                        districtSelect.niceSelect('update');
                     },
                     error: function () {
-                        console.error('Failed to fetch available services.');
-                        $('#available-services-display').text('Select delivery service');
+                        console.error('Failed to fetch districts.');
                     }
                 });
             }
+            $('#districtName').val($(select).find('option:selected').text());
+        }
 
-            // Handle change event for available-services select
-            $('#available-services').change(function () {
-                // Only handle change if the dropdown is not disabled
-                if (!$(this).prop('disabled')) {
-                    var selectedServiceId = $(this).val();
-                    var selectedServiceTypeId = $(this).find('option:selected').data('id');
-                    var selectedShortName = $(this).find('option:selected').data('short-name'); // Fetch the short_name
+        // Update Wards for the "To" Section
+        function updateWardsTo(select) {
+            var districtId = select.value;
+            var wardSelect = $('#toWardSelect');
 
-                    $('#oServiceId').val(selectedServiceId);
-                    $('#oShort_name').val(selectedShortName);
-                    $('#oServiceTypeId').val(selectedServiceTypeId); // Store the service_type_id
+            wardSelect.empty();
+            wardSelect.append('<option value="">Chọn quận huyện</option>');
 
-                    console.log("Selected shipping service ID: ", selectedServiceId);
-                    console.log("Selected shipping service name: ", selectedShortName);
-                    console.log("Selected service type ID: ", selectedServiceTypeId);
-
-
-                }
-            });
-
-            // Calculate Shipping Fee
-            function calculateShippingFee() {
-                var fromDistrictId = $('#fromDistrictSelect').val();
-                var fromWardCode = $('#fromWardSelect').val();
-                var serviceId = $('#oServiceId').val();
-                var serviceTypeId = $('#oServiceTypeId').val();
-                var toDistrictId = $('#to_district_id').val();
-                var toWardCode = $('#to_ward_code').val();
-                var height = $('#totalHeight').val();
-                var length = $('#totalLength').val();
-                var weight = $('#totalWeight').val();
-                var width = $('#totalWidth').val();
-
-                // Debugging: log the values
-                console.log('fromDistrictId:', fromDistrictId);
-                console.log('fromWardCode:', fromWardCode);
-                console.log('serviceId:', serviceId);
-                console.log('serviceTypeId:', serviceTypeId);
-                console.log('toDistrictId:', toDistrictId);
-                console.log('toWardCode:', toWardCode);
-                console.log('height:', height);
-                console.log('length:', length);
-                console.log('weight:', weight);
-                console.log('width:', width);
-
-                if (!fromDistrictId || !fromWardCode || !serviceId || !toDistrictId || !toWardCode || !height || !length || !weight || !width) {
-                    console.error('All required fields must be filled');
-                    return;
-                }
-
+            if (districtId) {
                 $.ajax({
-                    url: '/calculate-fee',
+                    url: '/wards/' + districtId,
                     type: 'GET',
-                    data: {
-                        fromDistrictId: fromDistrictId,
-                        fromWardCode: fromWardCode,
-                        serviceId: serviceId,
-                        serviceTypeId: serviceTypeId, // Include service_type_id in the request
-                        toDistrictId: toDistrictId,
-                        toWardCode: toWardCode,
-                        height: height,
-                        length: length,
-                        weight: weight,
-                        width: width
-                    },
-                    success: function (response) {
-                        if (response && response.data && response.data.total) {
-                            var shippingFee = Math.round(response.data.total);
-                            $('#shippingFeeDisplay').text(shippingFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VND');
-                            $('#ghnShippingFee').val(shippingFee); // Ensure this field is updated
-                            $('#oShippingFee').val(shippingFee);
-                            updateTotalPrice(shippingFee);
-                        } else {
-                            console.error('Invalid data received for shipping calculation');
-                        }
+                    success: function (data) {
+                        console.log("Wards data: ", data);
+                        wardSelect.empty();
+                        wardSelect.append('<option value="">Chọn phường xã</option>');
+                        $.each(data, function (index, ward) {
+                            wardSelect.append('<option value="' + ward.WardCode + '">' + ward.WardName + '</option>');
+                        });
+                        wardSelect.niceSelect('update');
                     },
                     error: function () {
-                        console.error('Failed to calculate shipping fee.');
+                        console.error('Failed to fetch wards.');
                     }
                 });
             }
+            $('#wardName').val($(select).find('option:selected').text());
+        }
 
-            function updateTotalPrice(shippingFee) {
-                var totalPriceString = $('.finalTotal').first().text().trim().replace(/\D+/g, '');
-                var totalPrice = parseInt(totalPriceString, 10);
+        // Event Handlers for "From" Section
+        $('#fromProvinceSelect').change(function () {
+            var provinceId = $(this).val();
+            if (provinceId) {
+                $.ajax({
+                    url: '/districts/' + provinceId,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("From Districts data: ", data);
+                        $('#fromDistrictSelect').empty();
+                        $('#fromDistrictSelect').append('<option value="">Chọn tỉnh thành</option>');
+                        $.each(data, function (index, district) {
+                            $('#fromDistrictSelect').append('<option value="' + district.DistrictID + '">' + district.DistrictName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error('Failed to fetch from districts.');
+                    }
+                });
+            }
+        });
 
-                if (isNaN(totalPrice)) {
-                    console.error('Total price parsing error');
-                    return;
-                }
+        $('#fromDistrictSelect').change(function () {
+            var districtId = $(this).val();
+            if (districtId) {
+                $.ajax({
+                    url: '/wards/' + districtId,
+                    type: 'GET',
+                    success: function (data) {
+                        console.log("From Wards data: ", data);
+                        $('#fromWardSelect').empty();
+                        $('#fromWardSelect').append('<option value="">Chọn phường xã</option>');
+                        $.each(data, function (index, ward) {
+                            $('#fromWardSelect').append('<option value="' + ward.WardCode + '">' + ward.WardName + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error('Failed to fetch from wards.');
+                    }
+                });
+            }
+        });
 
-                var totalAmount = totalPrice + shippingFee;
-                $('.finalTotal').text(totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VND');
-                $('#finalTotal').val(totalAmount);
-                $('#total-cal').val(totalAmount);
-                console.log("total price: ", totalAmount);
+        // Event Handlers for "To" Section
+        $('#toProvinceSelect').change(function () {
+            updateDistrictsTo(this);
+            $('#provinceName').val($(this).find('option:selected').text());
+        });
+
+        $('#toDistrictSelect').change(function () {
+            updateWardsTo(this);
+            var districtId = $(this).val();
+            $('#to_district_id').val(districtId);
+            $('#districtId').val(districtId);
+            $('#districtName').val($(this).find('option:selected').text());
+        });
+
+        $('#toWardSelect').change(function () {
+            var wardCode = $(this).val();
+            $('#to_ward_code').val(wardCode);
+            $('#wardCode').val(wardCode);
+            $('#wardName').val($(this).find('option:selected').text());
+        });
+
+        // Fetch Available Services
+        function fetchAvailableServices(fromDistrict, toDistrict) {
+            if (!fromDistrict || !toDistrict) {
+                console.error('District information is missing');
+                $('#available-services-display').text('Select delivery service');
+                return;
             }
 
-            // Event Handlers for Calculations
-            $('#fromDistrictSelect, #toDistrictSelect').change(function () {
-                var fromDistrict = $('#fromDistrictSelect').val();
-                var toDistrict = $('#toDistrictSelect').val();
-                fetchAvailableServices(fromDistrict, toDistrict);
-            });
+            $.ajax({
+                url: '/available-services',
+                type: 'GET',
+                data: {
+                    fromDistrict: fromDistrict,
+                    toDistrict: toDistrict
+                },
+                success: function (data) {
+                    console.log("Available services data: ", data);
+                    var displayText = '';
 
-            $('#fromDistrictSelect, #fromWardSelect, #available-services, #toDistrictSelect, #toWardSelect').change(function () {
-                calculateShippingFee();
+                    // Define replacements
+                    var replacements = {
+                        "Hàng nhẹ": "Giao hàng tiết kiệm",
+                        "Hàng nặng": "Giao hàng chuẩn"
+                    };
+
+                    var defaultOptionValue = "";
+
+                    defaultOptionValue = "Giao hàng tiết kiệm"; // Default for < 20kg
+
+                    if (data && data.data && data.data.length > 0) {
+                        var found = false;
+                        $.each(data.data, function (index, service) {
+                            var displayName = replacements[service.short_name] || service.short_name; // Apply replacement if it exists
+
+                            if (displayName === defaultOptionValue && !found) {
+                                displayText = displayName;
+                                $('#oServiceId').val(service.service_id);
+                                $('#oShort_name').val(service.short_name);
+                                $('#oServiceTypeId').val(service.service_type_id); // Store the service_type_id
+                                found = true;
+                            }
+                        });
+
+                        if (!found) {
+                            // If default option was not found, set the first available service
+                            var firstService = data.data[0];
+                            displayText = replacements[firstService.short_name] || firstService.short_name;
+                            $('#oServiceId').val(firstService.service_id);
+                            $('#oShort_name').val(firstService.short_name);
+                            $('#oServiceTypeId').val(firstService.service_type_id); // Store the service_type_id
+                        }
+
+                    } else {
+                        console.error('No available services found');
+                        displayText = 'Select delivery service';
+                    }
+
+                    $('#available-services-display').text(displayText);
+
+                    // Disable the dropdown if weight >= 20kg (not applicable anymore as we use div)
+                },
+                error: function () {
+                    console.error('Failed to fetch available services.');
+                    $('#available-services-display').text('Select delivery service');
+                }
             });
+        }
+
+        // Handle change event for available-services select
+        $('#available-services').change(function () {
+            // Only handle change if the dropdown is not disabled
+            if (!$(this).prop('disabled')) {
+                var selectedServiceId = $(this).val();
+                var selectedServiceTypeId = $(this).find('option:selected').data('id');
+                var selectedShortName = $(this).find('option:selected').data('short-name'); // Fetch the short_name
+
+                $('#oServiceId').val(selectedServiceId);
+                $('#oShort_name').val(selectedShortName);
+                $('#oServiceTypeId').val(selectedServiceTypeId); // Store the service_type_id
+
+                console.log("Selected shipping service ID: ", selectedServiceId);
+                console.log("Selected shipping service name: ", selectedShortName);
+                console.log("Selected service type ID: ", selectedServiceTypeId);
+
+
+            }
         });
-        $(document).ready(function () {
-            // Initialize Nice Select
-            $('select').niceSelect();
 
-            // Add event listeners to close the dropdown on selection
-            $('#toProvinceSelect').on('change', function () {
-                $('#toProvinceSelect').niceSelect('update');
-                $('.nice-select').removeClass('open');
-                // Your additional logic for updating districts can go here
-            });
+        // Calculate Shipping Fee
+        function calculateShippingFee() {
+            var fromDistrictId = $('#fromDistrictSelect').val();
+            var fromWardCode = $('#fromWardSelect').val();
+            var serviceId = $('#oServiceId').val();
+            var serviceTypeId = $('#oServiceTypeId').val();
+            var toDistrictId = $('#to_district_id').val();
+            var toWardCode = $('#to_ward_code').val();
+            var height = $('#totalHeight').val();
+            var length = $('#totalLength').val();
+            var weight = $('#totalWeight').val();
+            var width = $('#totalWidth').val();
 
-            $('#toDistrictSelect').on('change', function () {
-                $('#toDistrictSelect').niceSelect('update');
-                $('.nice-select').removeClass('open');
-                // Your additional logic for updating wards can go here
-            });
+            // Debugging: log the values
+            console.log('fromDistrictId:', fromDistrictId);
+            console.log('fromWardCode:', fromWardCode);
+            console.log('serviceId:', serviceId);
+            console.log('serviceTypeId:', serviceTypeId);
+            console.log('toDistrictId:', toDistrictId);
+            console.log('toWardCode:', toWardCode);
+            console.log('height:', height);
+            console.log('length:', length);
+            console.log('weight:', weight);
+            console.log('width:', width);
 
-            $('#toWardSelect').on('change', function () {
-                $('#toWardSelect').niceSelect('update');
-                $('.nice-select').removeClass('open');
-                // Your additional logic for handling ward selection can go here
-            });
+            if (!fromDistrictId || !fromWardCode || !serviceId || !toDistrictId || !toWardCode || !height || !length || !weight || !width) {
+                console.error('All required fields must be filled');
+                return;
+            }
 
-            $('#available-services').on('change', function () {
-                $('#available-services').niceSelect('update');
-                $('.nice-select').removeClass('open');
-                // Your additional logic for handling service selection can go here
+            $.ajax({
+                url: '/calculate-fee',
+                type: 'GET',
+                data: {
+                    fromDistrictId: fromDistrictId,
+                    fromWardCode: fromWardCode,
+                    serviceId: serviceId,
+                    serviceTypeId: serviceTypeId, // Include service_type_id in the request
+                    toDistrictId: toDistrictId,
+                    toWardCode: toWardCode,
+                    height: height,
+                    length: length,
+                    weight: weight,
+                    width: width
+                },
+                success: function (response) {
+                    if (response && response.data && response.data.total) {
+                        var shippingFee = Math.round(response.data.total);
+                        $('#shippingFeeDisplay').text(shippingFee.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VND');
+                        $('#ghnShippingFee').val(shippingFee); // Ensure this field is updated
+                        $('#oShippingFee').val(shippingFee);
+                        updateTotalPrice(shippingFee);
+                    } else {
+                        console.error('Invalid data received for shipping calculation');
+                    }
+                },
+                error: function () {
+                    console.error('Failed to calculate shipping fee.');
+                }
             });
+        }
+
+        function updateTotalPrice(shippingFee) {
+            var totalPriceString = $('.finalTotal').first().text().trim().replace(/\D+/g, '');
+            var totalPrice = parseInt(totalPriceString, 10);
+
+            if (isNaN(totalPrice)) {
+                console.error('Total price parsing error');
+                return;
+            }
+
+            var totalAmount = totalPrice + shippingFee;
+            $('.finalTotal').text(totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VND');
+            $('#finalTotal').val(totalAmount);
+            $('#total-cal').val(totalAmount);
+            console.log("total price: ", totalAmount);
+        }
+
+        // Event Handlers for Calculations
+        $('#fromDistrictSelect, #toDistrictSelect').change(function () {
+            var fromDistrict = $('#fromDistrictSelect').val();
+            var toDistrict = $('#toDistrictSelect').val();
+            fetchAvailableServices(fromDistrict, toDistrict);
         });
-    </script>
+
+        $('#fromDistrictSelect, #fromWardSelect, #available-services, #toDistrictSelect, #toWardSelect').change(function () {
+            calculateShippingFee();
+        });
+    });
+    $(document).ready(function () {
+        // Initialize Nice Select
+        $('select').niceSelect();
+
+        // Add event listeners to close the dropdown on selection
+        $('#toProvinceSelect').on('change', function () {
+            $('#toProvinceSelect').niceSelect('update');
+            $('.nice-select').removeClass('open');
+            // Your additional logic for updating districts can go here
+        });
+
+        $('#toDistrictSelect').on('change', function () {
+            $('#toDistrictSelect').niceSelect('update');
+            $('.nice-select').removeClass('open');
+            // Your additional logic for updating wards can go here
+        });
+
+        $('#toWardSelect').on('change', function () {
+            $('#toWardSelect').niceSelect('update');
+            $('.nice-select').removeClass('open');
+            // Your additional logic for handling ward selection can go here
+        });
+
+        $('#available-services').on('change', function () {
+            $('#available-services').niceSelect('update');
+            $('.nice-select').removeClass('open');
+            // Your additional logic for handling service selection can go here
+        });
+    });
+</script>
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const height = document.getElementById('totalHeight').value;
+        const length = document.getElementById('totalLength').value;
+        const width = document.getElementById('totalWidth').value;
+        const weight = document.getElementById('totalWeight').value;
+        const requiredNote = document.getElementById('requiredNote').value;
+
+        const errorMessageElement = document.getElementById('errorMessage');
+        let errorMessages = [];
+
+        function isValidNumber(value) {
+            return !isNaN(value) && value > 0;
+        }
+
+        if (errorMessages.length > 0) {
+            errorMessageElement.classList.remove('d-none');
+            errorMessageElement.innerHTML = errorMessages.join('<br>');
+        } else {
+            errorMessageElement.classList.add('d-none');
+            document.getElementById('createOrderResult').innerText = 'Đang tạo vận đơn...';
+            this.submit();
+        }
+    });
+</script>
+<script>
+    function createOrder(event) {
+        event.preventDefault();
+
+        // Get the form element
+        var form = $('#paymentForm');
+
+        // Validate the ghnShippingFee field
+        var shippingFee = $('#ghnShippingFee').val();
+
+        // Get user input values for to_phone and to_address
+        var toPhone = $('#to_phone').val();
+        var toAddress = $('#to_address').val();
+
+        // Ensure that all required values are present before submitting
+        if (!shippingFee || !toPhone || !toAddress) {
+            console.error('All required fields must be filled');
+            return;
+        }
+
+        // Make the API call with the required parameters
+        $.ajax({
+            url: '/ghn/create-order',
+            type: 'POST',
+            data: {
+                ghnShippingFee: shippingFee,
+                to_phone: toPhone,
+                to_address: toAddress,
+                // Add other necessary parameters here as well
+            },
+            success: function (response) {
+                console.log('Order created successfully', response);
+                $('#createOrderResult').text('Order created successfully');
+            },
+            error: function () {
+                console.error('Failed to create order');
+            }
+        });
+    }
+</script>
 </body>
 </html>

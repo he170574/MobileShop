@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderListManageFilterRequest {
     private String keyword;
-    private Integer orderStatus;
+    private String orderStatus;
     private Integer accountId;
 
     private String sortBy;

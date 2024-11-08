@@ -4,12 +4,10 @@ import fptu.mobile_shop.MobileShop.dto.CheckoutDTO;
 import fptu.mobile_shop.MobileShop.dto.OrderDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.*;
-import fptu.mobile_shop.MobileShop.entity.Account;
-import fptu.mobile_shop.MobileShop.entity.Cart;
-import fptu.mobile_shop.MobileShop.entity.Order;
-import fptu.mobile_shop.MobileShop.entity.OrderDetail;
+import fptu.mobile_shop.MobileShop.entity.*;
 import fptu.mobile_shop.MobileShop.final_attribute.STATUS;
 import fptu.mobile_shop.MobileShop.repository.AccountRepository;
+import fptu.mobile_shop.MobileShop.repository.CartItemRepository;
 import fptu.mobile_shop.MobileShop.service.CartService;
 import fptu.mobile_shop.MobileShop.service.OrderDetailService;
 import fptu.mobile_shop.MobileShop.service.OrderService;
@@ -22,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -50,6 +49,7 @@ public class CheckoutController {
 
     private GHNServiceImpl ghnService;
     private final AccountRepository accountRepository;
+    private final CartItemRepository cartItemRepository;
 
     @GetMapping("/checkout")
     public String checkout(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -70,20 +70,41 @@ public class CheckoutController {
         }
 
         Cart cart = cartService.findByAccountId();
-        if(Objects.isNull(cart)){
+        if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
             return "redirect:/home";
         }
+
+        Long cartId = cart.getId();  // Retrieve the cart ID
+
+// Calculate total amount and quantity
         double totalAmount = cartService.calculateTotalAmount(cart);
         AtomicInteger soLuong = new AtomicInteger();
         cart.getItems().forEach(cartItem -> {
-            soLuong.addAndGet((cartItem.getQuantity()));
+            soLuong.addAndGet(cartItem.getQuantity());
         });
-        CheckoutDTO checkoutDTO = new CheckoutDTO(new Order(), cart, 0, totalAmount);
-        checkoutDTO.setTotalHeight(soLuong.get() * 3); // Chiều cao tổng cộng
-        checkoutDTO.setTotalWeight(soLuong.get() * 5);                   // Khối lượng tổng cộng
-        checkoutDTO.setTotalWidth(30);                  // Chiều rộng tổng cộng
-        checkoutDTO.setTotalLength(30);                  // Chiều dài tổng cộng
 
+        CheckoutDTO checkoutDTO = new CheckoutDTO(new Order(), cart, 0, totalAmount);
+        checkoutDTO.setTotalHeight(soLuong.get() * 3);  // Total height
+        checkoutDTO.setTotalWeight(soLuong.get() * 5);  // Total weight
+        checkoutDTO.setTotalWidth(30);                  // Total width
+        checkoutDTO.setTotalLength(30);                 // Total length
+
+// Retrieve cart items using the cart ID
+        List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
+
+        if (!cartItems.isEmpty()) {
+            List<String> productNames = new ArrayList<>();
+            List<Integer> quantities = new ArrayList<>();
+
+            for (CartItem cartItem : cartItems) {
+                productNames.add(cartItem.getProduct().getProductName());
+                quantities.add(cartItem.getQuantity());
+            }
+
+            model.addAttribute("productNames", productNames);
+            model.addAttribute("quantities", quantities);
+        }
+        model.addAttribute("orderDTO", cartId);
         model.addAttribute("checkoutDTO", checkoutDTO);
         model.addAttribute("invoiceDTO", new OrderDTO());
 
@@ -101,13 +122,13 @@ public class CheckoutController {
         Account account = accountRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
         Cart cart = cartService.findByAccountId();
-        if(cart == null) {
+        if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
             return "redirect:/home";
         }
         AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
         Order order = new Order();
         order.setOrderDate(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault()));
-        order.setAccountId(account.getAccountId());
+        order.setAccount(account);
         order.setTotalAmount(totalAmount.get() + checkoutDTO.getShippingFee());
         order.setShippingFee(new BigDecimal(checkoutDTO.getShippingFee()));
         order.setOrderStatus(STATUS.INIT);
