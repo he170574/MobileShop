@@ -4,14 +4,17 @@ import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackFilterRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackManageResponse;
 import fptu.mobile_shop.MobileShop.dto.ProductCommentDTO;
 import fptu.mobile_shop.MobileShop.entity.Account;
+import fptu.mobile_shop.MobileShop.entity.Order;
 import fptu.mobile_shop.MobileShop.entity.Product;
 import fptu.mobile_shop.MobileShop.entity.ProductComment;
 import fptu.mobile_shop.MobileShop.repository.ProductCommentRepository;
 import fptu.mobile_shop.MobileShop.service.AccountService;
 import fptu.mobile_shop.MobileShop.service.FeedbackService;
+import fptu.mobile_shop.MobileShop.service.OrderService;
 import fptu.mobile_shop.MobileShop.service.ProductService;
 import fptu.mobile_shop.MobileShop.util.CommonPage;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final ProductCommentRepository productCommentRepository;
     private final AccountService accountService;
     private final ProductService productService;
+    private final OrderService orderService;
 
     @Transactional
     @Override
@@ -61,12 +65,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     public ProductCommentDTO creatProductComment(ProductCommentDTO request) {
         Product product = request.getProductId() != null ? productService.getById(request.getProductId()).get() : null;
         Account account = request.getAccountId() != null ? accountService.getAccountByAccountId(request.getAccountId()) : null;
+        Order order = request.getOrdersId() != null ? orderService.getOrderById(request.getOrdersId()).get() : null;
         ProductComment entity = new ProductComment();
         entity.setCommentText(request.getCommentText());
         entity.setCommentDate(LocalDateTime.now());
         // Ánh xạ các đối tượng liên kết
         entity.setProduct(product);
         entity.setAccount(account);
+        entity.setOrder(order);
         ProductComment productComment = productCommentRepository.save(entity);
         return new ProductCommentDTO(productComment);
     }
@@ -76,12 +82,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     public ProductCommentDTO updateProductComment(Integer commentId, ProductCommentDTO request) {
         Product product = request.getProductId() != null ? productService.getById(request.getProductId()).get() : null;
         Account account = request.getAccountId() != null ? accountService.getAccountByAccountId(request.getAccountId()) : null;
+        Order order = request.getOrdersId() != null ? orderService.getOrderById(request.getOrdersId()).get() : null;
         ProductComment entity = this.getProductCommentById(commentId);
         entity.setCommentText(request.getCommentText());
-//        entity.setCommentDate(LocalDateTime.now());
+        entity.setCommentDate(LocalDateTime.now());
         // Ánh xạ các đối tượng liên kết
         entity.setProduct(product);
         entity.setAccount(account);
+        entity.setOrder(order);
         ProductComment productComment = productCommentRepository.save(entity);
         return new ProductCommentDTO(productComment);
     }
@@ -98,6 +106,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     public FeedbackManageResponse getFeedbackDetail(Integer commentId) {
         ProductComment entity = this.getProductCommentById(commentId);
         return new FeedbackManageResponse(entity);
+    }
+
+    @Override
+    public FeedbackManageResponse getFeedbackOrder(Integer orderId, Integer productId) {
+        ProductComment entity = productCommentRepository.getFeedbackOrder(orderId, productId);
+        return entity != null ? new FeedbackManageResponse(entity) : null;
     }
 
 }

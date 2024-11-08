@@ -32,7 +32,7 @@
                     <th>Total Amount</th>
                     <th>Expected Delivery Time</th>
                     <th>Order Status</th>
-                    <!--                    <th>Order Detail</th>-->
+                                        <th>Order Detail</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,10 +46,9 @@
                     <td th:text="${order.expectedDeliveryTime}"></td>
                     <td th:text="${order.orderStatus}"></td>
                     <td>
-                        <!--                        <a-->
-                        <!--                           class="btn btn-primary btn-sm">-->
-                        <!--                            Detail-->
-                        <!--                        </a>-->
+                        <a class="btn btn-primary btn-sm" th:href="@{/ghn/order-details/{id}(id=${order.id})}">
+                            Detail
+                        </a>
                         <a th:if="${order.orderStatus == 'WATING_PAYMENT'}"
                            th:attr="onclick=|showQRModal('${order.id}', '${order.orderCode}', '${order.shippingCode}', '${order.shippingFee + order.totalAmount}')|"
                            class="btn btn-primary btn-sm">
