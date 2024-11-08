@@ -26,6 +26,7 @@ public class OrderResponse {
     private double totalAmount;
     private List<OrderDetailResponse> orderDetails;
 
+
     public OrderResponse(Order order) {
         this.id = order.getId();
         this.orderCode = order.getOrderCode();
@@ -37,6 +38,7 @@ public class OrderResponse {
         this.shippingCode = order.getShippingCode();
         this.totalAmount = order.getTotalAmount();
         this.orderDetails = order.getOrderDetails().stream().map(OrderDetailResponse::new).collect(Collectors.toList());
+
     }
 
     @Data

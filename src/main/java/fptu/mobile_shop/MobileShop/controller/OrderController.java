@@ -6,6 +6,8 @@ import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderUpdateRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderListManageResponse;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderResponse;
 import fptu.mobile_shop.MobileShop.entity.Order;
+import fptu.mobile_shop.MobileShop.entity.ProductComment;
+import fptu.mobile_shop.MobileShop.service.FeedbackService;
 import fptu.mobile_shop.MobileShop.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private FeedbackService feedbackService;
+
     @GetMapping("/list-manage")
     public ResponseEntity<ResponseDTO> getListOrdersManage(@Validated OrderListManageFilterRequest request) {
         ResponseDTO responseDTO = new ResponseDTO();
@@ -43,6 +48,9 @@ public class OrderController {
         ResponseDTO responseDTO = new ResponseDTO();
         Optional<Order> orderOpt = orderService.getOrderById(id);
         if (orderOpt.isPresent()) {
+            orderOpt.get().getOrderDetails().forEach(orderDetail -> {
+                orderDetail.setFeedbank(feedbackService.checkIsFeedbackOrder(orderOpt.get().getId(), orderDetail.getProduct().getProductID()));
+            });
             responseDTO.setData(new OrderResponse(orderOpt.get()));
             responseDTO.setMessage("Success");
             return ResponseEntity.ok().body(responseDTO);
