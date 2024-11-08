@@ -130,13 +130,14 @@ public class GHNController {
         Cart cart = cartService.findByAccountId();
         Order order = new Order();
 //        if()
+        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
         ResponseEntity<ShippingOrderResponse> response = ghnService.createShippingOrder(request);
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             ShippingOrderResponse responseData = response.getBody();
             String shippingCode = responseData.getData().getOrder_code();
             String expectedDeliveryTime = responseData.getData().getFormattedExpectedDeliveryTime();
             AtomicReference<String> totalAmount = new AtomicReference<>(responseData.getData().getTotal_fee());
-
+            totalPrice.set(new BigDecimal(totalAmount.get()));
             Random random = new Random();
 
             // Generate 3 random uppercase letters
@@ -171,10 +172,11 @@ public class GHNController {
                 orderDetail.setProductName(orderItem.getProduct().getProductName());
                 orderDetail.setOrder(createdOrder);
                 orderDetailService.createOrderDetail(orderDetail);
-                totalAmount.updateAndGet(v -> v + orderDetail.getProductAmount());
+                // Add product amount to totalPrice
+                totalPrice.updateAndGet(v -> v.add(BigDecimal.valueOf(orderDetail.getProductAmount())));
             });
             createdOrder.setOrderStatus(STATUS.WATING_PAYMENT);
-            createdOrder.setTotalAmount(Double.parseDouble(totalAmount.get()));
+            createdOrder.setTotalAmount(Double.parseDouble(totalPrice.toString()));
             orderService.createOrder(createdOrder);
 
             cartService.deleteCart(cart);
