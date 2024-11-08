@@ -79,6 +79,7 @@ function displayOrder(orders) {
                 <td>${orderStatus}</td>
                 <td>
                     <button class="btn btn-primary" onclick="viewOrder(${order.id})">View</button>
+                    ${orderStatus !== 'SUCCESS' ? `<button class="btn btn-primary" onclick="UpdateStatus(${order.id}, 'SUCCESS')">Accept</button>` : ''}
                 </td>
             </tr>
         `;
@@ -88,6 +89,32 @@ function displayOrder(orders) {
 
 function goToPage(page) {
     getDataOrderManage(keyword, orderStatus, accountId, sortBy, orderBy, page)
+}
+
+function UpdateStatus(id, status){
+    const data = {
+        id: id,
+        status: status,
+    };
+    $.ajax({
+        url: '/api/orders/updateOrder',
+        method: 'POST',
+        contentType: 'application/json', // Set content type to JSON
+        data: JSON.stringify(data),       // Convert data to JSON string
+        success: function (response) {
+            // if (response.success) {
+            //     window.location.reload();
+            //     // getDataOrderManage(keyword, orderStatus, accountId, sortBy, orderBy, 1);
+            // } else {
+            //     alert('Failed to update order: ' + response.message);
+            // }
+            window.location.reload();
+        },
+        error: function (err) {
+            console.error('Error updating order:', err);
+            alert('Failed to update order');
+        }
+    });
 }
 
 function updatePagination(totalPages, currentPage) {
