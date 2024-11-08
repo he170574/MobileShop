@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequestMapping("/ghn")
@@ -116,6 +118,7 @@ public class GHNController {
         return "order-details";
     }
 
+    @Transactional
     @PostMapping("/create-order")
     public String createShippingOrder(Authentication authentication,
                                       @ModelAttribute("checkoutDTO") CheckoutDTO checkoutDTO,
@@ -129,13 +132,14 @@ public class GHNController {
         Cart cart = cartService.findByAccountId();
         Order order = new Order();
 //        if()
+        AtomicReference<BigDecimal> totalPrice = new AtomicReference<>(BigDecimal.ZERO);
         ResponseEntity<ShippingOrderResponse> response = ghnService.createShippingOrder(request);
         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             ShippingOrderResponse responseData = response.getBody();
             String shippingCode = responseData.getData().getOrder_code();
             String expectedDeliveryTime = responseData.getData().getFormattedExpectedDeliveryTime();
-            String totalAmount = responseData.getData().getTotal_fee();
-
+            AtomicReference<String> totalAmount = new AtomicReference<>(responseData.getData().getTotal_fee());
+            totalPrice.set(new BigDecimal(totalAmount.get()));
             Random random = new Random();
 
             // Generate 3 random uppercase letters
@@ -151,7 +155,7 @@ public class GHNController {
             order.setOrderDate(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault()));
             order.setExpectedDeliveryTime(expectedDeliveryTime);
             order.setAccount(accountService.getByUsername(userDetails.getUsername()));
-            order.setTotalAmount(Double.parseDouble(totalAmount));
+            order.setTotalAmount(Double.parseDouble(totalAmount.get()));
             order.setShippingFee(new BigDecimal(checkoutDTO.getShippingFee()));
             order.setShippingCode(shippingCode);
             order.setOrderStatus(STATUS.WATING_DELIVERY);
@@ -159,6 +163,7 @@ public class GHNController {
             final Order createdOrder = orderService.createOrder(order);
             cart.getItems().forEach(orderItem -> {
                 OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setId(0L);
                 orderDetail.setQuantity(orderItem.getQuantity());
                 orderDetail.setProduct(orderItem.getProduct());
                 if (orderItem.getProduct().getCost() == null) {
@@ -170,8 +175,11 @@ public class GHNController {
                 orderDetail.setProductName(orderItem.getProduct().getProductName());
                 orderDetail.setOrder(createdOrder);
                 orderDetailService.createOrderDetail(orderDetail);
+                // Add product amount to totalPrice
+                totalPrice.updateAndGet(v -> v.add(BigDecimal.valueOf(orderDetail.getProductAmount())));
             });
             createdOrder.setOrderStatus(STATUS.WATING_PAYMENT);
+            createdOrder.setTotalAmount(Double.parseDouble(totalPrice.toString()));
             orderService.createOrder(createdOrder);
 
             cartService.deleteCart(cart);

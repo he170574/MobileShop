@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Builder
@@ -52,5 +54,11 @@ public class Order {
 
     public List<OrderDetail> getOrderDetails() {
         return (orderDetails != null || orderDetails.size() <= 0) ? orderDetails : new ArrayList<>();
+    }
+
+    public String formatToVND() {
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        // Format totalAmount and replace "₫" with " VNĐ"
+        return vndFormat.format(totalAmount).replace("₫", " VNĐ");
     }
 }

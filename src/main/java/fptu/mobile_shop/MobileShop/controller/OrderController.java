@@ -2,6 +2,7 @@ package fptu.mobile_shop.MobileShop.controller;
 
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderListManageFilterRequest;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.OrderUpdateRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderListManageResponse;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.OrderResponse;
 import fptu.mobile_shop.MobileShop.entity.Order;
@@ -49,6 +50,15 @@ public class OrderController {
             responseDTO.setMessage("Order not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);  // Trả về mã HTTP 404 Not Found
         }
+    }
+
+    @PostMapping("/updateOrder")
+    public ResponseEntity<ResponseDTO> updateOrder(@RequestBody OrderUpdateRequest request) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Optional<Order> orderOpt = orderService.getOrderById(request.getId());
+        orderOpt.get().setOrderStatus(request.getStatus());
+        orderService.createOrder(orderOpt.get());
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping
