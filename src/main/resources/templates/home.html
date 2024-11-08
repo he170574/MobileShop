@@ -17,64 +17,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: white;
-        }
-        .popover {
-            max-width: 400px; /* Adjust width as needed */
-            width: 400px; /* Ensure width applies across all screen sizes */
-        }
 
-        .popover-body {
-            padding: 15px; /* Adjust padding to your preference */
-        }
 
-        /* Align the sort-options-container to the right */
-        .sort-options-container {
-            display: flex;
-            justify-content: flex-end; /* Align everything to the right */
-            align-items: center; /* Vertically center label and buttons */
-            margin-bottom: 15px; /* Space below the sort options */
-        }
-
-        /* Style the sort label */
-        .sort-label {
-            font-weight: bold;
-            margin-right: 10px; /* Space between label and buttons */
-        }
-
-        /* Style the sort options buttons */
-        .sort-options {
-            display: inline-flex;
-        }
-
-        .sort-button {
-            border: 1px solid #ddd;
-            background-color: white;
-            padding: 8px 12px;
-            margin-left: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .sort-button i {
-            margin-right: 5px; /* Space between icon and text */
-        }
-
-        /* Hover effect */
-        .sort-button:hover {
-            background-color: #f0f0f0;
-        }
-
-        #category{
-            margin-top: 10px;
-        }
 
 
     </style>
@@ -84,6 +28,8 @@
 <th:block th:replace="common/header.html"></th:block>
 
 <main>
+
+
 
     <!-- Main Filter and Search Section -->
     <section class="container mt-3">
@@ -109,10 +55,10 @@
                 <!-- Hidden Popover Content -->
                 <div id="price-popover-content" style="display: none;">
                     <div class="price-filter-range">
-                        <div class="range-header">
-                            <p id="min-price">0đ</p>
-                            <p id="max-price">50.000.000đ</p>
-                        </div>
+<!--                        <div class="range-header">-->
+<!--                            <p id="min-price">0đ</p>-->
+<!--                            <p id="max-price">50.000.000đ</p>-->
+<!--                        </div>-->
                         <div id="price-slider" style="padding: 9px 0; width: auto; height: 8px;"></div>
                     </div>
                     <div class="show btn-filter-group mt-2">

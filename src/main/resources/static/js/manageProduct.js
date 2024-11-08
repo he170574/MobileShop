@@ -2,6 +2,17 @@ $(document).ready(function () {
     loadProducts();
     loadCategories();
 
+    $(document).on('click', '.edit-product', function () {
+        const productId = $(this).data('product-id');
+        editProduct(productId);
+    });
+
+    // Binding the Delete button with event delegation
+    $(document).on('click', '.delete-product', function () {
+        const productId = $(this).data('product-id');
+        deleteProduct(productId);
+    });
+
     $('#searchInput').on('keypress', function (e) {
         if (e.which === 13) {
             loadProducts(1);
@@ -24,7 +35,6 @@ function formatCurrency(value) {
 }
 
 // Load all product
-// Load all products with optional category filter
 function loadProducts(page = 1, categoryId = null) {
     const searchTerm = $('#searchInput').val();
     const pageSize = 6;
@@ -267,6 +277,18 @@ function editProduct(productId) {
 // Update
 $('#editProductForm').on('submit', function (event) {
     event.preventDefault();
+
+    // Get the description input and trim any extra spaces
+    var productDescription = $('#editProductDescription').val().trim();
+
+    // Regex pattern to check for extra spaces (no leading/trailing spaces, no consecutive spaces)
+    var descriptionPattern = /^[^\s]+(\s+[^\s]+)*$/;
+
+    // Validate the product description field
+    if (!descriptionPattern.test(productDescription)) {
+        alert("Product description should not contain extra spaces.");
+        return; // Stop form submission if validation fails
+    }
 
     var formData = new FormData(this);
 

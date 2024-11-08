@@ -53,8 +53,8 @@ $(document).ready(function() {
 
             // Update the min and max price values as the slider moves
             priceSlider.noUiSlider.on('update', function (values) {
-                $('#min-price').text(values[0]);
-                $('#max-price').text(values[1]);
+                // $('#min-price').text(values[0]);
+                // $('#max-price').text(values[1]);
             });
 
             priceSliderInitialized = true; // Ensure slider only initializes once
@@ -129,13 +129,15 @@ function renderProductList(products) {
             productListContainer.append(row);
         }
 
+        const formattedPrice = Number(product.price).toLocaleString('vi-VN') + ' đ';
+
         row.append(`
             <div class="col-6 col-md-4 col-lg-2 mb-4 product-item" data-product-id="${product.productId}">
                 <div class="card text-center h-100">
                     <img onclick="viewProductDetail(${product.productId})" src="${product.productImageUrl}" alt="${product.productName}" class="card-img-top" style="cursor: pointer;">
                     <div class="card-body">
                         <h5 class="card-title text-truncate">${product.productName}</h5>
-                        <p class="card-text text-danger">${product.price} đ</p>
+                        <p class="card-text text-danger">${formattedPrice}</p>
                         <button class="btn btn-primary" onclick="addToCart(${product.productId})">Add to Cart</button>
                     </div>
                 </div>
@@ -189,3 +191,4 @@ function addToCart(id) {
         }
     });
 }
+

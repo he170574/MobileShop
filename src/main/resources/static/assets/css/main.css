@@ -2617,3 +2617,66 @@ h2.title {
   margin-right: 100vh;
   margin-left: 42vh;
 }
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+}
+.popover {
+  max-width: 400px; /* Adjust width as needed */
+  width: 400px; /* Ensure width applies across all screen sizes */
+}
+
+.popover-body {
+  padding: 15px; /* Adjust padding to your preference */
+}
+
+/* Align the sort-options-container to the right */
+.sort-options-container {
+  display: flex;
+  justify-content: flex-end; /* Align everything to the right */
+  align-items: center; /* Vertically center label and buttons */
+  margin-bottom: 15px; /* Space below the sort options */
+}
+
+/* Style the sort label */
+.sort-label {
+  font-weight: bold;
+  margin-right: 10px; /* Space between label and buttons */
+}
+
+/* Style the sort options buttons */
+.sort-options {
+  display: inline-flex;
+}
+
+.sort-button {
+  border: 1px solid #ddd;
+  background-color: white;
+  padding: 8px 12px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.sort-button i {
+  margin-right: 5px; /* Space between icon and text */
+}
+
+/* Hover effect */
+.sort-button:hover {
+  background-color: #f0f0f0;
+}
+
+#category{
+  margin-top: 10px;
+}
+
+#apply-price-filter{
+  margin-top: 10px;
+}
