@@ -110,6 +110,12 @@ public class GHNController {
         return "orderHistory";
     }
 
+    @GetMapping("/order-details/{orderId}")
+    public String listOrder(@PathVariable Long orderId) {
+        System.out.println("orderId " + orderId);
+        return "order-details";
+    }
+
     @PostMapping("/create-order")
     public String createShippingOrder(Authentication authentication,
                                       @ModelAttribute("checkoutDTO") CheckoutDTO checkoutDTO,

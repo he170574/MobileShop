@@ -3,10 +3,12 @@ package fptu.mobile_shop.MobileShop.controller;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackFilterRequest;
 import fptu.mobile_shop.MobileShop.dto.ProductCommentDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackManageResponse;
 import fptu.mobile_shop.MobileShop.service.FeedbackService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,6 +52,20 @@ public class FeedbackController {
         responseDTO.setData(response);
         responseDTO.setMessage("Success");
         return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/order")
+    public ResponseEntity<ResponseDTO> getFeedbackOrder(Integer orderId, Integer productId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        FeedbackManageResponse response = feedbackService.getFeedbackOrder(orderId, productId);
+        if (response != null) {
+            responseDTO.setData(response);
+            responseDTO.setMessage("Success");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            responseDTO.setMessage("Feedback not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
     }
 
     @PostMapping("")

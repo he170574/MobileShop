@@ -31,4 +31,11 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
     @Query("DELETE FROM ProductComment x1 WHERE x1.commentId = :commentId")
     void deleteProductCommentById(Integer commentId);
 
+    @Query("""
+            select x1 from ProductComment x1
+            left join x1.account x2
+            left join x1.product x3
+            where x1.isDeleted = false and x1.order.id = :orderId and x3.productID = :productId
+                        """)
+    ProductComment getFeedbackOrder(Integer orderId, Integer productId);
 }

@@ -20,4 +20,6 @@ public interface FeedbackService {
     void deleteProductComment(Integer commentId);
 
     FeedbackManageResponse getFeedbackDetail(Integer commentId);
+
+    FeedbackManageResponse getFeedbackOrder(Integer orderId, Integer productId);
 }
