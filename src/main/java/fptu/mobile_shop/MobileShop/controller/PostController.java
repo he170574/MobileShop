@@ -1,7 +1,9 @@
 package fptu.mobile_shop.MobileShop.controller;
 
 import fptu.mobile_shop.MobileShop.entity.Post;
+import fptu.mobile_shop.MobileShop.entity.BlogCategory;
 import fptu.mobile_shop.MobileShop.service.PostService;
+import fptu.mobile_shop.MobileShop.service.BlogCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +21,14 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private BlogCategoryService blogCategoryService;
+
+    // Phương thức lấy tất cả bài viết có statusPost = true
     @GetMapping
     public String getAllPosts(Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage = postService.getAllPosts(pageable);
-        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        Page<Post> postsPage = postService.getAllActivePosts(pageable); // Lấy bài viết có statusPost = true
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories(); // Lấy danh mục hoạt động
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
         model.addAttribute("totalPages", postsPage.getTotalPages());
@@ -31,71 +37,94 @@ public class PostController {
         return "blog";
     }
 
-    @GetMapping("/category/{category}")
-    public String getPostsByCategory(@PathVariable String category, Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage;
-        if ("All".equals(category)) {
-            postsPage = postService.getAllPosts(pageable);
-        } else {
-            postsPage = postService.getPostsByCategory(category, pageable);
-        }
-        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+    // Phương thức lấy bài viết theo category và chỉ lấy bài viết có statusPost = true
+    @GetMapping("/category/{categoryId}")
+    public String getPostsByCategory(@PathVariable Long categoryId, Model model, @PageableDefault(size = 5) Pageable pageable) {
+        // Lấy bài viết theo categoryId và statusPost = true
+        Page<Post> postsPage = postService.getPostsByCategoryId(categoryId, pageable);
+
+        // Lấy tất cả các danh mục để hiển thị ở sidebar
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories();
+
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
         model.addAttribute("totalPages", postsPage.getTotalPages());
-        model.addAttribute("categories", categories); // Gán danh mục vào model
-        model.addAttribute("selectedCategory", category); // Gán danh mục đã chọn
-        return "blog";
+        model.addAttribute("categories", categories);
+        model.addAttribute("selectedCategory", categoryId); // Truyền categoryId vào model
+        return "blog"; // Trả về trang blog.html
     }
 
+    // Phương thức lấy bài viết theo ID và chỉ lấy bài viết có statusPost = true
     @GetMapping("/{postId}")
     public String getPostById(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
-        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories();
         model.addAttribute("post", post);
-        model.addAttribute("categories", categories); // Gán danh mục vào model
-        model.addAttribute("selectedCategory", "All"); // Gán danh mục đã chọn là "All"
-        return "blog-single"; // Tên template cho bài viết đơn
+        model.addAttribute("categories", categories);
+        model.addAttribute("selectedCategory", "All");
+        return "blog-single";
     }
 
+    // Phương thức tạo bài viết mới
     @GetMapping("/new")
     public String showCreatePostForm(Model model) {
         model.addAttribute("post", new Post());
-        return "create-post"; // Tên template cho form tạo bài viết
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories(); // Danh mục
+        model.addAttribute("categories", categories);
+        return "create-post";
     }
 
-
-
+    // Phương thức sửa bài viết
     @GetMapping("/edit/{postId}")
     public String showUpdatePostForm(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found with id " + postId));
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories(); // Danh mục
         model.addAttribute("post", post);
-        return "edit-post"; // Tên template cho form chỉnh sửa bài viết
+        model.addAttribute("categories", categories);
+        return "edit-post";
     }
 
+    // Phương thức cập nhật bài viết
     @PostMapping("/update/{postId}")
     public String updatePost(@PathVariable Long postId, @ModelAttribute Post postDetails) {
         postService.updatePost(postId, postDetails);
-        return "redirect:/blog"; // Chuyển hướng đến danh sách bài viết
+        return "redirect:/blog";
     }
 
+    // Phương thức xóa bài viết
     @PostMapping("/delete/{postId}")
     public String deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
-        return "redirect:/blog"; // Chuyển hướng đến danh sách bài viết
+        return "redirect:/blog";
     }
 
+    // Phương thức tìm kiếm bài viết theo tiêu đề và chỉ lấy bài viết có statusPost = true
     @GetMapping("/search")
     public String searchPosts(@RequestParam("title") String title, Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage = postService.searchByTitle(title, pageable);
-        List<String> categories = postService.getAllCategories(); // Lấy danh mục
+        Page<Post> postsPage = postService.searchByTitle(title, pageable); // Tìm kiếm bài viết có statusPost = true
+        List<BlogCategory> categories = blogCategoryService.getAllActiveCategories();
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
         model.addAttribute("totalPages", postsPage.getTotalPages());
-        model.addAttribute("categories", categories); // Gán danh mục vào model
-        model.addAttribute("selectedCategory", "All"); // Gán danh mục đã chọn là "All"
-        return "blog"; // Trả về template blog
+        model.addAttribute("categories", categories);
+        model.addAttribute("selectedCategory", "All");
+        return "blog";
+    }
+
+    // Phương thức block bài viết
+    @PostMapping("/block/{postId}")
+    public String blockPost(@PathVariable Long postId) {
+        postService.blockPost(postId); // Đặt bài viết thành trạng thái không hoạt động
+        return "redirect:/blog";
+    }
+
+    // Phương thức unblock bài viết
+    @PostMapping("/unblock/{postId}")
+    public String unblockPost(@PathVariable Long postId) {
+        postService.unblockPost(postId); // Đặt bài viết lại thành trạng thái hoạt động
+        return "redirect:/blog";
     }
 }
+
