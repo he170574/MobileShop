@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequestMapping("/ghn")
@@ -128,7 +129,7 @@ public class GHNController {
             ShippingOrderResponse responseData = response.getBody();
             String shippingCode = responseData.getData().getOrder_code();
             String expectedDeliveryTime = responseData.getData().getFormattedExpectedDeliveryTime();
-            String totalAmount = responseData.getData().getTotal_fee();
+            AtomicReference<String> totalAmount = new AtomicReference<>(responseData.getData().getTotal_fee());
 
             Random random = new Random();
 
@@ -145,7 +146,7 @@ public class GHNController {
             order.setOrderDate(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault()));
             order.setExpectedDeliveryTime(expectedDeliveryTime);
             order.setAccount(accountService.getByUsername(userDetails.getUsername()));
-            order.setTotalAmount(Double.parseDouble(totalAmount));
+            order.setTotalAmount(Double.parseDouble(totalAmount.get()));
             order.setShippingFee(new BigDecimal(checkoutDTO.getShippingFee()));
             order.setShippingCode(shippingCode);
             order.setOrderStatus(STATUS.WATING_DELIVERY);
@@ -164,8 +165,10 @@ public class GHNController {
                 orderDetail.setProductName(orderItem.getProduct().getProductName());
                 orderDetail.setOrder(createdOrder);
                 orderDetailService.createOrderDetail(orderDetail);
+                totalAmount.updateAndGet(v -> v + orderDetail.getProductAmount());
             });
             createdOrder.setOrderStatus(STATUS.WATING_PAYMENT);
+            createdOrder.setTotalAmount(Double.parseDouble(totalAmount.get()));
             orderService.createOrder(createdOrder);
 
             cartService.deleteCart(cart);
