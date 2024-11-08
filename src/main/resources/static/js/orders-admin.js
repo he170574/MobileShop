@@ -284,7 +284,7 @@ function updateModalWithOrderData(orderData) {
         productDiv.innerHTML = `
             <div class="product-info">
                 <img src="${product.product.productImage}" alt="${product.product.productName}" width="50" height="50">
-                <span>${product.product.productName}</span> (Quantity: ${product.quantity || 'N/A'}, Price: ${product.cost.toLocaleString()} ₫)
+                <span>${product.product.productName}</span> (Quantity: ${product.quantity || 'N/A'}, Price: ${product.productAmount.toLocaleString()} ₫)
             </div>
         `;
 

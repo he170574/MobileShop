@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
                     authorizationManagerRequestMatcherRegistry
                             .requestMatchers("/admin/dashboard").hasRole("ADMIN")
-                            .requestMatchers("/admin/product", "/admin/members", "/admin/orders", "/admin/blogs").hasAnyRole("STAFF", "ADMIN")
+                            .requestMatchers("/admin/product", "/admin/members", "/admin/orders", "/admin/blogs","/admin/feedback").hasAnyRole("STAFF", "ADMIN")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers("/staff/**").hasRole("STAFF")
                             .anyRequest().permitAll();
