@@ -163,6 +163,7 @@ public class GHNController {
             final Order createdOrder = orderService.createOrder(order);
             cart.getItems().forEach(orderItem -> {
                 OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setId(0L);
                 orderDetail.setQuantity(orderItem.getQuantity());
                 orderDetail.setProduct(orderItem.getProduct());
                 if (orderItem.getProduct().getCost() == null) {
