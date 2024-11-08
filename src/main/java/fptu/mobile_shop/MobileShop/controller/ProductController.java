@@ -262,28 +262,5 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/check-product-exists")
-    public ResponseEntity<Map<String, Object>> checkProductExists(@RequestBody Map<String, String> request) {
-        String productName = request.get("productName");
-
-        Product existingProduct = productService.findByName(productName);
-
-        Map<String, Object> response = new HashMap<>();
-        if (existingProduct != null) {
-            response.put("exists", true);
-
-            // Tạo một instance của ProductDTO chỉ với các thông tin cần thiết
-            ProductDTO productDTO = new ProductDTO();
-            productDTO.setProductId(existingProduct.getProductID());
-            productDTO.setProductName(existingProduct.getProductName());
-            productDTO.setStockQuantity(existingProduct.getStockQuantity());
-
-            response.put("data", productDTO);
-        } else {
-            response.put("exists", false);
-        }
-        return ResponseEntity.ok(response);
-    }
-
 
 }

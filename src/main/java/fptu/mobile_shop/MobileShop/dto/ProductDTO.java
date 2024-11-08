@@ -4,21 +4,17 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductDTO {
-    @NotNull
+
     private Integer productId;
 
     @NotNull(message = "Name is required")
     private String productName;
 
-    @NotNull(message = "Detail is required")
+    @NotNull(message = "Details is required")
     private String productDetails;
 
     private MultipartFile productImage;
@@ -28,11 +24,13 @@ public class ProductDTO {
     @NotNull(message = "Price is required")
     private Double price;
 
+    @NotNull(message = "Cost is required")
     private Double cost;
 
-    @NotNull(message = "Category is required")
+    @NotNull(message = "Brand is required")
     private String categoryName;
 
     @NotNull(message = "Quantity is required")
     private Integer stockQuantity;
+
 }

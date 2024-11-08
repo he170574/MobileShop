@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -18,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     Product findProductByProductID(Integer id);
     List<Product> findAllByDeletedIsFalse();
 
-    @Query("SELECT p FROM Product p WHERE "
+    @Query("SELECT p FROM Product p WHERE p.deleted = false  AND"
             + "(:searchTerm IS NULL OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND "
             + "(:category IS NULL OR p.categoryName = :category) AND "
             + "(:minPrice IS NULL OR p.price >= :minPrice) AND "

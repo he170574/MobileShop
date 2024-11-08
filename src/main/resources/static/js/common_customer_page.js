@@ -161,22 +161,28 @@ function login() {
         if (!isValidForm) {
             return;
         }
-        // Ngăn submit mặc định
+        // Prevent default form submission
         event.preventDefault();
-        // Lấy data
+
+        // Get form data
         const formData = {
             'username': $('input[name=username]').val(),
             'password': $('input[name=password]').val()
         };
+
         // Ajax request
         $.ajax({
             type: 'POST',
             url: '/login',
             data: formData,
             success: function (response) {
-                // Xử lý khi đăng nhập thành công
-                loadAccountData();
-                window.location.href = '/home';
+                // Redirect based on role
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    // Fallback redirect if no role is provided
+                    window.location.href = '/home';
+                }
             },
             error: function (error) {
                 Swal.fire({
@@ -187,7 +193,6 @@ function login() {
                 });
             }
         });
-
     });
 }
 

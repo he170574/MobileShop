@@ -38,49 +38,6 @@ public class AccountController {
         this.roleService = roleService;
     }
 
-//    @GetMapping("/get-all-users")
-//    public ResponseEntity<ResponseDTO> getAllUsers(Authentication authentication,
-//                                                   @RequestParam Integer pageNumber,
-//                                                   @RequestParam Integer pageSize,
-//                                                   @RequestParam(defaultValue = "") String search) {
-//        if (authentication == null) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(ResponseDTO.builder().message("Login before").build());
-//        }
-//
-//        if (!((CustomAccount) authentication.getPrincipal()).getRole().equals(ROLE.ADMIN)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(ResponseDTO.builder().message("Don't have permission").build());
-//        }
-//
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-//
-//        Page<Account> pageUsers = accountService.getAllActiveAccounts(search, pageable);
-//
-//        List<AccountDTO> lstUsers = pageUsers.stream().map(item -> AccountDTO.builder()
-//                .accountId(item.getAccountId())
-//                .fullName(item.getFullName())
-//                .email(item.getEmail())
-//                .phoneNumber(item.getPhoneNumber())
-//                .role(item.getRole().getRoleName())
-//                .deleted(item.getDeleted())
-//                .build()).toList();
-//
-//        // Tạo map để chứa thông tin phân trang
-//        HashMap<String, Object> mapUsers = new HashMap<>();
-//        mapUsers.put("lstUsers", lstUsers);
-//        mapUsers.put("pageNumber", pageUsers.getNumber());
-//        mapUsers.put("pageSize", pageUsers.getSize());
-//        mapUsers.put("totalPage", pageUsers.getTotalPages());
-//        mapUsers.put("totalElements", pageUsers.getTotalElements());
-//
-//        // Trả về ResponseDTO
-//        return ResponseEntity.ok().body(ResponseDTO.builder()
-//                .message("Success")
-//                .data(mapUsers)
-//                .build());
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> postRegister(@RequestBody AccountDTO accountDTO) {
         Account account = Account.builder()
