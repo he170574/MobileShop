@@ -12,11 +12,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account getAccountByAccountId(Integer accountId);
     Account getByUsernameAndDeletedIsFalse(String userName);
+
+    @Query("SELECT  a FROM Account a  WHERE a.email = ?1")
+    Account findByEmailAndIsEnabledTrue(String email);
+    boolean existsByUsername(String username);
 
     @Modifying
     @Transactional
@@ -45,7 +50,9 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("UPDATE Account a set a.deleted = false WHERE a = :account")
     void activeSTAFF(Account account);
 
+
     List<Account> findByFullNameContaining(String name); // Tìm kiếm theo tên
     List<Account> findByRoleRoleName(String roleName); // Tìm kiếm theo vai trò
+
 
 }

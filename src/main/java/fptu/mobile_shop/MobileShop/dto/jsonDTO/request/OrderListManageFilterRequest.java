@@ -1,18 +1,19 @@
-package fptu.mobile_shop.MobileShop.dto;
+package fptu.mobile_shop.MobileShop.dto.jsonDTO.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedbackFilterRequest {
-    private Integer productId;
+public class OrderListManageFilterRequest {
+    private String keyword;
+    private String orderStatus;
     private Integer accountId;
-    private LocalDateTime commentDate;
+
+    private String sortBy;
+    private String orderBy;
     private Integer pageNum = 1;
     private Integer pageSize = 20;
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MobileShop</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/assets/css/price-range.css" rel="stylesheet">
+    <link href="/assets/css/animate.css" rel="stylesheet">
+    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
+</head>
+
+<body>
+<th:block th:replace="common/header.html"></th:block>
+
+<main>
+    <div class="content-wrapper">
+        <div class="row">
+            <div th:if="${response != null and response.data != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Đã tạo đơn hàng vận chuyển thành công!</strong>
+                <br>
+                Order Code:<b th:text="' '+${response.data.order_code}"></b>
+                <br>
+                Delivery Time:<b th:text="' '+${response.data.getFormattedExpectedDeliveryTime()}"></b>
+                <br>
+            </div>
+            <div th:if="${response != null and response.error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Không thể tạo đơn hàng vận chuyển!</strong>
+                <b th:text="' '+${response.error}"></b>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/ghn/list-order}" class="current-page">
+        <span class="menu-text">Order History</span>
+    </a>
+</main>
+
+<th:block th:replace="common/footer.html"></th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/wnumb@1.1.0/wNumb.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.scrollUp.min.js"></script>
+<script src="/assets/js/jquery.prettyPhoto.js"></script>
+<script src="/js/common_customer_page.js"></script>
+<script src="/js/home.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+</body>
+</html>

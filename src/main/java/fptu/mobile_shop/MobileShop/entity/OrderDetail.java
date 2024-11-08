@@ -16,33 +16,27 @@ import java.math.BigDecimal;
 public class OrderDetail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OrderHistoryID")
     private Long id;
 
     @Column(name = "quantity")
     private Integer quantity;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "product_name")
+    @Column(name = "productName")
     private String productName;
 
-    @Column(name = "color")
-    private String color;
-
-    @Column(name = "size")
-    private String size;
-
-    @Column(name = "product_amount")
+    @Column(name = "productAmount")
     private double productAmount;
 
     @Column(name = "cost")
     private double cost;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderID")
     private Order order;
 }

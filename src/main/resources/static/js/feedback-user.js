@@ -1,5 +1,5 @@
 let currentPage = 1;
-let pageSize = 5;
+let pageSize = 10;
 let productId = null;
 let accountId = null;
 getDataFeedbackManage(currentPage)
@@ -19,7 +19,7 @@ function getDataFeedbackManage(page) {
     }
 
     $.ajax({
-        url: '/feedback/feedback-manage',
+        url: '/api/feedback/feedback-manage',
         method: 'GET',
         data: data,
         success: function (response) {
@@ -125,7 +125,7 @@ function goToPage(page) {
 
 function deleteFeedback(commentId) {
     $.ajax({
-        url: '/feedback/' + commentId,
+        url: '/api/feedback/' + commentId,
         method: 'DELETE',
         success: function (response) {
             if (response.message === "Success") {
@@ -147,7 +147,7 @@ function deleteFeedback(commentId) {
 
 function viewFeedback(commentId) {
     $.ajax({
-        url: '/feedback/' + commentId + '/detail',
+        url: '/api/feedback/' + commentId + '/detail',
         method: 'GET',
         success: function (response) {
             console.log("response " + response.data)

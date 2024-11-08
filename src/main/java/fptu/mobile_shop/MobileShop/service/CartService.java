@@ -15,4 +15,10 @@ public interface CartService {
 
     double getCartTotalPrice(Account account);
     int getCartTotal(Account account);
+
+    Cart findByAccountId();
+
+    double calculateTotalAmount(Cart cart);
+
+    void deleteCart(Cart cart);
 }

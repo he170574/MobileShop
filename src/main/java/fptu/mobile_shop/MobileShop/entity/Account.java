@@ -52,7 +52,7 @@ public class Account {
     private Boolean deleted;
 
     @JoinColumn(name = "ROLE_ID", foreignKey = @ForeignKey(name = "FK_ACCOUNT_ROLE"))
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Role role;
 
 }

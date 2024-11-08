@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MobileShop</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/assets/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/assets/css/price-range.css" rel="stylesheet">
+    <link href="/assets/css/animate.css" rel="stylesheet">
+    <link href="/assets/css/main.css" rel="stylesheet">
+    <link href="/assets/css/responsive.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+        }
+
+        table thead tr {
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: left;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        table tbody tr:nth-of-type(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    </style>
+</head>
+
+<body>
+<th:block th:replace="common/header.html"></th:block>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Order Code</th>
+            <th>Shipping Code</th>
+            <th>Order Date</th>
+            <th>Shipping Fee</th>
+            <th>Total Amount</th>
+            <th>Expected Delivery Time</th>
+            <th>Order Status</th>
+        </tr>
+        </thead>
+        <tbody id="orderTableBody">
+        <!-- Dữ liệu sẽ được điền vào đây -->
+        </tbody>
+
+        <!-- Bảng hiển thị chi tiết của từng sản phẩm trong đơn hàng -->
+        <table>
+            <thead>
+            <tr>
+                <th>No</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th id="feed-back-thead">feed back</th>
+            </tr>
+            </thead>
+            <tbody id="orderDetailsTableBody">
+            <!-- Chi tiết sản phẩm của đơn hàng sẽ hiển thị tại đây -->
+            </tbody>
+        </table>
+    </table>
+
+
+    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" aria-labelledby="viewFeedbackModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Feedback</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="feedbackId">
+                    <input type="hidden" id="ordersId">
+                    <input type="hidden" id="productId">
+                    <input type="hidden" id="accountId">
+                    <div class="form-group">
+                        <label>Comment Text</label>
+                        <textarea class="form-control" id="commentText"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- Nút Close và Save sử dụng JavaScript để đóng modal -->
+                    <button type="button" class="btn btn-primary" onclick="saveFeedback()">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<th:block th:replace="common/footer.html"></th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/wnumb@1.1.0/wNumb.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/jquery.scrollUp.min.js"></script>
+<script src="/assets/js/jquery.prettyPhoto.js"></script>
+<script src="/js/common_customer_page.js"></script>
+<script src="/js/home.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
+<script src="/js/order-details.js"></script>
+</body>
+</html>

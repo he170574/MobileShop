@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mobile Shop - Admin Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/images/logos/logo.png"/>
+    <link rel="stylesheet" href="/assets/css/styles.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .pagination {
+            display: flex; /* Sử dụng Flexbox */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            margin: 20px 0; /* Thêm khoảng cách phía trên và dưới nếu cần */
+        }
+
+        .pagination .page-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            background-color: #f8f9fa; /* Màu nền mặc định */
+            border: 1px solid #ced4da; /* Đường viền mặc định */
+            border-radius: 4px; /* Bo góc */
+            display: flex; /* Sử dụng flex để căn chỉnh biểu tượng */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+        .pagination .page-btn:hover {
+            background-color: #e9ecef; /* Màu nền khi hover */
+        }
+
+        .pagination .page-btn.active {
+            background-color: #007bff; /* Màu nền của trang hiện tại */
+            color: white; /* Màu chữ của trang hiện tại */
+            font-weight: bold; /* In đậm chữ */
+        }
+
+        .pagination .page-btn i {
+            font-size: 1.2em; /* Kích thước biểu tượng */
+        }
+
+        .search-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center; /* Căn chỉnh theo chiều dọc (thẳng hàng nhau) */
+            gap: 10px; /* Khoảng cách giữa các phần tử */
+        }
+
+        .search-container p {
+            margin: 0; /* Loại bỏ margin mặc định */
+        }
+
+        .search-container label {
+            margin-right: 10px; /* Khoảng cách giữa label và select */
+        }
+
+        .searchInput, .form-control {
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .form-control {
+            width: 150px; /* Đặt chiều rộng của select */
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+
+    <th:block th:replace="common/sidebar.html"></th:block>
+
+    <div class="body-wrapper">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold mb-4">Orders List</h5>
+                    <div class="search-container">
+                        <label>Search:</label>
+                        <input type="search" id="searchInput" class="searchInput" placeholder="Search...">
+                        <label>Order Status:</label>
+                        <select id="status-selection" class="form-control">
+                            <option value="">Order Status</option>
+                            <option value="EMPTY">EMPTY</option>
+                            <option value="INIT">INIT</option>
+                            <option value="WATING_PAYMENT">WATING PAYMENT</option>
+                            <option value="PAYMENT_SUCCESS">PAYMENT SUCCESS</option>
+                            <option value="WATING_DELIVERY">WATING DELIVERY</option>
+                            <option value="DELIVERY_SUCCESS">DELIVERY SUCCESS</option>
+                            <option value="CANCEL">CANCEL</option>
+                            <option value="SUCCESS">SUCCESS</option>
+                        </select>
+                    </div>
+
+                    <table id="order-table" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th onclick="sortOrderTable('orderCode')">Order Code <i class="fa-up"></i></th>
+                            <th>User Name</th>
+                            <th onclick="sortOrderTable('orderDate')">Order Date <i class="fas"></i></th>
+                            <th onclick="sortOrderTable('totalAmount')">Total Amount <i class="fas"></i></th>
+                            <th onclick="sortOrderTable('orderStatus')">Order Status <i class="fas"></i></th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Data will be dynamically added here -->
+                        </tbody>
+                    </table>
+                    <div id="pagination" class="pagination">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add New Category Modal -->
+    <div class="modal fade" id="viewFeedbackModal" tabindex="-1" aria-labelledby="viewFeedbackModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Order Code -->
+                    <div class="form-group">
+                        <label>Order Code</label>
+                        <input type="text" class="form-control" id="ordersCode" readonly>
+                    </div>
+
+                    <!-- User Name -->
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" id="userName" readonly>
+                    </div>
+
+                    <!-- Order Status -->
+                    <div class="form-group">
+                        <label>Order Status</label>
+                        <input type="text" class="form-control" id="orderStatus" readonly>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="form-group">
+                        <label>Total Amount</label>
+                        <input type="text" class="form-control" id="totalAmount" readonly>
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="form-group">
+                        <label>Products</label>
+                        <div id="productDetails"></div> <!-- Here we will display products dynamically -->
+                    </div>
+
+                    <!-- Comment Date (Optional) -->
+                    <div class="form-group">
+                        <label>Comment Date</label>
+                        <input type="text" class="form-control" id="commentDate" readonly>
+                    </div>
+
+                    <!-- Comment Text (Optional) -->
+                    <div class="form-group">
+                        <label>Comment Text</label>
+                        <textarea class="form-control" id="commentText" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/sidebarmenu.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<script src="/assets/libs/simplebar/dist/simplebar.js"></script>
+<script src="/js/orders-admin.js"></script>
+</body>
+</html>

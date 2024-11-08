@@ -120,6 +120,7 @@
     </div><!--/header-middle-->
 </header><!--/header-->
 <body>
+<th:block th:replace="common/header.html"></th:block>
 <!-- Loading spinner -->
 <div class="lsd-ring-container" id="loadingSpinner">
     <div class="loader"></div>
@@ -168,6 +169,9 @@
 
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary">Update Account</button>
+            <a th:href="@{/ghn/list-order}" class="current-page">
+                <span class="menu-text">Order History</span>
+            </a>
         </div>
     </form>
 </div>
