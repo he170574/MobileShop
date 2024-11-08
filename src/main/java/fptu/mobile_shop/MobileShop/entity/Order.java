@@ -2,10 +2,13 @@ package fptu.mobile_shop.MobileShop.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Nationalized;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Entity
 @Builder
@@ -17,25 +20,45 @@ import java.util.List;
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OrderID")
     private Long id;
+
+    @Column(name = "OrderCode")
+    private String orderCode;
 
     @Column(name = "OrderDate")
     private LocalDateTime orderDate;
 
-    @Column(name = "ACCOUNT_ID")
-    private Integer accountId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
 
     @Column(name = "OrderStatus", length = 50)
     private String orderStatus;
 
-    @Column(name = "OrderCode", length = 50)
-    private String orderCode;
+    @Column(name = "ExpectedDeliveryTime")
+    private String expectedDeliveryTime;
+
+    @Column(name = "ShippingFee")
+    private BigDecimal shippingFee;
+
+    @Column(name = "ShippingCode", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+    private String shippingCode;
 
     @Column(name = "TotalAmount")
     private double totalAmount;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails;
+
+    public List<OrderDetail> getOrderDetails() {
+        return (orderDetails != null || orderDetails.size() <= 0) ? orderDetails : new ArrayList<>();
+    }
+
+    public String formatToVND() {
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        // Format totalAmount and replace "₫" with " VNĐ"
+        return vndFormat.format(totalAmount).replace("₫", " VNĐ");
+    }
 }

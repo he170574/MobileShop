@@ -36,5 +36,5 @@ public class Post {
 
     private String categoryPost;
 
-    private String statusPost;
+    private boolean statusPost;
 }
