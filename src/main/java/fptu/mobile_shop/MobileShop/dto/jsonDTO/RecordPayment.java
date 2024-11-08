@@ -26,4 +26,11 @@ public class RecordPayment {
     private String corresponsiveBankName;
     private int accountId;
     private String bankCodeName;
+
+    public RecordPayment(long id, String tid, int amount, String description) {
+        this.id = id;
+        this.tid = tid;
+        this.amount = amount;
+        this.description = description;
+    }
 }

@@ -1,8 +1,10 @@
 package fptu.mobile_shop.MobileShop.controller;
 
 import fptu.mobile_shop.MobileShop.dto.CheckoutDTO;
+import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.ShippingOrderRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.ShippingOrderResponse;
+import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Cart;
 import fptu.mobile_shop.MobileShop.entity.Order;
 import fptu.mobile_shop.MobileShop.entity.OrderDetail;
@@ -10,10 +12,8 @@ import fptu.mobile_shop.MobileShop.final_attribute.STATUS;
 import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.OrderRepository;
 import fptu.mobile_shop.MobileShop.repository.ProductRepository;
-import fptu.mobile_shop.MobileShop.service.AccountService;
-import fptu.mobile_shop.MobileShop.service.CartService;
-import fptu.mobile_shop.MobileShop.service.OrderDetailService;
-import fptu.mobile_shop.MobileShop.service.OrderService;
+import fptu.mobile_shop.MobileShop.security.CustomAccount;
+import fptu.mobile_shop.MobileShop.service.*;
 import fptu.mobile_shop.MobileShop.service.impl.GHNServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -53,6 +53,9 @@ public class GHNController {
     OrderDetailService orderDetailService;
 
     @Autowired
+    PaymentHistoryService paymentHistoryService;
+
+    @Autowired
     CartService cartService;
 
     @Autowired
@@ -60,6 +63,23 @@ public class GHNController {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @PostMapping("/checkPayment")
+    public ResponseEntity<ResponseDTO> checkPayment(
+            Authentication authentication,
+            @RequestParam(required = true) Long id) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        if (authentication == null) {
+            return ResponseEntity.internalServerError().body(responseDTO);
+        }
+
+        Order order = orderService.getOrderById(id).get();
+        String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
+        int total = Integer.parseInt((order.getTotalAmount() + Double.parseDouble(order.getShippingFee() + "") + ""));
+        boolean payment = paymentHistoryService.callApi(noiDung, total);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
     @GetMapping("/list-order")
     public String listOrder(
@@ -71,7 +91,10 @@ public class GHNController {
         if (authentication == null) {
             return "redirect:/home";
         }
+        CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
+        Account account = accountService.getByUsername(customAccount.getUsername());
         Page<Order> orderPage = orderService.getListOrder(keyword, status, page, size);
+        model.addAttribute("account", account);
         model.addAttribute("orders", orderPage);
         model.addAttribute("currentPage", orderPage.getNumber());
         model.addAttribute("size", size);
@@ -126,9 +149,9 @@ public class GHNController {
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setQuantity(orderItem.getQuantity());
                 orderDetail.setProduct(orderItem.getProduct());
-                if(orderItem.getProduct().getCost() == null){
+                if (orderItem.getProduct().getCost() == null) {
                     orderDetail.setCost(0);
-                }else {
+                } else {
                     orderDetail.setCost(orderItem.getProduct().getCost());
                 }
                 orderDetail.setProductAmount(orderItem.getProduct().getPrice() * orderItem.getQuantity());
@@ -145,10 +168,11 @@ public class GHNController {
             model.addAttribute("response", responseData);
         } else {
             redirectAttrs.addFlashAttribute("error", "Failed to create order. Please try again.");
+            return "redirect:/checkout";
         }
 
         model.addAttribute("invoice", order);
-        return "orderResult";
+        return "redirect:/ghn/list-order";
     }
 
 }

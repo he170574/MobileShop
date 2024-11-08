@@ -18,6 +18,7 @@ import fptu.mobile_shop.MobileShop.service.RoleService;
 import fptu.mobile_shop.MobileShop.util.CommonPage;
 import fptu.mobile_shop.MobileShop.util.CommonUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,17 +42,11 @@ import static org.hibernate.engine.transaction.internal.jta.JtaStatusHelper.getS
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Resource
+    @Autowired
     private OrderRepository orderRepository;
 
-    @Resource
+    @Autowired
     private AccountRepository accountRepository;
-
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private RoleRepository roleRepository;
 
     @Override
     public Page<Order> getListOrder(String keyword, String status, int page, int size) {

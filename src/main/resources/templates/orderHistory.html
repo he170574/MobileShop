@@ -32,7 +32,7 @@
                     <th>Total Amount</th>
                     <th>Expected Delivery Time</th>
                     <th>Order Status</th>
-                    <th>Order Detail</th>
+                    <!--                    <th>Order Detail</th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -46,9 +46,14 @@
                     <td th:text="${order.expectedDeliveryTime}"></td>
                     <td th:text="${order.orderStatus}"></td>
                     <td>
-                        <a
+                        <!--                        <a-->
+                        <!--                           class="btn btn-primary btn-sm">-->
+                        <!--                            Detail-->
+                        <!--                        </a>-->
+                        <a th:if="${order.orderStatus == 'WATING_PAYMENT'}"
+                           th:attr="onclick=|showQRModal('${order.id}', '${order.orderCode}', '${order.shippingCode}', '${order.shippingFee + order.totalAmount}')|"
                            class="btn btn-primary btn-sm">
-                            <i class="bi bi-eye"></i>
+                            Payment
                         </a>
                     </td>
                 </tr>
@@ -58,7 +63,9 @@
         <nav aria-label="Page navigation" th:if="${totalPages > 0}">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/ghn/list-order(page=${currentPage - 1},keyword=${keyword},status=${status})}" tabindex="-1">&laquo;</a>
+                    <a class="page-link"
+                       th:href="@{/ghn/list-order(page=${currentPage - 1},keyword=${keyword},status=${status})}"
+                       tabindex="-1">&laquo;</a>
                 </li>
                 <li class="page-item" th:if="${currentPage > 4}">
                     <a class="page-link" th:href="@{/ghn/list-order(page=1,keyword=${keyword},status=${status})}">1</a>
@@ -69,21 +76,47 @@
                 <li class="page-item" th:each="i : ${#numbers.sequence(currentPage > 3 ? currentPage - 2 : 1,
                                             currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}"
                     th:classappend="${currentPage == (i - 1)} ? 'active'">
-                    <a class="page-link" th:href="@{/ghn/list-order(page=${i - 1},keyword=${keyword},status=${status})}" th:text="${i}"></a>
+                    <a class="page-link" th:href="@{/ghn/list-order(page=${i - 1},keyword=${keyword},status=${status})}"
+                       th:text="${i}"></a>
                 </li>
                 <li class="page-item disabled" th:if="${currentPage < totalPages - 4}">
                     <span class="page-link">...</span>
                 </li>
                 <li class="page-item" th:if="${currentPage < totalPages - 3}">
-                    <a class="page-link" th:href="@{/ghn/list-order(page=${totalPages - 1},keyword=${keyword},status=${status})}" th:text="${totalPages}"></a>
+                    <a class="page-link"
+                       th:href="@{/ghn/list-order(page=${totalPages - 1},keyword=${keyword},status=${status})}"
+                       th:text="${totalPages}"></a>
                 </li>
                 <li class="page-item" th:classappend="${currentPage - totalPages == -1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/ghn/list-order(page=${currentPage + 1},keyword=${keyword},status=${status})}">&raquo;</a>
+                    <a class="page-link"
+                       th:href="@{/ghn/list-order(page=${currentPage + 1},keyword=${keyword},status=${status})}">&raquo;</a>
                 </li>
             </ul>
         </nav>
     </div>
 </main>
+<!-- Modal for QR Code Payment -->
+<div class="modal fade" id="qrModal" tabindex="-1" role="dialog" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrModalLabel">QR Code Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <!-- QR code image for payment -->
+                <img id="QRPayment" src="path/to/qr-code-image.jpg" alt="QR Code for Payment"
+                     style="max-width: 100%; height: auto;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="confirmPayment">Confirm Payment</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <th:block th:replace="common/footer.html"></th:block>
 
 <script src="https://cdn.jsdelivr.net/npm/wnumb@1.1.0/wNumb.min.js"></script>
@@ -97,3 +130,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.3/nouislider.min.js"></script>
 </body>
 </html>
+<script>
+    // Function to show the QR code modal when Payment button is clicked
+    function showQRModal(id, orderCode, shippingCode, total) {
+        // alert(id)
+        // Parse the JSON string to an object
+        // Update QR image or other modal elements based on parameters
+        const bankId = '970422'
+        const stk = '3854019201'
+        const noiDung = 'MobileShop ' + orderCode + ' ' + shippingCode + ' payment' + id;
+        const chuTaiKhoan = 'Do Hoai Linh'
+        // const total = shippingFee + totalAmount
+        const qrImagePath = `https://img.vietqr.io/image/${bankId}-${stk}-compact2.jpg?amount=${total}&addInfo=${noiDung}&accountName=${chuTaiKhoan}`; // Adjust path as needed
+        document.getElementById('QRPayment').src = qrImagePath;
+
+        $('#qrModal').modal('show');
+    }
+
+    // Handle the Confirm Payment button click within the modal
+    $('#confirmPayment').click(function () {
+
+        $('#qrModal').modal('hide');
+        Swal.fire('Payment confirmed!', 'Your payment has been successfully recorded.', 'success');
+        // Additional logic after confirming payment can go here
+    });
+</script>
