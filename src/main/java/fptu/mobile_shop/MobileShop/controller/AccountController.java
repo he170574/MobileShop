@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
@@ -38,48 +39,44 @@ public class AccountController {
         this.roleService = roleService;
     }
 
-//    @GetMapping("/get-all-users")
-//    public ResponseEntity<ResponseDTO> getAllUsers(Authentication authentication,
-//                                                   @RequestParam Integer pageNumber,
-//                                                   @RequestParam Integer pageSize,
-//                                                   @RequestParam(defaultValue = "") String search) {
-//        if (authentication == null) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(ResponseDTO.builder().message("Login before").build());
-//        }
-//
-//        if (!((CustomAccount) authentication.getPrincipal()).getRole().equals(ROLE.ADMIN)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(ResponseDTO.builder().message("Don't have permission").build());
-//        }
-//
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-//
-//        Page<Account> pageUsers = accountService.getAllActiveAccounts(search, pageable);
-//
-//        List<AccountDTO> lstUsers = pageUsers.stream().map(item -> AccountDTO.builder()
-//                .accountId(item.getAccountId())
-//                .fullName(item.getFullName())
-//                .email(item.getEmail())
-//                .phoneNumber(item.getPhoneNumber())
-//                .role(item.getRole().getRoleName())
-//                .deleted(item.getDeleted())
-//                .build()).toList();
-//
-//        // Tạo map để chứa thông tin phân trang
-//        HashMap<String, Object> mapUsers = new HashMap<>();
-//        mapUsers.put("lstUsers", lstUsers);
-//        mapUsers.put("pageNumber", pageUsers.getNumber());
-//        mapUsers.put("pageSize", pageUsers.getSize());
-//        mapUsers.put("totalPage", pageUsers.getTotalPages());
-//        mapUsers.put("totalElements", pageUsers.getTotalElements());
-//
-//        // Trả về ResponseDTO
-//        return ResponseEntity.ok().body(ResponseDTO.builder()
-//                .message("Success")
-//                .data(mapUsers)
-//                .build());
-//    }
+    // Endpoint để trả về danh sách người dùng theo phân trang và tìm kiếm
+    @GetMapping("/get-all-users")
+    public String getAllUsers(@RequestParam Integer pageNumber,
+                              @RequestParam Integer pageSize,
+                              @RequestParam(defaultValue = "") String search,
+                              Model model, Authentication authentication) {
+        if (authentication == null) {
+            model.addAttribute("message", "Please log in to view the users.");
+            return "error"; // Trang lỗi nếu không đăng nhập
+        }
+
+        // Kiểm tra quyền Admin
+        CustomAccount customAccount = (CustomAccount) authentication.getPrincipal();
+        if (!customAccount.getRole().equals(ROLE.ADMIN)) {
+            model.addAttribute("message", "You don't have permission to view users.");
+            return "error"; // Trang lỗi nếu không có quyền Admin
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Account> pageUsers = accountService.getAllActiveAccounts(search, pageable);
+
+        List<AccountDTO> lstUsers = pageUsers.stream().map(item -> AccountDTO.builder()
+                .accountId(item.getAccountId())
+                .fullName(item.getFullName())
+                .email(item.getEmail())
+                .phoneNumber(item.getPhoneNumber())
+                .role(item.getRole().getRoleName())
+                .deleted(item.getDeleted())
+                .build()).toList();
+
+        // Thêm dữ liệu vào model để hiển thị trong HTML
+        model.addAttribute("lstUsers", lstUsers);
+        model.addAttribute("pageNumber", pageUsers.getNumber());
+        model.addAttribute("totalPage", pageUsers.getTotalPages());
+        model.addAttribute("totalElements", pageUsers.getTotalElements());
+
+        return "user-list"; // Trả về trang HTML hiển thị danh sách người dùng
+    }
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> postRegister(@RequestBody AccountDTO accountDTO) {
@@ -232,5 +229,50 @@ public class AccountController {
             responseDTO.setMessage("Internal Server Error");
             return ResponseEntity.internalServerError().body(responseDTO);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> accounts = accountService.getAllAccounts();
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Account>> searchAccountsByName(@RequestParam String name) {
+        List<Account> accounts = accountService.searchAccountsByName(name);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Account>> filterAccountsByRole(@RequestParam String role) {
+        List<Account> accounts = accountService.filterAccountsByRole(role);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Account> getAccountById(@PathVariable Integer id) {
+        return accountService.getAccountById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable Integer id, @RequestBody Account accountDetails) {
+        return accountService.getAccountById(id)
+                .map(account -> {
+                    account.setFullName(accountDetails.getFullName());
+                    account.setAddress(accountDetails.getAddress());
+                    account.setPhoneNumber(accountDetails.getPhoneNumber());
+                    account.setRole(accountDetails.getRole());
+                    accountService.saveOrUpdateAccount(account);
+                    return ResponseEntity.ok(account);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
     }
 }

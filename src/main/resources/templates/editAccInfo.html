@@ -38,13 +38,94 @@
         }
     </style>
 </head>
+<header id="header"><!--header-->
+    <div class="header_top"><!--header_top-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="contactinfo">
+                        <ul class="nav nav-pills">
+                            <li><a href="#"><i class="fa fa-phone"></i> +2 95 01 88 821</a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i> info@domain.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="social-icons pull-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--/header_top-->
 
+    <div class="header-middle"><!--header-middle-->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="logo pull-left">
+                        <a href="/home"><img src="/assets/images/logos/logo.png" alt="" class="imgHome"/></a>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="shop-menu pull-right">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="/edit-info" id="accountBtn" >
+                                    <i class="fa fa-user"></i>
+                                    Account
+                                </a>
+                            </li>
+                            <!--<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>-->
+                            <li>
+                                <a href="/blog">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Blog <span id="" class="text-bg-danger"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/cart">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Cart <span id="countItemCartHeder" class="text-bg-danger"></span>
+                                </a>
+                            </li>
+                            <li id="manage-btn" style="display: none;">
+                                <a href="/admin/dashboard">
+                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
+                                    Manage
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" id="login-btn" data-toggle="modal" data-bs-dismiss="modal"
+                                   data-target="#loginModal">
+                                    <i class="fa fa-lock"></i>
+                                    Login
+                                </a>
+                                <a href="/logout" id="logout-btn" style="display: none">
+                                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--/header-middle-->
+</header><!--/header-->
 <body>
 <th:block th:replace="common/header.html"></th:block>
 <!-- Loading spinner -->
 <div class="lsd-ring-container" id="loadingSpinner">
     <div class="loader"></div>
 </div>
+
 
 <div class="container mt-5">
     <h2>Edit Account Information</h2>

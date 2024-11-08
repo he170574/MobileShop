@@ -50,6 +50,9 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("UPDATE Account a set a.deleted = false WHERE a = :account")
     void activeSTAFF(Account account);
 
-    Optional<Account> findByEmail(String email);
-    Optional<Account> findByUsername(String username);
+
+    List<Account> findByFullNameContaining(String name); // Tìm kiếm theo tên
+    List<Account> findByRoleRoleName(String roleName); // Tìm kiếm theo vai trò
+
+
 }
