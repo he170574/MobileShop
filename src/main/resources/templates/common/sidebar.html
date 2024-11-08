@@ -3,7 +3,7 @@
         <!-- Sidebar Start -->
         <aside class="left-sidebar">
             <!-- Sidebar scroll-->
-            <div>
+            <div class="sidebar-container" style="position: relative; height: 100%;">
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="/home" class="text-nowrap logo-img">
                         <img src="/assets/images/logos/logo.png" width="180" alt="" />
@@ -12,47 +12,48 @@
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
+
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                    <h5 class="sidebar-title" style="font-weight: bold; margin: 15px" >Dashboard</h5>
+                    <h5 class="sidebar-title" style="font-weight: bold; margin: 15px">Dashboard</h5>
                     <ul id="sidebarnav">
-                        <li sec:authorize="hasRole('ADMIN')"  class="sidebar-item">
+                        <li sec:authorize="hasRole('ADMIN')" class="sidebar-item">
                             <a class="sidebar-link" href="/admin/dashboard" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-layout-dashboard"></i>
-                                    </span>
+                                <span>
+                                    <i class="ti ti-layout-dashboard"></i>
+                                </span>
                                 <span class="hide-menu">Statistic</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="/admin/orders" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-article"></i>
-                                    </span>
+                                <span>
+                                    <i class="ti ti-article"></i>
+                                </span>
                                 <span class="hide-menu">Order</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="/admin/product" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-alert-circle"></i>
-                                    </span>
+                                <span>
+                                    <i class="ti ti-alert-circle"></i>
+                                </span>
                                 <span class="hide-menu">Products</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="/admin/members" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-file-description"></i>
-                                    </span>
+                                <span>
+                                    <i class="ti ti-file-description"></i>
+                                </span>
                                 <span class="hide-menu">Member</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="/admin/feedback" aria-expanded="false">
-                                    <span>
-                                        <i class="ti ti-file-description"></i>
-                                    </span>
+                                <span>
+                                    <i class="ti ti-file-description"></i>
+                                </span>
                                 <span class="hide-menu">Feedback</span>
                             </a>
                         </li>
@@ -67,8 +68,20 @@
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
+
+                <!-- Footer with Role Display and Logout Button -->
+                <div class="sidebar-footer text-center" style="position: absolute; bottom: 20px; width: 100%;">
+                    <div class="user-role mb-2">
+                        <span>Role: </span>
+                        <span th:text="${#authentication.principal.authorities}">USER</span>
+                    </div>
+                    <a href="/logout" class="btn btn-danger btn-sm">
+                        <i class="ti ti-power"></i> Logout
+                    </a>
+                </div>
             </div>
             <!-- End Sidebar scroll-->
         </aside>
-        <!--  Sidebar End -->
+        <!-- Sidebar End -->
+    </div>
 </th:block>

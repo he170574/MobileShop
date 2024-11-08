@@ -2,14 +2,15 @@ $(document).ready(function () {
     loadProducts();
     loadCategories();
 
-    $('#searchButton').on('click', function () {
-        loadProducts(1);
-    });
-
     $('#searchInput').on('keypress', function (e) {
         if (e.which === 13) {
             loadProducts(1);
         }
+    });
+
+    // Load all products when "All Categories" button is clicked
+    $('#allCategoriesButton').on('click', function () {
+        loadProducts(); // No categoryId, so it loads all products
     });
 });
 
@@ -23,36 +24,37 @@ function formatCurrency(value) {
 }
 
 // Load all product
-function loadProducts(page = 1) {
+// Load all products with optional category filter
+function loadProducts(page = 1, categoryId = null) {
     const searchTerm = $('#searchInput').val();
     const pageSize = 6;
+
+    // Define parameters for the AJAX request
+    const params = {
+        search: searchTerm,
+        page: page - 1,
+        size: pageSize
+    };
+
+    // Add category filter if categoryId is provided
+    if (categoryId) {
+        params.categoryId = categoryId;
+    }
 
     $.ajax({
         url: `/get-all-product`,
         type: 'GET',
-        data: {
-            search: searchTerm,
-            page: page - 1,
-            size: pageSize
-        },
+        data: params,
         success: function (response) {
-            response.data.sort((a, b) => b.productId - a.productId);
-
-            renderProductTable(response.data);
-            renderPagination(response.totalPages, page);
-
-            $('.edit-product').on('click', function () {
-                var productId = $(this).data('product-id');
-                editProduct(productId);
-            });
-
-            $('.delete-product').on('click', function () {
-                var productId = $(this).data('product-id');
-                deleteProduct(productId);
-            });
-
-            $('#noDataMessage').hide();
-            $('#productTable').show();
+            if (response.data.length === 0) {
+                $('#noDataMessage').show();
+                $('#productTable').hide();
+            } else {
+                $('#noDataMessage').hide();
+                $('#productTable').show();
+                renderProductTable(response.data);
+                renderPagination(response.totalPages, page);
+            }
         },
         error: function (xhr, status, error) {
             console.error("Error loading products:", error);
@@ -61,6 +63,7 @@ function loadProducts(page = 1) {
         }
     });
 }
+
 
 // Product Table
 function renderProductTable(products) {
@@ -94,6 +97,12 @@ function renderProductTable(products) {
 
         $('#productTable').show();
         $('#noDataMessage').hide();
+
+        // Attach click event to each category link after rendering the table
+        $('.category-link').on('click', function () {
+            const categoryId = $(this).data('category-id');
+            loadProducts(1, categoryId);
+        });
     } else {
         // Hiển thị thông báo nếu không có sản phẩm nào
         $('#productTable').hide();
@@ -193,65 +202,29 @@ $('#addProductForm').on('submit', function (event) {
     }
 
     if (isValid) {
-        // Kiểm tra xem sản phẩm có tồn tại dựa trên tên sản phẩm hay không
+        var formData = new FormData($('#addProductForm')[0]);
+
         $.ajax({
-            url: '/check-product-exists',
+            url: '/save-new-product',
             type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ productName: productName }),
+            processData: false,
+            contentType: false,
+            data: formData,
             success: function (response) {
-                if (response.exists) {
-                    // Nếu sản phẩm đã tồn tại, thông báo cho người dùng và hỏi có muốn cập nhật không
-                    var existingProduct = response.data;
-                    var newStockQuantity = existingProduct.stockQuantity + productStock;
-
-                    if (confirm("Product already exists. Do you want to update the quantity?")) {
-                        $.ajax({
-                            url: '/save-edit-product',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({
-                                productId: existingProduct.productId,
-                                stockQuantity: newStockQuantity
-                            }),
-                            success: function (updateResponse) {
-                                alert("Product quantity updated successfully");
-                                loadProducts();
-                                $('#addProductModal').modal('hide');
-                                $('#addProductForm')[0].reset();
-                            },
-                            error: function (updateError) {
-                                console.error("Error updating quantity:", updateError);
-                                alert("Error updating quantity");
-                            }
-                        });
-                    }
-                } else {
-                    // Nếu sản phẩm không tồn tại, tiến hành thêm sản phẩm mới
-                    var formData = new FormData($('#addProductForm')[0]);
-
-                    $.ajax({
-                        url: '/save-new-product',
-                        type: 'POST',
-                        processData: false,
-                        contentType: false,
-                        data: formData,
-                        success: function (response) {
-                            alert("Product added successfully");
-                            loadProducts();
-                            $('#addProductModal').modal('hide');
-                            $('#addProductForm')[0].reset();
-                        },
-                        error: function (error) {
-                            console.error("Error adding product:", error);
-                            alert("Error adding product");
-                        }
-                    });
-                }
+                // Nếu thêm sản phẩm mới thành công
+                alert("Product added successfully.");
+                loadProducts();
+                $('#addProductModal').modal('hide');
+                $('#addProductForm')[0].reset();
             },
             error: function (xhr) {
-                console.error("Error checking product existence:", xhr);
-                alert("Error checking product existence");
+                if (xhr.status === 409) {
+                    // Thông báo nếu sản phẩm đã tồn tại
+                    alert("Product already exists. Cannot add new product with the same name.");
+                } else {
+                    console.error("Error adding product:", xhr);
+                    alert("Error adding product.");
+                }
             }
         });
     }
@@ -362,20 +335,35 @@ function sortProducts(columnIndex) {
     });
 }
 
-// Load all category
+
+// Define categoriesList as a global array to store category names for duplicate checking
+var categoriesList = [];
+
+// Load categories function
 function loadCategories() {
     $.ajax({
         url: '/get-category',
         type: 'GET',
         success: function (response) {
             var categorySelect = $('#categoryName, #editCategoryName');
+            var categoryFilter = $('#categoryFilter');
             categorySelect.empty();
+            categoryFilter.empty();
 
-            $.each(response.data, function (index, category) {
+            // Populate form dropdowns and filter dropdown
+            categorySelect.append('<option value="">Select Category</option>');
+            categoryFilter.append('<option value="">All Categories</option>');
+
+            categoriesList = response.data.map(function (category) {
                 categorySelect.append($('<option>', {
                     value: category.categoryId,
                     text: category.categoryName
                 }));
+                categoryFilter.append($('<option>', {
+                    value: category.categoryId,
+                    text: category.categoryName
+                }));
+                return category.categoryName.toLowerCase(); // Store names in lowercase for duplicate check
             });
         },
         error: function (xhr, status, error) {
@@ -384,21 +372,31 @@ function loadCategories() {
     });
 }
 
-// Modal add new category
+// Show modal for adding a new category
 function showAddCategoryModal() {
     $('#addCategoryModal').modal('show');
     $('.modal-backdrop').remove();
-    loadCategories();
+    // No need to call loadCategories here unless explicitly needed for UI updates
 }
 
-// Save category
+// Save new category with validation
 function saveNewCategory() {
-    var newCategoryName = $('#newCategoryName').val();
+    var newCategoryName = $('#newCategoryName').val().trim();
+
     if (!newCategoryName) {
         alert("Please enter a category name.");
         return;
     }
 
+    // Check for duplicate category names using categoriesList
+    var isDuplicate = categoriesList.includes(newCategoryName.toLowerCase()); // Case-insensitive check
+
+    if (isDuplicate) {
+        alert("Category name already exists. Please enter a different name.");
+        return;
+    }
+
+    // Proceed with AJAX request to add the new category
     $.ajax({
         url: '/admin/product/add-new-category',
         type: 'POST',
@@ -409,11 +407,45 @@ function saveNewCategory() {
             $('#addCategoryModal').modal('hide');
             $('#newCategoryName').val('');
 
+            // Reload categories to update dropdown and categoriesList
             loadCategories();
         },
         error: function (xhr, status, error) {
             console.error("Error adding category:", error);
             alert("Error adding category.");
+        }
+    });
+}
+
+function filterByCategory() {
+    const selectedCategoryId = $('#categoryFilter').val();
+    const searchTerm = $('#searchInput').val();
+    const pageSize = 6;
+
+    $.ajax({
+        url: '/get-all-product',
+        type: 'GET',
+        data: {
+            search: searchTerm,
+            categoryId: selectedCategoryId, // Pass the selected category ID to filter
+            page: 0, // Start from the first page
+            size: pageSize
+        },
+        success: function (response) {
+            if (response.data.length === 0) {
+                $('#noDataMessage').show();
+                $('#productTable').hide();
+            } else {
+                $('#noDataMessage').hide();
+                $('#productTable').show();
+                renderProductTable(response.data);
+                renderPagination(response.totalPages, 1);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error filtering products by category:", error);
+            $('#noDataMessage').show();
+            $('#productTable').hide();
         }
     });
 }

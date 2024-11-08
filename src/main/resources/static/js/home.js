@@ -35,11 +35,13 @@ $(document).ready(function() {
     loadAllProducts();
 
     // Toggle hiển thị dropdown bộ lọc giá và khởi tạo thanh trượt khi nhấn nút "Price"
-    $('#toggle-price').on('click', function () {
-        const priceDropdown = $('#price-dropdown');
-
+    $('#toggle-price').popover({
+        content: $('#price-popover-content').html(),
+        html: true,
+        placement: 'bottom'
+    }).on('shown.bs.popover', function () {
         if (!priceSliderInitialized) {
-            // Khởi tạo thanh trượt noUiSlider chỉ một lần
+            // Initialize the price slider only once inside the popover
             const priceSlider = document.getElementById('price-slider');
             noUiSlider.create(priceSlider, {
                 start: [0, 50000000],
@@ -49,25 +51,22 @@ $(document).ready(function() {
                 format: wNumb({ decimals: 0, thousand: ',', suffix: ' đ' })
             });
 
-            // Cập nhật giá trị hiển thị khi thay đổi thanh trượt
+            // Update the min and max price values as the slider moves
             priceSlider.noUiSlider.on('update', function (values) {
                 $('#min-price').text(values[0]);
                 $('#max-price').text(values[1]);
             });
 
-            priceSliderInitialized = true; // Đánh dấu thanh trượt đã được khởi tạo
+            priceSliderInitialized = true; // Ensure slider only initializes once
         }
-
-        // Toggle hiển thị dropdown
-        priceDropdown.toggle();
     });
 
-    // Áp dụng bộ lọc giá khi nhấn nút "Xem kết quả"
-    $('#apply-price-filter').on('click', function () {
+    // Apply price filter when the "Xem kết quả" button is clicked inside the popover
+    $(document).on('click', '#apply-price-filter', function() {
         const priceSlider = document.getElementById('price-slider');
         const [minPrice, maxPrice] = priceSlider.noUiSlider.get();
 
-        $('#price-dropdown').hide();
+        $('#toggle-price').popover('hide'); // Hide the popover after applying the filter
 
         loadAllProducts({
             minPrice: parseFloat(minPrice.replace(/ đ/g, '').replace(/,/g, '')),
@@ -82,14 +81,23 @@ $(document).ready(function() {
 
     // Lọc sản phẩm theo danh mục
     $('.category').on('click', function() {
-        const category = $(this).data('category'); // Lấy danh mục được chọn
-        loadAllProducts({ category: category });
+        const category = $(this).data('category');
+
+        // Check if "ALL" category is selected
+        if (category === 'all') {
+            loadAllProducts(); // Load all products without any filters
+        } else {
+            loadAllProducts({ category: category });
+        }
     });
 
     // Tìm kiếm sản phẩm theo tên
-    $('#search-button').on('click', function() {
-        const productName = $('#search-input').val();
-        loadAllProducts({ search: productName });
+    $('#search-input').on('keydown', function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const productName = $('#search-input').val();
+            loadAllProducts({ search: productName });
+        }
     });
 
     // Sắp xếp sản phẩm theo giá: từ cao xuống thấp và từ thấp lên cao
