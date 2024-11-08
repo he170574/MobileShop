@@ -75,9 +75,15 @@ public class GHNController {
 
         Order order = orderService.getOrderById(id).get();
         String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
-        int total = Integer.parseInt((order.getTotalAmount() + Double.parseDouble(order.getShippingFee() + "") + ""));
+        int total = new BigDecimal(order.getTotalAmount())
+                .add(order.getShippingFee())
+                .intValue();
         boolean payment = paymentHistoryService.callApi(noiDung, total);
-
+        if(payment) {
+            order.setOrderStatus(STATUS.PAYMENT_SUCCESS);
+            orderService.saveOrder(order);
+        }
+        responseDTO.setMessage(payment?"SUCCESS":"FAILL");
         return ResponseEntity.ok().body(responseDTO);
     }
 

@@ -130,8 +130,10 @@
 </body>
 </html>
 <script>
+    var orderId = 0;
     // Function to show the QR code modal when Payment button is clicked
     function showQRModal(id, orderCode, shippingCode, total) {
+        orderId = id;
         // alert(id)
         // Parse the JSON string to an object
         // Update QR image or other modal elements based on parameters
@@ -148,9 +150,48 @@
 
     // Handle the Confirm Payment button click within the modal
     $('#confirmPayment').click(function () {
+        if(orderId == 0){
+            return;
+        }
 
+        $.ajax({
+            url: '/ghn/checkPayment', // API endpoint
+            method: 'POST',
+            data: {
+                id: orderId
+            },
+            success: function (response) {
+                if (response && response.message === 'SUCCESS') {
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: 'Your payment has been recorded successfully.',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Payment Issue",
+                        icon: "warning",
+                        text: "There was an error updating the payment status. Please try again.",
+                        confirmButtonText: "OK",
+                    });
+                }
+            },
+            error: function (error) {
+                console.error("Error updating payment status:", error);
+                Swal.fire({
+                    title: "Error",
+                    icon: "error",
+                    text: "An error occurred. Please try again later.",
+                    confirmButtonText: "OK",
+                });
+            }
+
+        });
         $('#qrModal').modal('hide');
-        Swal.fire('Payment confirmed!', 'Your payment has been successfully recorded.', 'success');
-        // Additional logic after confirming payment can go here
+
     });
 </script>

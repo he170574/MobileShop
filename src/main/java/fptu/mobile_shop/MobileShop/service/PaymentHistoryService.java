@@ -1,4 +1,5 @@
 package fptu.mobile_shop.MobileShop.service;
+import com.mysql.cj.util.StringUtils;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.RecordPayment;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
@@ -45,9 +46,11 @@ public class PaymentHistoryService {
                                 recordJson.getString("tid"),
                                 recordJson.getInt("amount"),
                                 recordJson.getString("description"));
-                        if(record.getDescription().toLowerCase().startsWith(noiDung.toLowerCase())){
-                            if(price == record.getAmount()){
-                                return true;
+                        if(!StringUtils.isNullOrEmpty(record.getDescription()) && noiDung.length() > 25){
+                            if(record.getDescription().toLowerCase().contains(noiDung.toLowerCase())){
+                                if(price == record.getAmount()){
+                                    return true;
+                                }
                             }
                         }
                     }
