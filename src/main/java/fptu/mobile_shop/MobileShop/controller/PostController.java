@@ -24,10 +24,10 @@ public class PostController {
     @Autowired
     private BlogCategoryService blogCategoryService;
 
-    // Phương thức lấy tất cả bài viết
+    // Phương thức lấy tất cả bài viết có statusPost = true
     @GetMapping
     public String getAllPosts(Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage = postService.getAllPosts(pageable);
+        Page<Post> postsPage = postService.getAllActivePosts(pageable); // Lấy bài viết có statusPost = true
         List<BlogCategory> categories = blogCategoryService.getAllActiveCategories(); // Lấy danh mục hoạt động
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
@@ -37,10 +37,10 @@ public class PostController {
         return "blog";
     }
 
-    // Phương thức lấy bài viết theo category
+    // Phương thức lấy bài viết theo category và chỉ lấy bài viết có statusPost = true
     @GetMapping("/category/{categoryId}")
     public String getPostsByCategory(@PathVariable Long categoryId, Model model, @PageableDefault(size = 5) Pageable pageable) {
-        // Lấy bài viết theo categoryId
+        // Lấy bài viết theo categoryId và statusPost = true
         Page<Post> postsPage = postService.getPostsByCategoryId(categoryId, pageable);
 
         // Lấy tất cả các danh mục để hiển thị ở sidebar
@@ -54,9 +54,7 @@ public class PostController {
         return "blog"; // Trả về trang blog.html
     }
 
-
-
-    // Phương thức lấy bài viết theo ID
+    // Phương thức lấy bài viết theo ID và chỉ lấy bài viết có statusPost = true
     @GetMapping("/{postId}")
     public String getPostById(@PathVariable Long postId, Model model) {
         Post post = postService.getPostById(postId)
@@ -102,10 +100,10 @@ public class PostController {
         return "redirect:/blog";
     }
 
-    // Phương thức tìm kiếm bài viết
+    // Phương thức tìm kiếm bài viết theo tiêu đề và chỉ lấy bài viết có statusPost = true
     @GetMapping("/search")
     public String searchPosts(@RequestParam("title") String title, Model model, @PageableDefault(size = 5) Pageable pageable) {
-        Page<Post> postsPage = postService.searchByTitle(title, pageable);
+        Page<Post> postsPage = postService.searchByTitle(title, pageable); // Tìm kiếm bài viết có statusPost = true
         List<BlogCategory> categories = blogCategoryService.getAllActiveCategories();
         model.addAttribute("posts", postsPage.getContent());
         model.addAttribute("currentPage", postsPage.getNumber());
@@ -114,4 +112,19 @@ public class PostController {
         model.addAttribute("selectedCategory", "All");
         return "blog";
     }
+
+    // Phương thức block bài viết
+    @PostMapping("/block/{postId}")
+    public String blockPost(@PathVariable Long postId) {
+        postService.blockPost(postId); // Đặt bài viết thành trạng thái không hoạt động
+        return "redirect:/blog";
+    }
+
+    // Phương thức unblock bài viết
+    @PostMapping("/unblock/{postId}")
+    public String unblockPost(@PathVariable Long postId) {
+        postService.unblockPost(postId); // Đặt bài viết lại thành trạng thái hoạt động
+        return "redirect:/blog";
+    }
 }
+

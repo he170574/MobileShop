@@ -28,5 +28,5 @@ public class PostDTO {
     private MultipartFile thumbnail; // Đường dẫn của thumbnail
     private Long categoryPostID; // ID of the category (instead of category name)
 
-    private Long authorID; // ID of the author (instead of full author info)
+    private Integer  authorID; // ID of the author (instead of full author info)
 }

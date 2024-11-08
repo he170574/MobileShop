@@ -94,9 +94,13 @@
                             <td th:text="${post.briefInfo}"></td>
                             <td><img th:src="@{${post.thumbnail}}" alt="Image" width="50" height="50"></td>
                             <td th:text="${post.categoryPost.categoryName}"></td>
-                            <td th:text="${post.createdDate}"></td>
+                            <td th:text="${#temporals.format(post.createdDate, 'dd/MM/yyyy')}"></td>
                             <td>
-                                <a th:href="@{/admin/blog/edit/{postId}(postId=${post.postID})}" class="btn btn-warning btn-sm">Edit</a>
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBlogModal">
+                                    Edit
+                                </button>
+
+
 
                                 <form th:action="@{/admin/blog/block/{postId}(postId=${post.postID})}" method="post" style="display:inline;"
                                       th:if="${post.statusPost == true}">
@@ -180,12 +184,13 @@
                             </div>
                             <div class="mb-3">
                                 <label for="categoryPostID" class="form-label">Category</label>
-                                <input type="number" id="categoryPostID" name="categoryPostID" class="form-control" required/>
+                                <select id="categoryPostID" name="categoryPostID" class="form-control" required>
+                                    <option value="" disabled selected>Select Category</option>
+                                    <!-- Lặp qua danh sách categories -->
+                                    <option th:each="category : ${categories}" th:value="${category.categoryID}" th:text="${category.categoryName}"></option>
+                                </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="authorID" class="form-label">Author ID</label>
-                                <input type="number" id="authorID" name="authorID" class="form-control" required/>
-                            </div>
+<!--                            <input type="hidden" name="authorID" th:value="${accountId}" />-->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -195,6 +200,54 @@
                 </div>
             </div>
         </div>
+        <!-- Edit Blog Modal -->
+        <div class="modal fade" id="editBlogModal" tabindex="-1" aria-labelledby="editBlogModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editBlogModalLabel">Edit Blog</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="editBlogForm" action="/admin/blog/edit" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Title</label>
+                                <input type="text" id="editTitle" name="title" class="form-control" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editContent" class="form-label">Content</label>
+                                <textarea id="editContent" name="content" class="form-control" rows="5"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editBriefInfo" class="form-label">Brief Info</label>
+                                <textarea id="editBriefInfo" name="briefInfo" class="form-control" rows="2" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="editThumbnail">Thumbnail</label>
+                                <input type="file" id="editThumbnail" name="thumbnail" accept="image/*" class="form-control"/>
+                                <div id="currentThumbnail" style="display:none;">
+                                    <img id="currentThumbnailImg" src="" alt="Current Thumbnail" width="100" height="100"/>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategoryPostID" class="form-label">Category</label>
+                                <select id="editCategoryPostID" name="categoryPostID" class="form-control" required>
+                                    <option value="" disabled selected>Select Category</option>
+                                    <option th:each="category : ${categories}" th:value="${category.categoryID}" th:text="${category.categoryName}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
@@ -221,6 +274,36 @@
           }
       });
 </script>
+<script>
+    // Sự kiện khi nút Edit được nhấn
+document.querySelectorAll('.btn-warning').forEach(function(button) {
+    button.addEventListener('click', function() {
+        // Lấy thông tin bài viết từ thuộc tính của nút (data-post-id hoặc các thuộc tính khác)
+        const postId = this.closest('tr').querySelector('.id-column').textContent;
+        const title = this.closest('tr').querySelector('td:nth-child(2)').textContent;
+        const briefInfo = this.closest('tr').querySelector('td:nth-child(3)').textContent;
+        const content = this.closest('tr').querySelector('td:nth-child(2)').getAttribute('data-content');
+        const categoryName = this.closest('tr').querySelector('td:nth-child(5)').textContent;
+        const thumbnail = this.closest('tr').querySelector('td:nth-child(4) img').src;
 
+        // Điền vào form của modal
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editBriefInfo').value = briefInfo;
+        document.getElementById('editContent').value = content;
+        document.getElementById('currentThumbnailImg').src = thumbnail;
+        document.getElementById('currentThumbnail').style.display = 'block';
+
+        // Điền category vào select
+        const categorySelect = document.getElementById('editCategoryPostID');
+        for (let option of categorySelect.options) {
+            if (option.text === categoryName) {
+                option.selected = true;
+                break;
+            }
+        }
+    });
+});
+
+</script>
 </body>
 </html>

@@ -22,6 +22,14 @@
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/ico/apple-touch-icon-114-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/ico/apple-touch-icon-72-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" href="/assets/images/ico/apple-touch-icon-57-precomposed.png">
+	<style>
+		.thumbnail-image {
+    width: 100%; /* Chiều rộng của ảnh chiếm toàn bộ không gian trong phần chứa */
+    height: auto; /* Tự động điều chỉnh chiều cao để giữ tỉ lệ của ảnh */
+    max-width: 600px; /* Giới hạn chiều rộng tối đa cho ảnh */
+    object-fit: cover; /* Cắt ảnh sao cho phù hợp với không gian mà không bị méo */
+}
+	</style>
 </head><!--/head-->
 
 <body>
@@ -76,11 +84,11 @@
 							<div class="post-meta">
 								<ul>
 									<li><i class="fa fa-user"></i> <span th:text="${post.author.fullName}">Author Name</span></li>
-									<li><i class="fa fa-calendar"></i> <span th:text="${post.createdDate}">DEC 5, 2013</span></li>
+									<li><i class="fa fa-calendar"></i> <span th:text="${#temporals.format(post.createdDate, 'dd/MM/yyyy')}"></span></li>
 								</ul>
 							</div>
 							<a th:href="@{'/blog/' + ${post.postID}}">
-								<img th:src="@{${post.thumbnail}}" alt="Blog Thumbnail">
+								<img class="thumbnail-image" th:src="@{${post.thumbnail}}" alt="Blog Thumbnail">
 							</a>
 							<p th:text="${post.briefInfo}">Blog content goes here.</p>
 							<a class="btn btn-primary" th:href="@{'/blog/' + ${post.postID}}">Read More</a>

@@ -68,7 +68,7 @@
 							<div class="post-meta">
 								<ul>
 									<li><i class="fa fa-user"></i> <span th:text="${post.author.fullName}">Author Name</span></li>
-									<li><i class="fa fa-calendar"></i> <span th:text="${post.createdDate}">DEC 5, 2013</span></li>
+									<li><i class="fa fa-calendar"></i> <span th:text="${#temporals.format(post.createdDate, 'dd/MM/yyyy')}"></span></li>
 								</ul>
 							</div>
 							<a th:href="@{${post.thumbnail}}" th:src="${post.thumbnail}">
