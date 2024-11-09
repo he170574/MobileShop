@@ -31,7 +31,6 @@ $(document).ready(function() {
         });
     }
 
-    // Tải tất cả sản phẩm khi trang được tải
     loadAllProducts();
 
     // Toggle hiển thị dropdown bộ lọc giá và khởi tạo thanh trượt khi nhấn nút "Price"
