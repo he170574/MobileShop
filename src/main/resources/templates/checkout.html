@@ -75,28 +75,28 @@
                 </div>
                 <!-- Start Left Column -->
                 <div class="col-7">
-                    <h2 style="text-align: left">THÔNG TIN LIÊN HỆ</h2>
+                    <h2 style="text-align: left">Contact Information</h2>
                     <hr>
                     <div class="row mt-2 mb-2">
                         <div class="col-6">
-                            <label>Họ và tên</label>
-                            <input name="to_name" class="form-control" placeholder="Nhập họ và tên"
+                            <label>Full Name</label>
+                            <input name="to_name" class="form-control" placeholder="Enter full name"
                                    th:value="${customer.fullName}" required>
                         </div>
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-6">
-                            <label class="required">Số điện thoại</label>
+                            <label class="required">Phone Number</label>
                             <input type="number" class="form-control" id="to_phone"
                                    th:value="${customer.phoneNumber}"
-                                   name="to_phone" placeholder="Nhập số điện thoại" required>
+                                   name="to_phone" placeholder="Enter phone number" required>
                             <span class="error" id="phoneNumberError"></span>
                         </div>
                         <div class="col-6">
-                            <label for="email" class="required">Địa chỉ Email</label>
+                            <label for="email" class="required">Email</label>
                             <input type="text" class="form-control" name="email"
                                    th:value="${customer.email}"
-                                   id="email" placeholder="Nhập Email" th:field="*{invoice.email}" required>
+                                   id="email" placeholder="Enter Email" th:field="*{invoice.email}" required>
                             <span class="error" id="emailError"></span>
                         </div>
                     </div>
@@ -107,10 +107,10 @@
                     <input type="hidden" name="from_ward_code" class="form-control" id="fromWardSelect" value="13004">
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label>Tỉnh/Thành phố: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <label>Province/City: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                             <input type="hidden" name="provinceName" id="provinceName" th:field="*{invoice.province}"/>
                             <select name="toProvinceSelect" class="form-control" id="toProvinceSelect" required>
-                                <option value="">Chọn Thành phố</option>
+                                <option value="">Choose Province/City</option>
                                 <option th:each="province : ${provinces}" th:value="${province.provinceId}"
                                         th:text="${province.provinceName}"
                                         data-province-id="${province.provinceId}"></option>
@@ -122,11 +122,11 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label>Quận/Huyện: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <label>District: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                             <input type="hidden" id="districtName" name="to_district_name">
                             <input type="hidden" name="to_district_id" id="to_district_id"/>
                             <select name="districtName" class="form-control" id="toDistrictSelect" required>
-                                <option value="">Chọn Quận Huyện</option>
+                                <option value="">Choose District</option>
                             </select>
                             <div id="toDistrictSelect-error" class="text-danger small"></div>
                             <span class="placeholder"></span>
@@ -134,11 +134,11 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label>Phường/Xã: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <label>Ward/Commune: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                             <input type="hidden" id="wardName" name="to_ward_name">
                             <input type="hidden" name="to_ward_code" id="to_ward_code"/>
                             <select name="wardName" class="form-control" id="toWardSelect" required>
-                                <option value="">Chọn Phường Xã</option>
+                                <option value="">Choose Ward/Commune</option>
                             </select>
                             <div id="toWardSelect-error" class="text-danger small"></div>
                             <span class="placeholder"></span>
@@ -146,9 +146,9 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label for="address1" class="required">Địa chỉ</label>
+                            <label for="address1" class="required">Address</label>
                             <input type="text" class="form-control" name="to_address" id="address1"
-                                   placeholder="Nhập địa chỉ" required>
+                                   placeholder="Enter address" required>
                             <span class="error" id="address1Error"></span>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
                                 <textarea type="text" rows="5" class="form-control" name="note" id="note"
-                                          placeholder="Nhập ghi chú" th:field="*{invoice.note}"></textarea>
+                                          placeholder="Enter note" th:field="*{invoice.note}"></textarea>
                         </div>
                     </div>
                 </div>
@@ -175,13 +175,13 @@
                 <!-- Start Right Column -->
                 <div class="col-5">
                     <div class="jumbotron" style="background-color: #e5ecee">
-                        <h2 style="text-align: left">ĐƠN HÀNG</h2>
+                        <h2 style="text-align: left">Oder</h2>
                         <hr>
                         <table class="table">
                             <tr>
-                                <th class="text-left">Sản phẩm</th>
-                                <th class="text-center">Số lượng</th>
-                                <th class="text-right">Tổng tiền</th>
+                                <th class="text-left">Product</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-right">Total</th>
                             </tr>
                             <tr th:each="item : ${checkoutDTO.cart.getItems()}">
                                 <td class="text-left">
@@ -194,19 +194,22 @@
                                     th:text="${checkoutDTO.formatToVND(item.product.price * item.quantity)}"></td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">Tổng tiền được tính:</th>
+                                <th class="text-left" colspan="2">
+                                    Total amount calculated:</th>
                                 <td class="text-right subtotal"
                                     th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">Phí vận chuyển:</th>
+                                <th class="text-left" colspan="2">
+                                    Shipping fee:</th>
                                 <input type="hidden" name="ghn_shipping_fee" id="ghnShippingFee">
                                 <td class="text-right" id="shippingFeeDisplay">
                                     <span></span>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">Tổng tiền phải thanh toán:</th>
+                                <th class="text-left" colspan="2">
+                                    Total amount to be paid:</th>
                                 <td class="text-right finalTotal subtotal" id="finalTotal"
                                     th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                             </tr>
@@ -222,7 +225,7 @@
                                         <div id="createOrderResult"></div>
                                         <button type="button" onclick="paymentPopUp()" class="btn"
                                                 style="background-color: #ff6d00; color: whitesmoke; width: 100%">
-                                            Tiến hành thanh toán
+                                            Proceed to payment
                                         </button>
 
                                         <!-- Modal structure -->

@@ -2604,6 +2604,7 @@ h2.title {
 #toggle-price{
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-left: 26px;
 }
 
 #sort-high-to-low{
@@ -2639,6 +2640,7 @@ header {
   justify-content: flex-end; /* Align everything to the right */
   align-items: center; /* Vertically center label and buttons */
   margin-bottom: 15px; /* Space below the sort options */
+  margin-right: 18vh;
 }
 
 /* Style the sort label */
@@ -2675,6 +2677,7 @@ header {
 
 #category{
   margin-top: 10px;
+  margin-left: 26px;
 }
 
 #apply-price-filter{

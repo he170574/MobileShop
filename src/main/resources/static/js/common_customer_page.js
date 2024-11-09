@@ -55,6 +55,22 @@ function register() {
             return;
         }
 
+        // Check if username is not empty
+        if (!formData.username.trim()) {
+            Swal.fire({
+                title: "Register Fail",
+                icon: "warning",
+                text: "Username cannot be empty.",
+                confirmButtonText: "OK",
+            });
+            $('#username-register').addClass('border-danger');
+            $('#username-register').removeClass('border-dark-subtle');
+            return;
+        } else {
+            $('#username-register').removeClass('border-danger');
+            $('#username-register').addClass('border-dark-subtle');
+        }
+
         // Check password match
         if (confirmPasswordTag.val() !== formData.password) {
             confirmPasswordTag.addClass('border-danger');
