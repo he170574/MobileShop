@@ -39,4 +39,7 @@ public class OrderDetail {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "OrderID")
     private Order order;
+
+    @Transient
+    private boolean isFeedbank;
 }

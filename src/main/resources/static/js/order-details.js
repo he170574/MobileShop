@@ -54,13 +54,16 @@ function viewOrder(orderId) {
                         <td>${detail.productAmount}</td>
                     `;
                     // Check order status and conditionally add the "Feedback" button
-                    if (orderStatus === 'DELIVERY_SUCCESS' || orderStatus === 'CANCEL' || orderStatus === 'SUCCESS') {
-                        const feedbackButtonCell = document.createElement("td");
-                        feedbackButtonCell.innerHTML = `
+                    if(detail.feedbank == false){
+                        if (orderStatus === 'DELIVERY_SUCCESS' || orderStatus === 'CANCEL' || orderStatus === 'SUCCESS') {
+                            const feedbackButtonCell = document.createElement("td");
+                            feedbackButtonCell.innerHTML = `
                             <button class="btn btn-primary" onclick="viewFeedback(${orderData.account.accountId},${orderData.id},${detail.product.productId})">Feedback</button>
                         `;
-                        detailRow.appendChild(feedbackButtonCell);
-                    }
+                            detailRow.appendChild(feedbackButtonCell);
+                        }
+                    } 
+
                     orderDetailsTableBody.appendChild(detailRow);
                 });
 

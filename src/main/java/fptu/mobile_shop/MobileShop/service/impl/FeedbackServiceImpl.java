@@ -114,4 +114,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         return entity != null ? new FeedbackManageResponse(entity) : null;
     }
 
+    @Override
+    public boolean checkIsFeedbackOrder(Long orderId, Integer productId) {
+        return productCommentRepository.findByOrderIdAndProductId(orderId, productId) != null;
+    }
+
 }

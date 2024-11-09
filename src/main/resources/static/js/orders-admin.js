@@ -91,7 +91,7 @@ function goToPage(page) {
     getDataOrderManage(keyword, orderStatus, accountId, sortBy, orderBy, page)
 }
 
-function UpdateStatus(id, status){
+function UpdateStatus(id, status) {
     const data = {
         id: id,
         status: status,

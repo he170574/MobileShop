@@ -22,7 +22,9 @@
     </style>
 </head>
 <body>
+
 <th:block th:replace="common/header.html"></th:block>
+
 <!-- Start Main -->
 <main class="mt-3 mb-3">
     <div class="container">
@@ -75,28 +77,28 @@
                 </div>
                 <!-- Start Left Column -->
                 <div class="col-7">
-                    <h2 style="text-align: left">Contact Information</h2>
+                    <h2 style="text-align: left">CONTACT INFORMATION</h2>
                     <hr>
                     <div class="row mt-2 mb-2">
                         <div class="col-6">
-                            <label>Full Name</label>
+                            <label>Full Name <span style="color: rgb(234, 77, 77);"> *</span></label>
                             <input name="to_name" class="form-control" placeholder="Enter full name"
                                    th:value="${customer.fullName}" required>
                         </div>
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-6">
-                            <label class="required">Phone Number</label>
+                            <label class="required">Phone Number <span style="color: rgb(234, 77, 77);"> *</span></label>
                             <input type="number" class="form-control" id="to_phone"
                                    th:value="${customer.phoneNumber}"
                                    name="to_phone" placeholder="Enter phone number" required>
                             <span class="error" id="phoneNumberError"></span>
                         </div>
                         <div class="col-6">
-                            <label for="email" class="required">Email</label>
+                            <label for="email" class="required">Email <span style="color: rgb(234, 77, 77);"> *</span></label>
                             <input type="text" class="form-control" name="email"
                                    th:value="${customer.email}"
-                                   id="email" placeholder="Enter Email" th:field="*{invoice.email}" required>
+                                   id="email" placeholder="Enter email" th:field="*{invoice.email}" required>
                             <span class="error" id="emailError"></span>
                         </div>
                     </div>
@@ -107,10 +109,10 @@
                     <input type="hidden" name="from_ward_code" class="form-control" id="fromWardSelect" value="13004">
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label>Province/City: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <label>Province: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                             <input type="hidden" name="provinceName" id="provinceName" th:field="*{invoice.province}"/>
                             <select name="toProvinceSelect" class="form-control" id="toProvinceSelect" required>
-                                <option value="">Choose Province/City</option>
+                                <option value="">Select province</option>
                                 <option th:each="province : ${provinces}" th:value="${province.provinceId}"
                                         th:text="${province.provinceName}"
                                         data-province-id="${province.provinceId}"></option>
@@ -126,7 +128,7 @@
                             <input type="hidden" id="districtName" name="to_district_name">
                             <input type="hidden" name="to_district_id" id="to_district_id"/>
                             <select name="districtName" class="form-control" id="toDistrictSelect" required>
-                                <option value="">Choose District</option>
+                                <option value="">Select district</option>
                             </select>
                             <div id="toDistrictSelect-error" class="text-danger small"></div>
                             <span class="placeholder"></span>
@@ -134,11 +136,11 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label>Ward/Commune: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
+                            <label>Ward: <span style="color: rgb(234, 77, 77);"> *</span></label><br>
                             <input type="hidden" id="wardName" name="to_ward_name">
                             <input type="hidden" name="to_ward_code" id="to_ward_code"/>
                             <select name="wardName" class="form-control" id="toWardSelect" required>
-                                <option value="">Choose Ward/Commune</option>
+                                <option value="">Select ward</option>
                             </select>
                             <div id="toWardSelect-error" class="text-danger small"></div>
                             <span class="placeholder"></span>
@@ -146,7 +148,7 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                            <label for="address1" class="required">Address</label>
+                            <label for="address1" class="required">Address <span style="color: rgb(234, 77, 77);"> *</span></label>
                             <input type="text" class="form-control" name="to_address" id="address1"
                                    placeholder="Enter address" required>
                             <span class="error" id="address1Error"></span>
@@ -166,8 +168,9 @@
                     </div>
                     <div class="row mt-2 mb-2">
                         <div class="col-12">
-                                <textarea type="text" rows="5" class="form-control" name="note" id="note"
-                                          placeholder="Enter note" th:field="*{invoice.note}"></textarea>
+                            <label for="address1" class="required">Note</label>
+                            <textarea type="text" rows="5" class="form-control" name="note" id="note"
+                                      placeholder="Enter notes" th:field="*{invoice.note}"></textarea>
                         </div>
                     </div>
                 </div>
@@ -175,13 +178,13 @@
                 <!-- Start Right Column -->
                 <div class="col-5">
                     <div class="jumbotron" style="background-color: #e5ecee">
-                        <h2 style="text-align: left">Oder</h2>
+                        <h2 style="text-align: left">ORDER</h2>
                         <hr>
                         <table class="table">
                             <tr>
-                                <th class="text-left">Product</th>
+                                <th class="text-left">Product Name</th>
                                 <th class="text-center">Quantity</th>
-                                <th class="text-right">Total</th>
+                                <th class="text-right">Total Amount</th>
                             </tr>
                             <tr th:each="item : ${checkoutDTO.cart.getItems()}">
                                 <td class="text-left">
@@ -194,22 +197,19 @@
                                     th:text="${checkoutDTO.formatToVND(item.product.price * item.quantity)}"></td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">
-                                    Total amount calculated:</th>
+                                <th class="text-left" colspan="2">Sub-Total:</th>
                                 <td class="text-right subtotal"
                                     th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">
-                                    Shipping fee:</th>
+                                <th class="text-left" colspan="2">Shipping Fee:</th>
                                 <input type="hidden" name="ghn_shipping_fee" id="ghnShippingFee">
                                 <td class="text-right" id="shippingFeeDisplay">
                                     <span></span>
                                 </td>
                             </tr>
                             <tr>
-                                <th class="text-left" colspan="2">
-                                    Total amount to be paid:</th>
+                                <th class="text-left" colspan="2">Total Payment:</th>
                                 <td class="text-right finalTotal subtotal" id="finalTotal"
                                     th:text="${checkoutDTO.formatToVND(checkoutDTO.totalAmount)}"></td>
                             </tr>
@@ -282,13 +282,12 @@
 <th:block th:replace="common/footer.html"></th:block>
 <!-- Thêm thư viện niceSelect -->
 <!-- Nội dung trang -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<!-- Thêm thư viện niceSelect -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/cart.js"></script>
-<script src="/js/checkout.js"></script>
+<script src="/js/common_customer_page.js"></script>
+<!-- Thêm thư viện niceSelect -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
 
 <!--    <script type="text/javascript" th:src="@{/js/homepage/checkout.js}"></script>-->
@@ -668,7 +667,7 @@
             errorMessageElement.innerHTML = errorMessages.join('<br>');
         } else {
             errorMessageElement.classList.add('d-none');
-            document.getElementById('createOrderResult').innerText = 'Đang tạo vận đơn...';
+            document.getElementById('createOrderResult').innerText = 'Creating shipping order...';
             this.submit();
         }
     });

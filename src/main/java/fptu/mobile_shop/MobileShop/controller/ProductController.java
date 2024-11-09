@@ -234,7 +234,7 @@ public class ProductController {
         return ResponseEntity.ok().body(responseDTO).getBody();
     }
 
-    @PostMapping("/admin/product/add-new-category")
+    @PostMapping("/add-new-category")
     private ResponseEntity<ResponseDTO> addNewCategory(@RequestBody CategoryDTO categoryDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         Category category = categoryService.save(categoryService.parseCategoryDtoToCategory(categoryDTO));

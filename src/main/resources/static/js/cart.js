@@ -48,7 +48,7 @@ function renderCartItems() {
                             onchange="handleQuantityChange(event, '${item.productId}')" min="1" id="quantity-${item.id}">
                             <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
                         </div>
-                        <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')"> Xoá
+                        <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')"> Delete
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -86,9 +86,9 @@ function updateItem(productId, quantity) {
 
             } else {
                 Swal.fire({
-                    title: "Cập nhật giỏ hàng thất bại",
+                    title: "Cart update failed",
                     icon: "warning",
-                    text: "Đã xảy ra lỗi khi cập nhật sản phẩm. Vui lòng thử lại.",
+                    text: "An error occurred while updating the product. Please try again.",
                     confirmButtonText: "OK",
                 });
                 console.log('2')
@@ -98,9 +98,9 @@ function updateItem(productId, quantity) {
         error: function(error) {
             console.error("Error removing item from cart:", error);
             Swal.fire({
-                title: "Lỗi khi cập nhật giỏ hàng",
+                title: "Error updating cart",
                 icon: "error",
-                text: "Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại sau.",
+                text: "An error occurred while updating the product. Please try again.",
                 confirmButtonText: "OK",
             });
         }
@@ -129,13 +129,13 @@ function payment() {
                 Thanh toán
             </div>
             <div class="card-body">
-                <h5 class="card-title">Quét mã QR để thanh toán</h5>
-                <p class="card-text text-danger">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR bên dưới.</p>
+                <h5 class="card-title">QR Code Payment</h5>
+                <p class="card-text text-danger">Use your banking app or e-wallet to scan the QR code below.</p>
 
                 <!-- Order Details Section -->
                 <div class="order-details mb-3 text-start">
-                    <p><strong>Mã đơn hàng:</strong> ${orderId}</p>
-                    <p><strong>Tổng số tiền:</strong> ${totalAmount}</p>
+                    <p><strong>Order Code:</strong> ${orderId}</p>
+                    <p><strong>Total Amount:</strong> ${totalAmount}</p>
                 </div>
 
                 <!-- QR Code Placeholder -->
@@ -143,10 +143,10 @@ function payment() {
                     <img src="https://img.vietqr.io/image/${bankId}-${soTaiKhoan}-compact2.jpg?amount=${totalAmount}&addInfo=${noiDung}&accountName=${accountName}" alt="QR Code" class="img-fluid" style="max-width: 150px;">
                 </div>
 
-                <button class="btn btn-success w-100" onclick="confirmOrder()">Xác nhận đơn hàng</button>
+                <button class="btn btn-success w-100" onclick="confirmOrder()">Confirm Payment</button>
             </div>
             <div class="card-footer text-muted">
-                Cảm ơn bạn đã mua sắm cùng chúng tôi!
+                Thank you for shopping with us!
             </div>
         </div>
     `;
@@ -157,7 +157,7 @@ function payment() {
 
 function confirmOrder() {
     Swal.fire({
-        title: "Đơn hàng đã được xác nhận",
+        title: "Order has been confirmed\n",
         icon: "success",
         text: "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.",
         confirmButtonText: "OK",

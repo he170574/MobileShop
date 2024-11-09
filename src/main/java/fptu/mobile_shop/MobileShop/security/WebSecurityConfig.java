@@ -30,6 +30,7 @@ public class WebSecurityConfig {
                             .requestMatchers("/admin/product", "/admin/members", "/admin/orders", "/admin/blogs","/admin/feedback").hasAnyRole("STAFF", "ADMIN")
                             .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers("/staff/**").hasRole("STAFF")
+//                            .requestMatchers("/api/feedback/","/admin/feedback","/admin/feedback/").permitAll()
                             .anyRequest().permitAll();
                 })
                 .formLogin(httpSecurityFormLoginConfigurer -> {

@@ -38,4 +38,7 @@ public interface ProductCommentRepository extends JpaRepository<ProductComment, 
             where x1.isDeleted = false and x1.order.id = :orderId and x3.productID = :productId
                         """)
     ProductComment getFeedbackOrder(Integer orderId, Integer productId);
+
+    @Query("select c from ProductComment c where c.order.id = :orderId and c.product.productID = :productId")
+    ProductComment findByOrderIdAndProductId(Long orderId, Integer productId);
 }

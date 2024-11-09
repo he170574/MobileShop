@@ -418,9 +418,8 @@ function saveNewCategory() {
         return;
     }
 
-    // Proceed with AJAX request to add the new category
     $.ajax({
-        url: '/admin/product/add-new-category',
+        url: '/add-new-category',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ categoryName: newCategoryName }),
@@ -428,8 +427,7 @@ function saveNewCategory() {
             alert("Category added successfully!");
             $('#addCategoryModal').modal('hide');
             $('#newCategoryName').val('');
-
-            // Reload categories to update dropdown and categoriesList
+            
             loadCategories();
         },
         error: function (xhr, status, error) {
