@@ -16,6 +16,7 @@ public class OrderDetailResponse {
     private String productName;
     private double productAmount;
     private double cost;
+    private boolean isFeedbank;
 
     public OrderDetailResponse(OrderDetail orderDetail) {
         this.id = orderDetail.getId();
@@ -24,6 +25,7 @@ public class OrderDetailResponse {
         this.productName = orderDetail.getProductName();
         this.productAmount = orderDetail.getProductAmount();
         this.cost = orderDetail.getCost();
+        this.isFeedbank = orderDetail.isFeedbank();
     }
 
     @Data

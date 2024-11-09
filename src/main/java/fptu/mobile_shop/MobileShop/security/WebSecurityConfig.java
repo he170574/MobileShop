@@ -24,8 +24,9 @@ public class WebSecurityConfig {
                             .requestMatchers("/admin/members").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/orders").hasAnyRole("STAFF","ADMIN")
                             .requestMatchers("/admin/blogs").hasAnyRole("STAFF", "ADMIN")
-                            .requestMatchers("/admin/**").hasRole("ADMIN")
+//                            .requestMatchers("/admin/**").hasRole("ADMIN")
                             .requestMatchers("/staff/**").hasRole("STAFF")
+                            .requestMatchers("/api/feedback/","/admin/feedback","/admin/feedback/").permitAll()
                             .anyRequest().permitAll();
                 })
                 .formLogin(httpSecurityFormLoginConfigurer -> {

@@ -22,4 +22,6 @@ public interface FeedbackService {
     FeedbackManageResponse getFeedbackDetail(Integer commentId);
 
     FeedbackManageResponse getFeedbackOrder(Integer orderId, Integer productId);
+
+    boolean checkIsFeedbackOrder(Long orderId, Integer productId);
 }
