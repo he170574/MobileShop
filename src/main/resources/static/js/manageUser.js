@@ -17,7 +17,6 @@ $(document).ready(function() {
             },
             error: function(err) {
                 console.error('Error loading users:', err);
-                alert('Failed to load users');
             }
         });
     }

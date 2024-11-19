@@ -1,5 +1,6 @@
 package fptu.mobile_shop.MobileShop.repository;
 
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.AccountFilterRequest;
 import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.entity.Role;
 import org.springframework.data.domain.Page;
@@ -52,4 +53,19 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Optional<Account> findByEmail(String email);
     Optional<Account> findByUsername(String username);
+
+    @Query(value = """
+            select distinct x1 from Account x1
+            join x1.role x2
+            where x1.deleted = false
+            AND (:#{#request.keyword} is null or CONCAT(coalesce(x1.email,''), x1.fullName, x1.username,x1.phoneNumber) like CONCAT('%',:#{#request.keyword},'%'))
+            AND ( :#{#request.roles.size} = 0 or x2.roleName in :#{#request.roles})
+            """, countQuery = """
+              select distinct  count(DISTINCT x1.accountId) from Account x1
+                        join x1.role x2
+                        where x1.deleted = false
+                        AND (:#{#request.keyword} is null or CONCAT(coalesce(x1.email,''), x1.fullName, x1.username,x1.phoneNumber) like CONCAT('%',:#{#request.keyword},'%'))
+                        AND ( :#{#request.roles.size} = 0 or x2.roleName in :#{#request.roles})
+            """)
+    Page<Account> getPageAccount(AccountFilterRequest request, Pageable pageable);
 }

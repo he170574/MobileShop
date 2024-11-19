@@ -1,5 +1,7 @@
 package fptu.mobile_shop.MobileShop.service;
 
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.AccountFilterRequest;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.AccountResponse;
 import fptu.mobile_shop.MobileShop.entity.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,8 @@ public interface AccountService {
 
     void activeSTAFF(Account account);
 
+    Page<AccountResponse> getPageAccount(AccountFilterRequest request);
 
+    void deleteAccount(Integer accountId);
 }
 

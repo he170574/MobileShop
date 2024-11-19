@@ -1,17 +1,24 @@
 package fptu.mobile_shop.MobileShop.service.impl;
 
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.AccountFilterRequest;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.FeedbackManageResponse;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.AccountResponse;
 import fptu.mobile_shop.MobileShop.entity.Account;
+import fptu.mobile_shop.MobileShop.entity.ProductComment;
 import fptu.mobile_shop.MobileShop.entity.Role;
 import fptu.mobile_shop.MobileShop.final_attribute.ROLE;
 import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.RoleRepository;
 import fptu.mobile_shop.MobileShop.service.AccountService;
+import fptu.mobile_shop.MobileShop.util.CommonPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,10 +46,6 @@ public class AccountServiceImpl implements AccountService {
         account.setRegisterDate(LocalDate.now());
         account.setDeleted(false);
         return accountRepository.save(account);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new BCryptPasswordEncoder().encode("Viet123@"));
     }
 
     public void updateNewPassWord(String email) {
@@ -125,5 +128,20 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.activeSTAFF(account);
     }
 
+    @Override
+    public Page<AccountResponse> getPageAccount(AccountFilterRequest request) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "dateOfBirth");
+        Pageable pageable = CommonPage.pageWithSort(request.getPageNum(), request.getPageSize(), sort);
+        Page<Account> pageFeedback = accountRepository.getPageAccount(request, pageable);
+        if (CollectionUtils.isEmpty(pageFeedback.getContent())) return Page.empty(pageable);
+        return pageFeedback.map(AccountResponse::new);
+    }
+
+    @Override
+    public void deleteAccount(Integer accountId) {
+        Account account = getAccountByAccountId(accountId);
+        account.setDeleted(true);
+        accountRepository.save(account);
+    }
 }
 
