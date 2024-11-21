@@ -7,6 +7,40 @@
     <link rel="shortcut icon" type="image/png" href="/assets/images/logos/logo.png"/>
     <link rel="stylesheet" href="/assets/css/styles.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .pagination {
+            display: flex; /* Sử dụng Flexbox */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            margin: 20px 0; /* Thêm khoảng cách phía trên và dưới nếu cần */
+        }
+
+        .pagination .page-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+            background-color: #f8f9fa; /* Màu nền mặc định */
+            border: 1px solid #ced4da; /* Đường viền mặc định */
+            border-radius: 4px; /* Bo góc */
+            display: flex; /* Sử dụng flex để căn chỉnh biểu tượng */
+            align-items: center; /* Căn giữa theo chiều dọc */
+        }
+
+        .pagination .page-btn:hover {
+            background-color: #e9ecef; /* Màu nền khi hover */
+        }
+
+        .pagination .page-btn.active {
+            background-color: #007bff; /* Màu nền của trang hiện tại */
+            color: white; /* Màu chữ của trang hiện tại */
+            font-weight: bold; /* In đậm chữ */
+        }
+
+        .pagination .page-btn i {
+            font-size: 1.2em; /* Kích thước biểu tượng */
+        }
+
+    </style>
 </head>
 
 <body>
@@ -19,25 +53,22 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title fw-semibold mb-4">Customer List</h5>
+                    <h5 class="card-title fw-semibold mb-4">Member List</h5>
                     <input type="text" id="searchInput" placeholder="Nhập tên người dùng để tìm kiếm...">
-                    <button onclick="searchUsers()">Search</button>
-
-                    <label for="roleFilter">Filter by Role:</label>
-                    <select id="roleFilter" onchange="filterByRole()">
+                    <label>Filter by Role:</label>
+                    <select id="role-selection">
                         <option value="">All</option>
-                        <option value="ADMIN">Admin</option>
-                        <option value="Staff">Staff</option>
-                        <option value="MEMBER">Member</option>
+                        <option value="ROLE_ADMIN">Admin</option>
+                        <option value="ROLE_STAFF">Staff</option>
+                        <option value="ROLE_MEMBER">Member</option>
                     </select>
 
-                    <table id="userTable" class="table table-bordered">
+                    <table id="accountTable" class="table table-bordered">
                         <thead>
                         <tr>
-                            <th onclick="sortTable('id')">ID</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th onclick="sortTable('registrationDate')">Registration Date</th>
+                            <th>Registration Date</th>
                             <th>Address</th>
                             <th>Role</th>
                             <th>Actions</th>
@@ -48,9 +79,9 @@
                         </tbody>
                     </table>
                     <div id="pagination" class="pagination">
-                        <button id="prevBtn" class="btn btn-secondary" onclick="changePage(-1)">Previous</button>
-                        <span id="pageInfo"></span>
-                        <button id="nextBtn" class="btn btn-secondary" onclick="changePage(1)">Next</button>
+<!--                        <button id="prevBtn" class="btn btn-secondary" onclick="changePage(-1)">Previous</button>-->
+<!--                        <span id="pageInfo"></span>-->
+<!--                        <button id="nextBtn" class="btn btn-secondary" onclick="changePage(1)">Next</button>-->
                     </div>
                 </div>
             </div>
@@ -63,7 +94,7 @@
 <script src="/assets/js/sidebarmenu.js"></script>
 <script src="/assets/js/app.min.js"></script>
 <script src="/assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="/js/manageUser.js"></script>
+<script src="/js/manage-user.js"></script>
 
 </body>
 </html>

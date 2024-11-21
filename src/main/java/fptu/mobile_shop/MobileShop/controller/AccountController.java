@@ -3,6 +3,7 @@ package fptu.mobile_shop.MobileShop.controller;
 import fptu.mobile_shop.MobileShop.dto.AccountDTO;
 import fptu.mobile_shop.MobileShop.dto.ChangePasswordDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
+import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.AccountFilterRequest;
 import fptu.mobile_shop.MobileShop.entity.Account;
 import fptu.mobile_shop.MobileShop.final_attribute.ROLE;
 import fptu.mobile_shop.MobileShop.security.CustomAccount;
@@ -10,18 +11,14 @@ import fptu.mobile_shop.MobileShop.service.AccountService;
 import fptu.mobile_shop.MobileShop.service.CartService;
 import fptu.mobile_shop.MobileShop.service.RoleService;
 import jakarta.annotation.Resource;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 
 @RestController
 public class AccountController {
@@ -189,5 +186,26 @@ public class AccountController {
             responseDTO.setMessage("Internal Server Error");
             return ResponseEntity.internalServerError().body(responseDTO);
         }
+    }
+
+    @GetMapping("/list-account")
+    public ResponseEntity<ResponseDTO> getListFeedbackManage(@Validated AccountFilterRequest request) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        var response = accountService.getPageAccount(request);
+        responseDTO.setData(response.getContent());
+        if (response.getContent().size() != 0) {
+            responseDTO.setCurrentPage(response.getNumber() + 1);
+        }
+        responseDTO.setTotalPages(response.getTotalPages());
+        responseDTO.setMessage("Success");
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @DeleteMapping("/delete-account/{accountId}")
+    public ResponseEntity<ResponseDTO> getListFeedbackManage(@PathVariable("accountId") @NotNull() Integer accountId) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        accountService.deleteAccount(accountId);
+        responseDTO.setMessage("Success");
+        return ResponseEntity.ok().body(responseDTO);
     }
 }
