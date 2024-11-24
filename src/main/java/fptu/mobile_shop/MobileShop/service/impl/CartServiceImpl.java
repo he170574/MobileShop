@@ -96,9 +96,7 @@ public class CartServiceImpl implements CartService {
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
         try {
             Product product = productRepository.findProductByProductID(productId);
-            if(product.getStockQuantity() <= 0){
-                return false;
-            }
+
             Cart cart = getCart(account);
             if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
                 return false;
@@ -108,9 +106,15 @@ public class CartServiceImpl implements CartService {
                     .filter(item -> item.getProduct().getProductID() == productId)
                     .findFirst()
                     .orElseThrow(() -> new NoSuchElementException("No CartItem found with the specified product ID"));
+
             if (Objects.isNull(cartItem)) {
                 return false;
             } else {
+                if(product.getStockQuantity() <= 0){
+                    cartItemRepository.deleteById(cartItem.getId());
+                    cartRepository.deleteById(cart.getId());
+                    return false;
+                }
                 if(quantity > product.getStockQuantity()){
                     quantity = product.getStockQuantity();
                 }
