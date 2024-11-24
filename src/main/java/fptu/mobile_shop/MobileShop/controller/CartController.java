@@ -43,7 +43,7 @@ public class CartController {
                 int totalCart = cartService.addToCart(account, cartItemDTO.getProductId(), cartItemDTO.getQuantity());
 
                 if (totalCart == 0) {
-                    responseDTO.setMessage("Faild");
+                    responseDTO.setMessage("HetSanPham");
                 }
                 responseDTO.setData(totalCart);
             }

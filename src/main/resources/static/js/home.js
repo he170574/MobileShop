@@ -170,7 +170,17 @@ function addToCart(id) {
                 });
                 $('#countItemCartHeder').empty();
                 $('#countItemCartHeder').append(`(${response.data})`);
-            } else {
+            } else if (response && response.message == 'HetSanPham') {
+                Swal.fire({
+                    title: "Failed to Add Item",
+                    icon: "warning",
+                    text: "Out of Stock Product",
+                    confirmButtonText: "OK",
+                });
+                $('#countItemCartHeder').empty();
+                $('#countItemCartHeder').append(`(${response.data})`);
+            }
+            else {
                 Swal.fire({
                     title: "Failed to Add Item",
                     icon: "warning",
