@@ -29,30 +29,50 @@ function renderCartItems() {
         totalAmount = 0;
         var cartItemsHTML = cartItems.map(function (item) {
             totalAmount += item?.productPrice * item?.quantity;
+//             return `
+//                     <div class="cart-item">
+// <!--                        <input type="checkbox" checked onchange="toggleSelect(${item.id})">-->
+//                         <div class="cart-item-image">
+//                             <img style="width: 50px; height:  80px" src="${item.image}" alt="${item.productName}">
+//                         </div>
+//                         <div class="cart-item-details">
+//                             <h4>${item.productName}</h4>
+//                             <p>
+//                                 <span class="price">${item.productPrice.toLocaleString()}₫</span>
+//                             </p>
+//
+//                         </div>
+//                         <div class="quantity">
+//                             <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity - 1}')">-</button>
+//                             <input type="number" value="${item.quantity}"
+//                             onchange="handleQuantityChange(event, '${item.productId}')" min="1" id="quantity-${item.id}">
+//                             <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
+//                         </div>
+//                         <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')"> Delete
+//                             <i class="fa fa-trash"></i>
+//                         </button>
+//                     </div>
+//                 `;
             return `
-                    <div class="cart-item">
-<!--                        <input type="checkbox" checked onchange="toggleSelect(${item.id})">-->
-                        <div class="cart-item-image">
-                            <img style="width: 50px; height:  80px" src="${item.image}" alt="${item.productName}">
-                        </div>
-                        <div class="cart-item-details">
-                            <h4>${item.productName}</h4>
-                            <p>
-                                <span class="price">${item.productPrice.toLocaleString()}₫</span>
-                            </p>
-                             
-                        </div>
-                        <div class="quantity">
-                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity - 1}')">-</button>
-                            <input type="number" value="${item.quantity}" 
-                            onchange="handleQuantityChange(event, '${item.productId}')" min="1" id="quantity-${item.id}">
-                            <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
-                        </div>
-                        <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')"> Delete
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                `;
+            <div class="cart-item" style="display: flex; align-items: center; gap: 20px; padding: 10px 0; border-bottom: 1px solid #ccc;">
+                <div class="cart-item-image" >
+                    <img src="${item.image}" alt="${item.productName}">
+                </div>
+                <div class="cart-item-details" style="flex: 1;">
+                    <h4 style="margin: 0;">${item.productName}</h4>
+                    <p style="margin: 0;">
+                        <span class="price">${item.productPrice.toLocaleString()}₫</span>
+                    </p>
+                </div>
+                <div class="quantity" style="display: flex; align-items: center; gap: 5px;">
+                    <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity - 1}')">-</button>
+                    <input type="number" value="${item.quantity}" onchange="handleQuantityChange(event, '${item.productId}')"  id="quantity-${item.id}" min="1"
+                    style="width: 50px; text-align: center;">
+                    <button class="btn btn-secondary" onclick="updateItem('${item.productId}','${item.quantity + 1}')">+</button>
+                </div>
+                <button class="btn btn-danger" onclick="updateItem('${item.productId}','0')">Delete <i class="fa fa-trash"></i></button>
+            </div>
+            `
         }).join('');
         document.getElementById('priceCart').innerText = totalAmount.toLocaleString() + ' ₫'
         // $('#totlePriceCart').empty(); // Xóa nội dung cũ
