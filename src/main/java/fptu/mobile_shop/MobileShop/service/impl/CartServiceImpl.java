@@ -94,6 +94,9 @@ public class CartServiceImpl implements CartService {
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
         try {
             Product product = productRepository.findProductByProductID(productId);
+            if(product.getStockQuantity() <= 0){
+                return false;
+            }
             Cart cart = getCart(account);
             if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
                 return false;
