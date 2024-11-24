@@ -93,6 +93,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public boolean updateQuantity(Account account, Integer productId, int quantity) {
         try {
+            Product product = productRepository.findProductByProductID(productId);
             Cart cart = getCart(account);
             if (Objects.isNull(cart) || CollectionUtils.isEmpty(cart.getItems())) {
                 return false;
@@ -105,6 +106,9 @@ public class CartServiceImpl implements CartService {
             if (Objects.isNull(cartItem)) {
                 return false;
             } else {
+                if(quantity > product.getStockQuantity()){
+                    quantity = product.getStockQuantity();
+                }
                 if (quantity > 0) {
                     cartItem.setQuantity(quantity);
                     cartItemRepository.save(cartItem);

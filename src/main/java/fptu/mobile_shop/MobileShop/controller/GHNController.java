@@ -4,10 +4,7 @@ import fptu.mobile_shop.MobileShop.dto.CheckoutDTO;
 import fptu.mobile_shop.MobileShop.dto.ResponseDTO;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.request.ShippingOrderRequest;
 import fptu.mobile_shop.MobileShop.dto.jsonDTO.response.ShippingOrderResponse;
-import fptu.mobile_shop.MobileShop.entity.Account;
-import fptu.mobile_shop.MobileShop.entity.Cart;
-import fptu.mobile_shop.MobileShop.entity.Order;
-import fptu.mobile_shop.MobileShop.entity.OrderDetail;
+import fptu.mobile_shop.MobileShop.entity.*;
 import fptu.mobile_shop.MobileShop.final_attribute.STATUS;
 import fptu.mobile_shop.MobileShop.repository.AccountRepository;
 import fptu.mobile_shop.MobileShop.repository.OrderRepository;
@@ -32,6 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -77,14 +75,19 @@ public class GHNController {
         }
 
         Order order = orderService.getOrderById(id).get();
-
+        List<OrderDetail> orderDetails = order.getOrderDetails();
+        orderDetails.forEach(orderDetail -> {
+            Product product = productRepository.findProductByProductID(orderDetail.getProduct().getProductID());
+            product.setStockQuantity(product.getStockQuantity() - orderDetail.getQuantity());
+            productRepository.save(product);
+        });
         //-----
         order.setOrderStatus(STATUS.PAYMENT_SUCCESS);
         orderService.saveOrder(order);
         responseDTO.setMessage("SUCCESS");
         return ResponseEntity.ok().body(responseDTO);
         //-----
-        
+
 //        String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
 //        int total = new BigDecimal(order.getTotalAmount())
 //                .add(order.getShippingFee())
