@@ -56,7 +56,7 @@ function renderCartItems() {
             return `
             <div class="cart-item" style="display: flex; align-items: center; gap: 20px; padding: 10px 0; border-bottom: 1px solid #ccc;">
                 <div class="cart-item-image" >
-                    <img src="${item.image}" alt="${item.productName}">
+                    <img style="width: 80px; height: 120px;" src="${item.image}" alt="${item.productName}">
                 </div>
                 <div class="cart-item-details" style="flex: 1;">
                     <h4 style="margin: 0;">${item.productName}</h4>
