@@ -70,23 +70,26 @@ public class GHNController {
     public ResponseEntity<ResponseDTO> checkPayment(
             Authentication authentication,
             @RequestParam(required = true) Long id) {
+
         ResponseDTO responseDTO = new ResponseDTO();
         if (authentication == null) {
             return ResponseEntity.internalServerError().body(responseDTO);
         }
-
-        Order order = orderService.getOrderById(id).get();
-        String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
-        int total = new BigDecimal(order.getTotalAmount())
-                .add(order.getShippingFee())
-                .intValue();
-        boolean payment = paymentHistoryService.callApi(noiDung, total);
-        if(payment) {
-            order.setOrderStatus(STATUS.PAYMENT_SUCCESS);
-            orderService.saveOrder(order);
-        }
-        responseDTO.setMessage(payment?"SUCCESS":"FAILL");
+        responseDTO.setMessage("SUCCESS");
         return ResponseEntity.ok().body(responseDTO);
+
+//        Order order = orderService.getOrderById(id).get();
+//        String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
+//        int total = new BigDecimal(order.getTotalAmount())
+//                .add(order.getShippingFee())
+//                .intValue();
+//        boolean payment = paymentHistoryService.callApi(noiDung, total);
+//        if(payment) {
+//            order.setOrderStatus(STATUS.PAYMENT_SUCCESS);
+//            orderService.saveOrder(order);
+//        }
+//        responseDTO.setMessage(payment?"SUCCESS":"FAILL");
+//        return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/list-order")

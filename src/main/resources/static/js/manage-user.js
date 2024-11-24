@@ -1,5 +1,5 @@
 let currentPage = 1;
-let pageSize = 1;
+let pageSize = 10;
 let keyword = null;
 let roles = []
 
