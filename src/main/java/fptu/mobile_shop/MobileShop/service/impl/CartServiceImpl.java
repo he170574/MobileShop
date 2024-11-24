@@ -39,7 +39,9 @@ public class CartServiceImpl implements CartService {
     public int addToCart(Account account, Integer productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
+        if(product.getStockQuantity() <= 0){
+            return 0;
+        }
         Cart cart = cartRepository.getCartByAccountID(account.getAccountId());
         if (Objects.isNull(cart)) {
             cart = new Cart();

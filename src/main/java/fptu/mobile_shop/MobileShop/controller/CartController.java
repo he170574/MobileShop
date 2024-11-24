@@ -42,6 +42,9 @@ public class CartController {
                 Account account = accountService.getByUsername(customAccount.getUsername());
                 int totalCart = cartService.addToCart(account, cartItemDTO.getProductId(), cartItemDTO.getQuantity());
 
+                if (totalCart == 0) {
+                    responseDTO.setMessage("Faild");
+                }
                 responseDTO.setData(totalCart);
             }
             return ResponseEntity.ok().body(responseDTO);
