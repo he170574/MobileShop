@@ -75,10 +75,16 @@ public class GHNController {
         if (authentication == null) {
             return ResponseEntity.internalServerError().body(responseDTO);
         }
+
+        Order order = orderService.getOrderById(id).get();
+
+        //-----
+        order.setOrderStatus(STATUS.PAYMENT_SUCCESS);
+        orderService.saveOrder(order);
         responseDTO.setMessage("SUCCESS");
         return ResponseEntity.ok().body(responseDTO);
-
-//        Order order = orderService.getOrderById(id).get();
+        //-----
+        
 //        String noiDung = "MobileShop " + order.getOrderCode() + " " + order.getShippingCode() + " payment" + order.getId();
 //        int total = new BigDecimal(order.getTotalAmount())
 //                .add(order.getShippingFee())
